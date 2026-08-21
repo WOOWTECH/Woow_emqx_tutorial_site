@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: checks-${{ github.ref }}
@@ -16,34 +16,20 @@ concurrency:
 jobs:
   build-and-check:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Check drift (PR)
-        if: github.event_name == 'pull_request'
+      - name: Validate generated navigation and content
         run: |
           node scripts/build_nav.js --check
           node scripts/check_links.js
-
-      - name: Regenerate & commit (push to main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          node scripts/build_nav.js
-          node scripts/check_links.js
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name  'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add -A
-            git commit -m "chore(nav): 自動重新產生導覽與 sitemap [skip ci]"
-            git push
-          else
-            echo "沒有漂移，無需 commit"
-          fi
+          node scripts/check_content.js
+          node scripts/check_sensitive.js
+          node scripts/check_feature_manifest.js
+          node scripts/check_dockerfile.js
+          node scripts/test_checks.js
+          docker build -t emqx-guide:ci .

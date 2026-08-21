@@ -18,6 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { validateHtmlLinks } = require('./lib/html_links');
 
 const ROOT = path.resolve(__dirname, '..');
 const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'chapters.json'), 'utf8'));
@@ -35,34 +36,18 @@ const htmlFiles = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html')).sort()
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
 
-  // 1. 站內檔案
-  for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
-    let target = m[1];
-    if (/^(https?:|mailto:|data:|\/\/|#)/.test(target)) continue;
-    target = target.split('#')[0];
-    if (!target) continue;
-    if (target.startsWith(BASE_PREFIX)) target = target.slice(BASE_PREFIX.length) || 'index.html';
-    else if (target.startsWith('/')) target = target.slice(1) || 'index.html';
-    if (target.endsWith('/')) target += 'index.html';
-    if (!fs.existsSync(path.join(ROOT, target))) {
-      errors.push(`${file}: 連結指向不存在的檔案 → ${m[1]}`);
-    }
-  }
-
-  // 2 & 3. 錨點與重複 id
-  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
-  const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+  // 2 & 3. 重複 id（連結與 same/cross-page fragment 由 shared resolver 驗證）
+  const allIds = [...html.matchAll(/\bid\s*=\s*(["'])(.*?)\1/gi)].map((m) => m[2]);
+  const dupes = allIds.filter((id, i) => allIds.indexOf(id) !== i);
   [...new Set(dupes)].forEach((id) => errors.push(`${file}: 重複的 id="${id}"`));
-
-  for (const m of html.matchAll(/href="#([^"]+)"/g)) {
-    if (!ids.includes(m[1])) errors.push(`${file}: 錨點 #${m[1]} 在本頁沒有對應的 id`);
-  }
 
   // 4. section 一定要有 data-nav
   for (const m of html.matchAll(/<section id="([^"]+)"(?![^>]*data-nav)/g)) {
     errors.push(`${file}: <section id="${m[1]}"> 缺 data-nav（側欄產不出這個項目）`);
   }
 }
+
+errors.push(...validateHtmlLinks({ root: ROOT, files: htmlFiles, basePrefix: BASE_PREFIX }));
 
 // 6. data-icon 必須在 style.css 有對應字符，否則會顯示成空白方塊
 const cssPath = path.join(ROOT, 'assets', 'css', 'style.css');
@@ -95,7 +80,7 @@ for (const file of htmlFiles) {
     errors.push(`${file}: 找不到 chapter-header 的 kicker 區塊（build_nav.js 產生章節編號要用）`);
   }
   const faq = (html.match(/<details class="faq">/g) || []).length;
-  if (faq < 3) errors.push(`${file}: 常見問題只有 ${faq} 則，房規要求至少 4 則`);
+  if (faq < 4) errors.push(`${file}: 常見問題只有 ${faq} 則，房規要求至少 4 則`);
 }
 
 // 5. chapters.json ↔ 檔案 ↔ sitemap

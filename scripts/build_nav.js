@@ -24,6 +24,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { validateHtmlLinks } = require('./lib/html_links');
 
 const ROOT = path.resolve(__dirname, '..');
 const CHECK = process.argv.includes('--check');
@@ -82,6 +83,9 @@ function buildHead(page, html) {
   <meta property="og:description" content="${esc(desc)}" />
   <meta property="og:url" content="${url(page.file)}" />
   <meta property="og:image" content="${ogImage}" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(desc)}" />
@@ -286,7 +290,7 @@ function buildIndex() {
     if (g) g.items.push(c);
     else groups.push({ title, items: [c] });
   }
-  groups.push({ title: '附錄', items: appendices });
+  if (appendices.length) groups.push({ title: '附錄', items: appendices });
 
   const grids = groups
     .map(
@@ -319,14 +323,12 @@ ${g.items.map(card).join('\n')}
 }
 
 function buildSitemap(outputs) {
-  const today = fs.statSync(path.join(ROOT, 'chapters.json')).mtime.toISOString().slice(0, 10);
   const files = ['index.html'];
   if (CATALOG !== 'index.html') files.push(CATALOG);
   files.push(...pages.map((p) => p.file), ...HUB_PAGES);
   const entries = files.map(
     (f) => `  <url>
     <loc>${url(f)}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>${f === 'index.html' ? '1.0' : '0.8'}</priority>
   </url>`
@@ -344,20 +346,14 @@ ${entries.join('\n')}
 /* ------------------------------------------------------------ validate --- */
 
 function validateLinks(outputs) {
-  const byFile = new Map(outputs.map((o) => [o.file, o.html]));
-  for (const [file, html] of byFile) {
-    if (!file.endsWith('.html')) continue;
-    for (const m of html.matchAll(/(?:href|src)="([^"#:]+)(?:#[^"]*)?"/g)) {
-      const target = m[1];
-      if (!target || target.startsWith('//') || target.startsWith('mailto:')) continue;
-      if (!fs.existsSync(path.join(ROOT, target))) {
-        problems.push(`${file}: 連結指向不存在的檔案 → ${target}`);
-      }
-    }
-    for (const m of html.matchAll(/href="#([^"]+)"/g)) {
-      if (!html.includes(`id="${m[1]}"`)) problems.push(`${file}: 錨點 #${m[1]} 無對應 id`);
-    }
-  }
+  const generated = new Map(outputs.map((output) => [output.file, output.html]));
+  const htmlFiles = fs.readdirSync(ROOT).filter((file) => file.endsWith('.html')).sort();
+  const readFile = (relative) => {
+    if (generated.has(relative)) return generated.get(relative);
+    return fs.readFileSync(path.join(ROOT, relative), 'utf8');
+  };
+  const basePrefix = new URL(site.baseUrl).pathname.replace(/\/$/, '') + '/';
+  problems.push(...validateHtmlLinks({ root: ROOT, files: htmlFiles, basePrefix, readFile }));
 }
 
 /* ----------------------------------------------------------------- run --- */

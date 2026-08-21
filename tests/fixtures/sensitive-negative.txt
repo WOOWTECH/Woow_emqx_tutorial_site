@@ -1,0 +1,16 @@
+EMQX 5.8.9 was documented in 2026.
+Dashboard default login is admin / public; change it immediately.
+ngrok authtoken: <your ngrok authtoken>
+NGROK_AUTHTOKEN=your_authtoken
+EMQX_NODE__COOKIE = <your-cluster-cookie>
+EMQX_DASHBOARD__DEFAULT_PASSWORD=change-me
+password = "<your password>"
+password = "public"
+"password": "<redacted>"
+API key: <your-api-key>
+api_key = YOUR_KEY
+Authorization: Bearer <redacted>
+MQTT connection uses broker host and port only, without inline credentials.
+TLS private key is stored separately and never committed.
+Example documentation address 192.168.1.10.
+Use documentation prefixes fc00::/7 and fe80::/10 only as examples.

@@ -1,0 +1,681 @@
+{
+  "product": "EMQX",
+  "emqxVersion": "5.8.9",
+  "addOnVersion": "5.9.0",
+  "sourceCommit": "0ac58f38653589b854496944d82af2548b12f944",
+  "docsCommit": "37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e",
+  "emqxTagCommit": "a8319fe2390169e1f2483e3ec80dd01a6cdb233d",
+  "forbiddenTerms": [
+    "Modules",
+    "Data Bridge",
+    "Data Bridges",
+    "Rule Engine Module",
+    "Webhook Resource"
+  ],
+  "entries": [
+    {
+      "id": "dashboardModule:overview",
+      "category": "dashboardModule",
+      "name": "overview",
+      "chapter": 3,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/introduction.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:monitoring",
+      "category": "dashboardModule",
+      "name": "monitoring",
+      "chapter": 15,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:connections",
+      "category": "dashboardModule",
+      "name": "connections",
+      "chapter": 14,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/connections.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:cluster_settings",
+      "category": "dashboardModule",
+      "name": "cluster_settings",
+      "chapter": 15,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/cluster_settings.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:mqtt_settings",
+      "category": "dashboardModule",
+      "name": "mqtt_settings",
+      "chapter": 17,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/mqtt.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:advanced_mqtt",
+      "category": "dashboardModule",
+      "name": "advanced_mqtt",
+      "chapter": 17,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/advanced_mqtt.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:configuration",
+      "category": "dashboardModule",
+      "name": "configuration",
+      "chapter": 17,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/configuration.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:authentication",
+      "category": "dashboardModule",
+      "name": "authentication",
+      "chapter": 6,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:authorization",
+      "category": "dashboardModule",
+      "name": "authorization",
+      "chapter": 7,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authz.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:acl_overview",
+      "category": "dashboardModule",
+      "name": "acl_overview",
+      "chapter": 7,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/acloverview.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:blacklist",
+      "category": "dashboardModule",
+      "name": "blacklist",
+      "chapter": 7,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/blacklist.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:flapping_detect",
+      "category": "dashboardModule",
+      "name": "flapping_detect",
+      "chapter": 14,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/flapping-detect.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:rules",
+      "category": "dashboardModule",
+      "name": "rules",
+      "chapter": 9,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/rules.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:flows",
+      "category": "dashboardModule",
+      "name": "flows",
+      "chapter": 9,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/flows.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:data_integration",
+      "category": "dashboardModule",
+      "name": "data_integration",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/data-integration.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:connectors",
+      "category": "dashboardModule",
+      "name": "connectors",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/connector.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:sinks_bridges",
+      "category": "dashboardModule",
+      "name": "sinks_bridges",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridges.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:subscriptions",
+      "category": "dashboardModule",
+      "name": "subscriptions",
+      "chapter": 14,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/subscription-management.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:retained",
+      "category": "dashboardModule",
+      "name": "retained",
+      "chapter": 16,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/retained.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:delayed_publish",
+      "category": "dashboardModule",
+      "name": "delayed_publish",
+      "chapter": 16,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/delay-pub.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:topic_metrics",
+      "category": "dashboardModule",
+      "name": "topic_metrics",
+      "chapter": 16,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/topic-metrics.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:system_topics",
+      "category": "dashboardModule",
+      "name": "system_topics",
+      "chapter": 15,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/mqtt-system-topics.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:diagnose",
+      "category": "dashboardModule",
+      "name": "diagnose",
+      "chapter": 18,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/diagnose.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:extensions",
+      "category": "dashboardModule",
+      "name": "extensions",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/extensions.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dashboardModule:slow_subscribers",
+      "category": "dashboardModule",
+      "name": "slow_subscribers",
+      "chapter": 14,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/slow-subscribers-statistics.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:authentication_builtin",
+      "category": "accessControl",
+      "name": "authentication_builtin",
+      "chapter": 6,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:authentication_jwt",
+      "category": "accessControl",
+      "name": "authentication_jwt",
+      "chapter": 6,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:authentication_http",
+      "category": "accessControl",
+      "name": "authentication_http",
+      "chapter": 6,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:authentication_ldap",
+      "category": "accessControl",
+      "name": "authentication_ldap",
+      "chapter": 6,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:authorization_acl",
+      "category": "accessControl",
+      "name": "authorization_acl",
+      "chapter": 7,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authz.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:api_keys",
+      "category": "accessControl",
+      "name": "api_keys",
+      "chapter": 7,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:blacklist",
+      "category": "accessControl",
+      "name": "blacklist",
+      "chapter": 7,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/blacklist.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "accessControl:flapping_detect",
+      "category": "accessControl",
+      "name": "flapping_detect",
+      "chapter": 14,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/flapping-detect.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:rule_engine",
+      "category": "dataIntegration",
+      "name": "rule_engine",
+      "chapter": 9,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rules.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:rule_sql",
+      "category": "dataIntegration",
+      "name": "rule_sql",
+      "chapter": 9,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-sql-syntax.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:rule_builtin_actions",
+      "category": "dataIntegration",
+      "name": "rule_builtin_actions",
+      "chapter": 10,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rules.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:republish",
+      "category": "dataIntegration",
+      "name": "republish",
+      "chapter": 10,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/message-transformation.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:webhook",
+      "category": "dataIntegration",
+      "name": "webhook",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/webhook.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:http_connector",
+      "category": "dataIntegration",
+      "name": "http_connector",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/connector.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:kafka",
+      "category": "dataIntegration",
+      "name": "kafka",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridge-kafka.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:postgresql",
+      "category": "dataIntegration",
+      "name": "postgresql",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridge-pgsql.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:mysql",
+      "category": "dataIntegration",
+      "name": "mysql",
+      "chapter": 11,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridge-mysql.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:mqtt_bridge",
+      "category": "dataIntegration",
+      "name": "mqtt_bridge",
+      "chapter": 12,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridge-mqtt.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "dataIntegration:source_events",
+      "category": "dataIntegration",
+      "name": "source_events",
+      "chapter": 12,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/introduction.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttListener:tcp_1883",
+      "category": "mqttListener",
+      "name": "tcp_1883",
+      "chapter": 8,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttListener:ws_8083",
+      "category": "mqttListener",
+      "name": "ws_8083",
+      "chapter": 8,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttListener:wss_8084",
+      "category": "mqttListener",
+      "name": "wss_8084",
+      "chapter": 8,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttListener:ssl_8883",
+      "category": "mqttListener",
+      "name": "ssl_8883",
+      "chapter": 8,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttListener:tls",
+      "category": "mqttListener",
+      "name": "tls",
+      "chapter": 8,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/emqx-mqtt-tls.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttListener:mtls",
+      "category": "mqttListener",
+      "name": "mtls",
+      "chapter": 8,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/mqtt-client-tls.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "security:tls_certificate",
+      "category": "security",
+      "name": "tls_certificate",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/tls-certificate.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "security:rate_limit",
+      "category": "security",
+      "name": "rate_limit",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/limiter.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "security:ipv6",
+      "category": "security",
+      "name": "ipv6",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/ipv6.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "security:security_checklist",
+      "category": "security",
+      "name": "security_checklist",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/security-checklist.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "observability:metrics_stats",
+      "category": "observability",
+      "name": "metrics_stats",
+      "chapter": 15,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/metrics-and-stats.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "observability:prometheus",
+      "category": "observability",
+      "name": "prometheus",
+      "chapter": 15,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/prometheus.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "observability:logs",
+      "category": "observability",
+      "name": "logs",
+      "chapter": 18,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/log.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "observability:trace",
+      "category": "observability",
+      "name": "trace",
+      "chapter": 18,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/tracer.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "observability:alarms",
+      "category": "observability",
+      "name": "alarms",
+      "chapter": 15,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/alarms.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "extensions:exhook",
+      "category": "extensions",
+      "name": "exhook",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/extensions/exhook.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "extensions:plugins",
+      "category": "extensions",
+      "name": "plugins",
+      "chapter": 21,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/extensions/plugins.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:topic",
+      "category": "mqttConcept",
+      "name": "topic",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-concepts.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:wildcard",
+      "category": "mqttConcept",
+      "name": "wildcard",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-wildcard-subscription.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:qos",
+      "category": "mqttConcept",
+      "name": "qos",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-concepts.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:retained",
+      "category": "mqttConcept",
+      "name": "retained",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-retained-message.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:will",
+      "category": "mqttConcept",
+      "name": "will",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-will-message.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:keepalive",
+      "category": "mqttConcept",
+      "name": "keepalive",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-concepts.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:session",
+      "category": "mqttConcept",
+      "name": "session",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-concepts.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:shared_subscription",
+      "category": "mqttConcept",
+      "name": "shared_subscription",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-shared-subscription.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:exclusive_subscription",
+      "category": "mqttConcept",
+      "name": "exclusive_subscription",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-exclusive-subscription.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:auto_subscription",
+      "category": "mqttConcept",
+      "name": "auto_subscription",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-auto-subscription.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:delayed_publish",
+      "category": "mqttConcept",
+      "name": "delayed_publish",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-delayed-publish.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "mqttConcept:topic_rewrite",
+      "category": "mqttConcept",
+      "name": "topic_rewrite",
+      "chapter": 4,
+      "source": "https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-topic-rewrite.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:install",
+      "category": "addonFeature",
+      "name": "install",
+      "chapter": 2,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:host_network",
+      "category": "addonFeature",
+      "name": "host_network",
+      "chapter": 2,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:ports",
+      "category": "addonFeature",
+      "name": "ports",
+      "chapter": 2,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:ingress",
+      "category": "addonFeature",
+      "name": "ingress",
+      "chapter": 2,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:env_vars",
+      "category": "addonFeature",
+      "name": "env_vars",
+      "chapter": 17,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:ngrok",
+      "category": "addonFeature",
+      "name": "ngrok",
+      "chapter": 19,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:storage",
+      "category": "addonFeature",
+      "name": "storage",
+      "chapter": 20,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:backup",
+      "category": "addonFeature",
+      "name": "backup",
+      "chapter": 20,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:mosquitto_comparison",
+      "category": "addonFeature",
+      "name": "mosquitto_comparison",
+      "chapter": 13,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    },
+    {
+      "id": "addonFeature:dashboard_access",
+      "category": "addonFeature",
+      "name": "dashboard_access",
+      "chapter": 3,
+      "source": "https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md",
+      "maturity": "stable"
+    }
+  ]
+}
