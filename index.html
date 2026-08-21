@@ -3,137 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HA 資源總覽 · 教學、銷售手冊、提示詞庫、Skill 手冊 · WoowTech</title>
-  <meta name="description" content="Home Assistant 的四本手冊集中地：22 章＋3 附錄入住教學、給客戶的銷售手冊（HAOS 代設定 × 雲端 PaaS）、AI/MCP 控制提示詞庫、AI agent Skill 手冊。三本手冊提供單檔 HTML 下載，離線可讀。" />
+  <title>EMQX 指南 · WoowTech</title>
+  <meta name="description" content="WoowTech EMQX 5.8.9 完整指南：22 章教學、銷售手冊、提示詞庫與 Skill 手冊。把 EMQX 變成智慧家庭的 MQTT 訊息骨幹。" />
   <meta name="author" content="WoowTech" />
-  <link rel="canonical" href="https://woowtech.github.io/Woow_ha_tutorial_site/" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Home Assistant 新居入住指南" />
+  <meta property="og:site_name" content="WoowTech EMQX 指南" />
   <meta property="og:locale" content="zh_TW" />
-  <meta property="og:title" content="HA 資源總覽 · WoowTech" />
-  <meta property="og:description" content="教學、銷售手冊、提示詞庫、Skill 手冊，一頁入口。三本手冊提供單檔 HTML 下載。" />
-  <meta property="og:url" content="https://woowtech.github.io/Woow_ha_tutorial_site/" />
-  <meta property="og:image" content="https://woowtech.github.io/Woow_ha_tutorial_site/assets/screenshots/ch1/03_dashboard.png" />
+  <meta property="og:title" content="EMQX 指南 · WoowTech" />
+  <meta property="og:description" content="22 章 EMQX 5.8.9 完整教學、銷售手冊、提示詞庫與 Skill 手冊。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/" />
   <meta name="theme-color" content="#6183FC" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <style>
-    /* hub 專用（index.html 由人手維護，build_nav 不碰這一頁） */
     .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-    .res-card {
-      display: flex; flex-direction: column;
-      padding: 28px 26px; border: 1px solid var(--hairline); border-radius: var(--radius);
-      background: var(--surface); box-shadow: var(--shadow-sm);
-    }
-    .res-card .tile {
-      display: inline-flex; width: 48px; height: 48px; border-radius: 16px;
-      background: var(--ww-blue-050); align-items: center; justify-content: center; margin-bottom: 14px;
-    }
-    .res-card .tile svg { display: block; }
+    .res-card { display: flex; flex-direction: column; padding: 28px 26px; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
     .res-card h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
-    .res-card .aud { font-size: 12.5px; color: var(--ink-500); margin-bottom: 10px; }
     .res-card p { margin: 0 0 18px; color: var(--ink-700); font-size: 14.5px; flex: 1; }
     .res-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-pill, .btn-ghost {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--font-display); font-weight: 600; font-size: 14px;
-      padding: 10px 22px; border-radius: 999px; text-decoration: none;
-      transition: background 0.15s, border-color 0.15s, transform 0.15s;
-    }
-    .btn-pill { background: var(--ww-blue); color: #fff; }
-    .btn-pill:hover { background: var(--ww-blue-600); color: #fff; text-decoration: none; transform: translateY(-1px); }
-    .btn-ghost { background: var(--surface); color: var(--ink-900); border: 1.5px solid var(--hairline); }
-    .btn-ghost:hover { border-color: var(--ww-blue); color: var(--ww-blue-700); text-decoration: none; }
-    .btn-ghost svg, .btn-pill svg { flex-shrink: 0; }
-    .dl-note {
-      margin: 26px 0 0; padding: 14px 18px; border-radius: var(--radius-sm);
-      background: var(--ww-blue-050); border: 1px solid rgba(97,131,252,0.18);
-      font-size: 13.5px; color: var(--ink-700);
-    }
-    .link-row { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 14px; font-size: 14px; }
+    .btn-pill, .btn-ghost { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14.5px; text-decoration: none; }
+    .btn-pill { background: var(--ww-blue-700); color: #fff; }
+    .btn-ghost { border: 1px solid var(--hairline); color: var(--ink-700); }
     @media (max-width: 720px) { .res-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <main class="home">
     <div class="hero">
-      <span class="kicker-script">everything home assistant</span>
-      <div class="kicker">WoowTech · Home Assistant</div>
-      <h1>HA 資源總覽</h1>
-      <p>把 Home Assistant 從裝好到用好，四本手冊一次備齊：怎麼設定、怎麼賣、怎麼跟 AI 開口、怎麼加裝技能。三本手冊提供單檔 HTML 下載，存下來離線也能讀。</p>
+      <div class="kicker">WoowTech 資源中心</div>
+      <h1>EMQX 指南</h1>
+      <p>把 EMQX 5.8.9 變成智慧家庭的 MQTT 訊息骨幹。</p>
     </div>
-
     <section class="chapter-index">
-      <h2 class="index-title">四本手冊</h2>
       <div class="res-grid">
-
         <div class="res-card">
-          <span class="tile"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#6183FC" d="M19 2L14 6.5V17.5L19 13V2M6.5 5C4.55 5 2.45 5.4 1 6.5V21.16C1 21.41 1.25 21.66 1.5 21.66C1.6 21.66 1.65 21.59 1.75 21.59C3.1 20.94 5.05 20.5 6.5 20.5C8.45 20.5 10.55 20.9 12 22C13.35 21.15 15.8 20.5 17.5 20.5C19.15 20.5 20.85 20.81 22.25 21.56C22.35 21.61 22.4 21.59 22.5 21.59C22.75 21.59 23 21.34 23 21.09V6.5C22.4 6.05 21.75 5.75 21 5.5V19C19.9 18.65 18.7 18.5 17.5 18.5C15.8 18.5 13.35 19.15 12 20V6.5C10.55 5.4 8.45 5 6.5 5Z"/></svg></span>
-          <h3>入住教學</h3>
-          <div class="aud">給用戶 · 22 章＋3 附錄</div>
-          <p>從登入、區域命名、儀表板、通知、自動化，到通訊協定、能源監控、歷史數據、語音助理與 LLM、Docker 架構與遠端連線。每章 10 分鐘。</p>
-          <div class="res-actions">
-            <a class="btn-pill" href="tutorial.html">線上閱讀 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#FFFFFF" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/></svg></a>
-            <a class="btn-ghost" href="https://github.com/WOOWTECH/Woow_ha_tutorial_site/archive/refs/heads/main.zip"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#3A57C4" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg> 整站 zip</a>
-          </div>
+          <h3>完整教學</h3>
+          <p>22 章，從安裝、MQTT 心智模型、驗證與 ACL、TLS，到 Rule Engine、資料整合、監控與安全。</p>
+          <div class="res-actions"><a class="btn-pill" href="tutorial.html">開始閱讀</a></div>
         </div>
-
         <div class="res-card">
-          <span class="tile"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#6183FC" d="M11 6H14L17.29 2.7A1 1 0 0 1 18.71 2.7L21.29 5.29A1 1 0 0 1 21.29 6.7L19 9H11V11A1 1 0 0 1 10 12A1 1 0 0 1 9 11V8A2 2 0 0 1 11 6M5 11V15L2.71 17.29A1 1 0 0 0 2.71 18.7L5.29 21.29A1 1 0 0 0 6.71 21.29L11 17H15A1 1 0 0 0 16 16V15H17A1 1 0 0 0 18 14V13H19A1 1 0 0 0 20 12V11H13V12A2 2 0 0 1 11 14H9A2 2 0 0 1 7 12V9Z"/></svg></span>
-          <h3>銷售手冊</h3>
-          <div class="aud">給客戶與經銷商 · 單頁</div>
-          <p>想要智慧家庭又不想自架？兩條路：買 HAOS 硬體＋WoowTech 全套代設定，或從我們的雲端 PaaS 月租免自架。硬體選型、代裝 add-ons、代寫 automations，一頁講清楚。</p>
-          <div class="res-actions">
-            <a class="btn-pill" href="sales.html">線上閱讀 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#FFFFFF" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/></svg></a>
-            <a class="btn-ghost" href="sales.html" download="ha-銷售手冊.html"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#3A57C4" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg> 下載 HTML</a>
-          </div>
+          <h3>銷售與導入指南</h3>
+          <p>需求盤點、與 Mosquitto 的比較、部署階段、風險與驗收。</p>
+          <div class="res-actions"><a class="btn-ghost" href="sales.html">看銷售手冊</a></div>
         </div>
-
         <div class="res-card">
-          <span class="tile"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#6183FC" d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16M17 11H15V9H17M13 11H11V9H13M9 11H7V9H9"/></svg></span>
-          <h3>AI 提示詞庫</h3>
-          <div class="aud">給進階用戶 · 43+ 條可複製</div>
-          <p>透過 Claude／ChatGPT／Gemini + <code>ha-mcp-woow</code> 控制 HA 的提示詞：燈光、氣候、能源、通知、寫自動化、感測器查詢、語音對話、故障排除，8 大類全部可直接複製。</p>
-          <div class="res-actions">
-            <a class="btn-pill" href="prompts.html">線上閱讀 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#FFFFFF" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/></svg></a>
-            <a class="btn-ghost" href="prompts.html" download="ha-提示詞庫.html"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#3A57C4" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg> 下載 HTML</a>
-          </div>
+          <h3>提示詞工具箱</h3>
+          <p>安裝、連線、驗證、ACL、TLS、規則、整合、監控與維運的提示詞。</p>
+          <div class="res-actions"><a class="btn-ghost" href="prompts.html">看提示詞庫</a></div>
         </div>
-
         <div class="res-card">
-          <span class="tile"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#6183FC" d="M22,13.5C22,15.26 20.7,16.72 19,16.96V20A2,2 0 0,1 17,22H13.2V21.7A2.7,2.7 0 0,0 10.5,19C9,19 7.8,20.21 7.8,21.7V22H4A2,2 0 0,1 2,20V16.2H2.3C3.79,16.2 5,15 5,13.5C5,12 3.79,10.8 2.3,10.8H2V7A2,2 0 0,1 4,5H7.04C7.28,3.3 8.74,2 10.5,2C12.26,2 13.72,3.3 13.96,5H17A2,2 0 0,1 19,7V10.04C20.7,10.28 22,11.74 22,13.5M17,15H18.5A1.5,1.5 0 0,0 20,13.5A1.5,1.5 0 0,0 18.5,12H17V7H12V5.5A1.5,1.5 0 0,0 10.5,4A1.5,1.5 0 0,0 9,5.5V7H4V9.12C5.76,9.8 7,11.5 7,13.5C7,15.5 5.75,17.2 4,17.88V20H6.12C6.8,18.25 8.5,17 10.5,17C12.5,17 14.2,18.25 14.88,20H17V15Z"/></svg></span>
           <h3>Skill 手冊</h3>
-          <div class="aud">給進階用戶 · 型錄＋速查</div>
-          <p>搭配 AI agent（Claude Code／OpenClaw／Codex）使用 HA 的 skills：精選 10 顆 HA 相關 skill、6 大熱門集合、安裝速查、SKILL.md 規格、安全守則（2026-08 調查快照）。</p>
-          <div class="res-actions">
-            <a class="btn-pill" href="skills.html">線上閱讀 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#FFFFFF" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"/></svg></a>
-            <a class="btn-ghost" href="skills.html" download="ha-skill手冊.html"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#3A57C4" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg> 下載 HTML</a>
-          </div>
+          <p>給 AI agent 的實戰手冊：查核、撰寫、審查與發布 EMQX 教學。</p>
+          <div class="res-actions"><a class="btn-ghost" href="skills.html">看 Skill 手冊</a></div>
         </div>
-
-      </div>
-
-      <div class="dl-note">
-        銷售手冊、提示詞庫、Skill 手冊都是<strong>自包含單檔 HTML</strong>：圖示全部內嵌，下載後離線可開、可直接轉寄。教學為多頁站，建議線上閱讀，需要離線請下載整站 zip。
       </div>
     </section>
-
-    <section class="chapter-index" style="margin-top:56px;">
-      <h2 class="index-title">相關連結</h2>
-      <div class="link-row">
-        <a href="https://www.home-assistant.io/" rel="noopener">Home Assistant 官方網站</a>
-        <a href="https://github.com/WOOWTECH/Woow_ha_tutorial_site" rel="noopener">本站原始碼與勘誤</a>
-        <a href="https://pi-agent-guide.woowtech.io/" rel="noopener">姊妹站：Woow HA Pi Agent 入住指南</a>
-      </div>
-    </section>
-
-    <footer class="site-footer">
-      <p>《Home Assistant 新居入住指南》由 <a href="https://github.com/WOOWTECH/Woow_ha_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
-      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_ha_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
-    </footer>
   </main>
 </body>
 </html>

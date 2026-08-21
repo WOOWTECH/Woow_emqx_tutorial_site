@@ -1,14 +1,14 @@
 {
   "_readme": "側欄、上下章導覽、目錄卡片、章節編號、<title>／SEO meta、sitemap.xml 全部由這個檔案產生。改完請跑 `node scripts/build_nav.js`。章內錨點標題放在各 HTML 的 <section data-nav=\"...\">。part 欄位決定目錄頁與側欄的分組標題。",
   "site": {
-    "title": "Home Assistant 新居入住指南",
-    "brand": "HA 新居入住指南",
-    "subtitle": "從零到能用",
-    "baseUrl": "https://woowtech.github.io/Woow_ha_tutorial_site",
-    "repoUrl": "https://github.com/WOOWTECH/Woow_ha_tutorial_site",
+    "title": "WoowTech EMQX 完整指南",
+    "brand": "EMQX 指南",
+    "subtitle": "EMQX 5.8.9 完整功能",
+    "baseUrl": "https://emqx-guide.woowtech.io",
+    "repoUrl": "https://github.com/WOOWTECH/Woow_emqx_tutorial_site",
     "locale": "zh_TW",
-    "description": "22 章＋3 附錄的繁體中文 Home Assistant 教學：從登入、區域命名、儀表板、通知、自動化，到通訊協定、整合串接、能源監控、歷史數據、語音助理與 LLM、Docker 架構與遠端連線，每章 10 分鐘。",
-    "ogImage": "assets/screenshots/ch1/03_dashboard.png",
+    "description": "22 章繁體中文 EMQX 教學：從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，一路到 Rule Engine、Connector/Sink、Home Assistant 整合、監控、備份與安全，把 EMQX 5.8.9 變成可靠的 IoT 訊息骨幹。",
+    "ogImage": "assets/og/emqx-guide.png",
     "license": {
       "name": "CC BY 4.0",
       "url": "https://creativecommons.org/licenses/by/4.0/deed.zh-hant",
@@ -19,257 +19,234 @@
     "_readme": "index.html 是四類資源總覽(hub),由人手維護、build_nav 不碰。教學目錄頁由 build_nav 產生到 catalog 指定的檔案。pages 是 hub 底下的獨立單檔手冊(自帶 head 與樣式),納入 sitemap 與 check_links 白名單。",
     "catalog": "tutorial.html",
     "navLabel": "資源總覽",
-    "pages": ["sales.html", "prompts.html", "skills.html"]
+    "pages": [
+      "sales.html",
+      "prompts.html",
+      "skills.html"
+    ]
   },
   "chapters": [
     {
-      "file": "ch1_login.html",
+      "file": "ch1_overview.html",
       "num": "01",
-      "navLabel": "登入 HA",
-      "title": "登入 Home Assistant",
-      "pagerTitle": "01 · 登入 HA",
-      "card": "認識登入頁、記住我、Companion App 與網頁的差異。",
-      "description": "如何登入 Home Assistant：找到 HA 網址的三種方式、Owner 與 Administrator 的差別、「保持登入」怎麼用，以及網頁後台與 Companion App 的取捨。",
-      "part": "基礎：從零到能用"
+      "navLabel": "EMQX 是什麼",
+      "title": "認識 EMQX 與 MQTT Broker",
+      "pagerTitle": "01 · EMQX 是什麼",
+      "card": "從 MQTT broker 的角色出發，看懂 EMQX 與 Mosquitto 的差異、架構與 Dashboard 全貌。",
+      "description": "認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。",
+      "part": "基礎：認識與安裝"
     },
     {
-      "file": "ch2_system_settings.html",
+      "file": "ch2_install.html",
       "num": "02",
-      "navLabel": "系統設定",
-      "title": "系統設定",
-      "pagerTitle": "02 · 系統設定",
-      "card": "把時區、語言、單位、地理位置一次調對，之後所有自動化都準。",
-      "description": "Home Assistant 系統設定教學：時區、語言、單位制與地理位置一次調對，日出日落類自動化才不會算錯時間。",
-      "part": "基礎：從零到能用"
+      "navLabel": "安裝",
+      "title": "安裝 Woow EMQX add-on",
+      "pagerTitle": "02 · 安裝",
+      "card": "加入 repository、安裝、host_network 與五個連接埠，啟動後首次登入並改掉預設密碼。",
+      "description": "安裝 Woow EMQX add-on（EMQX 5.8.9）：加入 WoowTech repository、安裝與啟動、host_network、五個連接埠、Ingress 進入方式、首次登入與改密碼，以及與 Mosquitto 的連接埠衝突。",
+      "part": "基礎：認識與安裝"
     },
     {
-      "file": "ch3_floors_areas.html",
+      "file": "ch3_dashboard.html",
       "num": "03",
-      "navLabel": "樓層與區域",
-      "title": "樓層與區域",
-      "pagerTitle": "03 · 樓層與區域",
-      "card": "先畫出你家的樓層與房間，之後控制、儀表板、語音才會分得清。",
-      "description": "在 Home Assistant 建立樓層（Floor）與區域（Area）並把裝置歸位，讓儀表板、語音助理與自動化都能用「客廳的燈」這種說法操作。",
-      "part": "基礎：從零到能用"
+      "navLabel": "Dashboard",
+      "title": "EMQX Dashboard 導覽",
+      "pagerTitle": "03 · Dashboard",
+      "card": "認識 EMQX Dashboard 的側欄模組、Overview 監控、語言與版本資訊。",
+      "description": "EMQX Dashboard 導覽：側欄各模組、Overview 與監控概覽、授權 banner、語言與版本資訊，以及從 Home Assistant 開啟 Web UI 的方式。",
+      "part": "基礎：認識與安裝"
     },
     {
-      "file": "ch4_naming_labels.html",
+      "file": "ch4_mqtt_basics.html",
       "num": "04",
-      "navLabel": "命名與標籤",
-      "title": "命名與標籤",
-      "pagerTitle": "04 · 命名與標籤",
-      "card": "把「switch.0x00abc123」變成「客廳主燈」，並用標籤把同類設備群起來。",
-      "description": "Home Assistant 實體命名與 entity_id 規劃、Label 標籤與 Category 分類的差別，附可直接照抄的命名範例集。",
-      "part": "基礎：從零到能用"
+      "navLabel": "MQTT 基礎",
+      "title": "MQTT 心智模型",
+      "pagerTitle": "04 · MQTT 基礎",
+      "card": "broker、client、topic、QoS、retained、will、keepalive、session 與共享訂閱，一次建立心智模型。",
+      "description": "MQTT 心智模型：broker／client、topic 與 + # 萬用字元、QoS 0-1-2、retained、will 遺囑、keepalive、clean session 與 shared subscription，把抽象概念落到智慧家庭情境。",
+      "part": "基礎：認識與安裝"
     },
     {
-      "file": "ch5_users.html",
+      "file": "ch5_first_connection.html",
       "num": "05",
-      "navLabel": "用戶管理",
-      "title": "用戶管理",
-      "pagerTitle": "05 · 用戶管理",
-      "card": "幫家人、房客、訪客建帳號，決定誰能改設定、誰只能開燈。",
-      "description": "Home Assistant 的 Users 與 Persons 差在哪、如何開放家人與訪客權限、MFA 二階段驗證設定，以及手機定位與 Zone 半徑校準。",
-      "part": "基礎：從零到能用"
+      "navLabel": "第一個連線",
+      "title": "建立第一個 MQTT 連線",
+      "pagerTitle": "05 · 第一個連線",
+      "card": "用內建 WebSocket 工具 publish／subscribe，驗證 QoS，建立第一個 MQTT 連線。",
+      "description": "建立第一個 MQTT 連線：使用 EMQX 內建 WebSocket 測試工具與診斷頁 publish／subscribe，驗證 QoS，認識連線與訂閱的基本操作。",
+      "part": "核心：連線與存取控制"
     },
     {
-      "file": "ch6_dashboard.html",
+      "file": "ch6_authentication.html",
       "num": "06",
-      "navLabel": "儀表板",
-      "title": "儀表板",
-      "pagerTitle": "06 · 儀表板",
-      "card": "把最常用的燈、窗簾、冷氣拉到首頁，家人一打開就會用。",
-      "description": "Home Assistant 儀表板編輯教學：新增卡片、多分頁配置、四種 View Type 怎麼選，以及讓家人一打開就會用的排版訣竅。",
-      "part": "基礎：從零到能用"
+      "navLabel": "Authentication",
+      "title": "Authentication 驗證",
+      "pagerTitle": "06 · Authentication",
+      "card": "Password-Based 內建資料庫、建立使用者、JWT 與 HTTP/LDAP 概念，守住連線入口。",
+      "description": "EMQX Authentication 驗證：Password-Based Built-in Database 建立與停用使用者、憑證格式、JWT 概念、HTTP／LDAP 概念，以及首次設定驗證的必要性。",
+      "part": "核心：連線與存取控制"
     },
     {
-      "file": "ch7_notifications.html",
+      "file": "ch7_authorization.html",
       "num": "07",
-      "navLabel": "通知",
-      "title": "通知",
-      "pagerTitle": "07 · 通知",
-      "card": "裝 Companion App、綁定手機、發送第一則通知。",
-      "description": "安裝 Home Assistant Companion App、綁定手機並發出第一則推播通知，進階再做帶動作按鈕（actionable notification）的通知。",
-      "part": "基礎：從零到能用"
+      "navLabel": "Authorization",
+      "title": "Authorization 與 ACL",
+      "pagerTitle": "07 · Authorization",
+      "card": "授權順序、內建 ACL、主題規則配對與拒絕策略，與驗證搭配做最小權限。",
+      "description": "EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。",
+      "part": "核心：連線與存取控制"
     },
     {
-      "file": "ch8_first_automation.html",
+      "file": "ch8_listeners_tls.html",
       "num": "08",
-      "navLabel": "第一個自動化",
-      "title": "第一個自動化",
-      "pagerTitle": "08 · 第一個自動化",
-      "card": "觸發／條件／動作三段式，避開 device_id 陷阱，寫出「日落開燈」。",
-      "description": "用觸發／條件／動作三段式寫出第一個 Home Assistant 自動化「日落開燈」，並解釋為什麼要避開 device_id、改用 entity_id，附執行模式與 Blueprint 說明。",
-      "part": "基礎：從零到能用"
+      "navLabel": "Listener／TLS",
+      "title": "Listeners 與 TLS",
+      "pagerTitle": "08 · Listener／TLS",
+      "card": "1883／8083／8084／8883、新增修改 Listener、TLS 憑證與 mTLS，處理連接埠衝突。",
+      "description": "EMQX Listeners 與 TLS：1883／8083／8084／8883 各埠用途、新增與修改 Listener、TLS 憑證與 mTLS 概念，以及連接埠衝突的處理。",
+      "part": "核心：連線與存取控制"
     },
     {
-      "file": "ch9_backups.html",
+      "file": "ch9_rule_engine.html",
       "num": "09",
-      "navLabel": "備份",
-      "title": "備份",
-      "pagerTitle": "09 · 備份",
-      "card": "3 分鐘設好自動備份，之後可以放心亂試整合、亂改設定。",
-      "description": "Home Assistant 備份教學：手動建立備份、開啟自動備份排程、備份該存哪裡，以及兩種還原情境的操作步驟。",
-      "part": "基礎：從零到能用"
+      "navLabel": "規則引擎",
+      "title": "Rule Engine 規則引擎",
+      "pagerTitle": "09 · 規則引擎",
+      "card": "SQL 的 SELECT／FROM／WHERE、事件與 topic 作為 source、內建函數，寫出第一條規則。",
+      "description": "EMQX Rule Engine：以 SQL（SELECT／FROM／WHERE）描述規則、事件與 topic 作為資料來源、內建欄位與函數、觸發測試，寫出第一條規則。",
+      "part": "進階：規則、整合與資料橋接"
     },
     {
-      "file": "ch10_scripts.html",
+      "file": "ch10_rule_actions.html",
       "num": "10",
-      "navLabel": "腳本 Scripts",
-      "title": "腳本 Scripts",
-      "pagerTitle": "10 · 腳本 Scripts",
-      "card": "把重複動作打包成一個按鈕，比自動化更靈活，可以帶參數呼叫。",
-      "description": "Home Assistant Script 腳本教學：與自動化的差別、Fields 參數化、Single/Restart/Queued/Parallel 執行模式，以及四種呼叫腳本的入口。",
-      "part": "基礎：從零到能用"
+      "navLabel": "內建動作",
+      "title": "內建動作與訊息轉發",
+      "pagerTitle": "10 · 內建動作",
+      "card": "console output、republish、重寫 topic，把規則命中轉成實際動作。",
+      "description": "EMQX 規則內建動作：console output、republish、重寫 topic 與監控動作，把規則命中轉成實際訊息轉發行為。",
+      "part": "進階：規則、整合與資料橋接"
     },
     {
-      "file": "ch11_devices.html",
+      "file": "ch11_connectors_sinks.html",
       "num": "11",
-      "navLabel": "裝置詳細設定",
-      "title": "裝置詳細設定",
-      "pagerTitle": "11 · 裝置詳細設定",
-      "card": "裝置頁怎麼看、韌體怎麼升、實體怎麼停用、修復中心怎麼救。",
-      "description": "看懂 Home Assistant 裝置頁：重新命名裝置與實體、停用/隱藏/刪除的差別、韌體更新、診斷下載與修復中心（Repairs）。",
-      "part": "基礎：從零到能用"
+      "navLabel": "Connector",
+      "title": "Connectors 與 Sinks",
+      "pagerTitle": "11 · Connector",
+      "card": "Webhook、HTTP、Kafka、PostgreSQL／MySQL 的 Connector 與 Sink，以 Webhook／HTTP 實作。",
+      "description": "EMQX Connectors 與 Sinks：Webhook、HTTP、Kafka、PostgreSQL／MySQL 等目標的概念，以 Webhook／HTTP 為主實作資料外送。",
+      "part": "進階：規則、整合與資料橋接"
     },
     {
-      "file": "ch12_domains.html",
+      "file": "ch12_sources_bridge.html",
       "num": "12",
-      "navLabel": "Domain 控制圖鑑",
-      "title": "Domain 控制圖鑑",
-      "pagerTitle": "12 · Domain 控制圖鑑",
-      "card": "light / climate / cover / media_player… 每個 Domain 的常用動作、UI 卡片、常見坑一次講完。",
-      "description": "Home Assistant 各 Domain 控制圖鑑：light、switch、climate、cover、media_player、lock、vacuum、fan、camera、sensor、notify 的常用動作、UI 卡片與常見坑。",
-      "part": "基礎：從零到能用"
+      "navLabel": "Source",
+      "title": "Sources 與資料匯入",
+      "pagerTitle": "12 · Source",
+      "card": "MQTT 事件 source、跨 broker 橋接概念、訊息回寫 EMQX。",
+      "description": "EMQX Sources 與資料匯入：以 MQTT 事件作為資料來源、跨 broker 橋接的概念、把外部訊息回寫 EMQX 的流程。",
+      "part": "進階：規則、整合與資料橋接"
     },
     {
-      "file": "ch13_themes.html",
+      "file": "ch13_home_assistant.html",
       "num": "13",
-      "part": "擴充：接上更多裝置",
-      "navLabel": "主題與外觀",
-      "title": "主題與外觀個人化",
-      "pagerTitle": "13 · 主題與外觀",
-      "card": "深色模式、社群主題、每個人套自己的風格，把介面調成你想住進去的樣子。",
-      "description": "Home Assistant 主題與外觀教學：深色淺色模式、透過 HACS 安裝社群主題、每位使用者套用不同主題、儀表板單頁換主題，以及主題變數與品牌客製。"
+      "navLabel": "HA 整合",
+      "title": "與 Home Assistant 整合",
+      "pagerTitle": "13 · HA 整合",
+      "card": "HA MQTT 整合、discovery、birth／will、狀態主題、Zigbee2MQTT 與 Mosquitto 遷移。",
+      "description": "把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。",
+      "part": "進階：規則、整合與資料橋接"
     },
     {
-      "file": "ch14_integrations.html",
+      "file": "ch14_client_management.html",
       "num": "14",
-      "part": "擴充：接上更多裝置",
-      "navLabel": "整合服務串接",
-      "title": "整合服務串接 Integrations",
-      "pagerTitle": "14 · 整合服務串接",
-      "card": "天氣、音樂、定位、行事曆——把外面的服務接進來，家才會知道外面發生什麼事。",
-      "description": "Home Assistant 整合（Integration）教學：新增整合的完整流程、天氣與音樂與定位與行事曆等雲端服務串接、本地整合與雲端整合的取捨，以及診斷與移除。"
+      "navLabel": "客戶端管理",
+      "title": "客戶端與訂閱管理",
+      "pagerTitle": "14 · 客戶端管理",
+      "card": "Clients 清單、踢除、統計、Subscriptions、慢訂閱與主題監控。",
+      "description": "EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch15_protocols.html",
+      "file": "ch15_monitoring.html",
       "num": "15",
-      "part": "擴充：接上更多裝置",
-      "navLabel": "通訊協定大百科",
-      "title": "通訊協定大百科",
-      "pagerTitle": "15 · 通訊協定大百科",
-      "card": "Wi-Fi / Zigbee / Z-Wave / Matter / KNX / Modbus 一次講完，買設備前先翻這一章。",
-      "description": "Home Assistant 通訊協定完整對照：Wi-Fi、Zigbee、Z-Wave、Thread 與 Matter、藍牙、KNX、Modbus、MQTT 的差別、選購建議與在 HA 裡的整合方式。"
+      "navLabel": "監控",
+      "title": "監控與 Metrics",
+      "pagerTitle": "15 · 監控",
+      "card": "Dashboard 統計、節點狀態、系統資源、Prometheus 與速率指標。",
+      "description": "EMQX 監控與 Metrics：Dashboard 統計、節點狀態、系統資源、Prometheus 整合概念與訊息速率指標。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch16_todo_calendar.html",
+      "file": "ch16_message_management.html",
       "num": "16",
-      "part": "擴充：接上更多裝置",
-      "navLabel": "待辦與行事曆",
-      "title": "待辦清單與行事曆",
-      "pagerTitle": "16 · 待辦與行事曆",
-      "card": "倒垃圾、繳費、換濾網——讓家自己記得該做什麼，並在對的時間提醒你。",
-      "description": "Home Assistant 待辦清單與行事曆教學：Local To-do 與購物清單、本地行事曆與 Google 行事曆串接、儀表板卡片，以及用行事曆事件觸發自動化。"
+      "navLabel": "訊息管理",
+      "title": "訊息與主題管理",
+      "pagerTitle": "16 · 訊息管理",
+      "card": "Message publish、retained 管理、主題樹、Topic Metrics 與延遲發布。",
+      "description": "EMQX 訊息與主題管理：Message publish、retained 訊息管理、主題樹、Topic Metrics 與延遲發布（Delayed Publish）。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch17_energy.html",
+      "file": "ch17_configuration.html",
       "num": "17",
-      "part": "數據、能源與 AI",
-      "navLabel": "能源儀表板",
-      "title": "能源儀表板與 ESG 實踐",
-      "pagerTitle": "17 · 能源儀表板",
-      "card": "把電費變成看得懂的圖表，找出家裡的吃電怪獸，也做得出 ESG 報告。",
-      "description": "Home Assistant 能源儀表板設定教學：需要哪種 sensor、用 Riemann sum 與 Utility Meter 把功率轉成用電量、電價與成本追蹤，以及用電基線與節能分析。"
+      "navLabel": "設定",
+      "title": "設定與組態",
+      "pagerTitle": "17 · 設定",
+      "card": "Dashboard 設定、EMQX_ 環境變數、設定檔與 Secret 管理。",
+      "description": "EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch18_history_data.html",
+      "file": "ch18_logs_api_diagnose.html",
       "num": "18",
-      "part": "數據、能源與 AI",
-      "navLabel": "歷史數據與導出",
-      "title": "歷史數據、Recorder 與資料導出",
-      "pagerTitle": "18 · 歷史數據與導出",
-      "card": "資料存在哪、能存多久、怎麼下載成 CSV，還有為什麼你的 HA 會愈跑愈慢。",
-      "description": "Home Assistant 歷史數據教學：History 與 Logbook 的差別、Recorder 保留天數與排除設定、長期統計、下載 CSV，以及 MariaDB 與 InfluxDB Grafana 進階做法。"
+      "navLabel": "Log／API",
+      "title": "Log、API 與診斷",
+      "pagerTitle": "18 · Log／API",
+      "card": "Log & Trace、診斷工具、REST API 概念與 Health Check。",
+      "description": "EMQX Log、API 與診斷：Log & Trace、內建診斷工具、REST API 概念與 Health Check。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch19_voice_ai.html",
+      "file": "ch19_ngrok.html",
       "num": "19",
-      "part": "數據、能源與 AI",
-      "navLabel": "語音助理與 AI",
-      "title": "語音助理與 LLM 串接",
-      "pagerTitle": "19 · 語音助理與 AI",
-      "card": "從「開客廳燈」到跟 AI 對話管家裡，本地與雲端兩條路都講。",
-      "description": "Home Assistant 語音助理教學：Assist 與對話代理、喚醒詞與語音轉文字的本地雲端方案、接上 OpenAI 或其他 LLM 當對話代理，以及隱私與成本取捨。"
+      "navLabel": "ngrok",
+      "title": "ngrok TCP 通道",
+      "pagerTitle": "19 · ngrok",
+      "card": "add-on 專屬的 ngrok TCP 1883 通道、authtoken、固定位址與安全風險。",
+      "description": "Woow EMQX add-on 專屬的 ngrok TCP 通道：ngrok_enabled、authtoken、固定 TCP 位址、公開 1883 的風險，以及用 Cloudflare Tunnel 的替代。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch20_addons_docker.html",
+      "file": "ch20_backup_recovery.html",
       "num": "20",
-      "part": "進階架構與應用",
-      "navLabel": "Add-on 與 Docker",
-      "title": "Add-on 與 Docker 架構",
-      "pagerTitle": "20 · Add-on 與 Docker",
-      "card": "Add-on 其實就是 Docker 容器。看懂這層，你才知道 HA 為什麼這樣長。",
-      "description": "Home Assistant Add-on 與 Docker 架構教學：四種安裝方式的差別、Supervisor 的角色、必裝附加元件巡禮、備份自動上傳雲端，以及容器核心觀念白話版。"
+      "navLabel": "備份",
+      "title": "備份、還原與更新",
+      "pagerTitle": "20 · 備份",
+      "card": "資料範圍、驗證／ACL／橋接備份、還原、更新與 Mosquitto 遷移。",
+      "description": "EMQX 備份、還原與更新：/data/emqx 資料範圍、驗證／ACL／資料整合設定備份、還原流程、add-on 更新，以及 Mosquitto 遷移。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch21_network_remote.html",
+      "file": "ch21_security.html",
       "num": "21",
-      "part": "進階架構與應用",
-      "navLabel": "網路與遠端連線",
-      "title": "網路與遠端連線實務",
-      "pagerTitle": "21 · 網路與遠端連線",
-      "card": "固定 IP、反向代理、Cloudflare Tunnel、VPN——在外面也能安全地連回家。",
-      "description": "Home Assistant 遠端連線實務：DHCP 固定位址、Nabu Casa 與 Cloudflare Tunnel 與 VPN 與 DDNS 反向代理四條路線的實作、trusted_proxies 設定與資安硬規則。"
+      "navLabel": "安全部署",
+      "title": "安全部署",
+      "pagerTitle": "21 · 安全部署",
+      "card": "host_network 風險、對外暴露、Rate Limit、TLS 要求與最小權限。",
+      "description": "EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。",
+      "part": "維運：監控、管理與復原"
     },
     {
-      "file": "ch22_life_logs.html",
+      "file": "ch22_troubleshooting.html",
       "num": "22",
-      "part": "進階架構與應用",
-      "navLabel": "生活紀錄應用",
-      "title": "生活紀錄與客製儀表板",
-      "pagerTitle": "22 · 生活紀錄應用",
-      "card": "喝水、記帳、換濾網、家庭留言板——把生活瑣事變成會自己畫圖表的系統。",
-      "description": "用 Home Assistant 輔助元件做生活紀錄：習慣追蹤、家庭收支、設備保養提醒與留言板，並用統計圖表、條件卡片與 Sections 版面做出客製儀表板。"
+      "navLabel": "排錯",
+      "title": "完整疑難排解",
+      "pagerTitle": "22 · 排錯",
+      "card": "無法啟動、無法連線、Dashboard 進不去、連接埠衝突、資源不足、驗證失效的診斷與修復。",
+      "description": "EMQX 完整疑難排解：無法啟動、無法連線、Dashboard 進不去、連接埠衝突、資源不足、驗證失效的症狀、檢查與安全修復。",
+      "part": "維運：監控、管理與復原"
     }
   ],
-  "appendices": [
-    {
-      "file": "appendix_hacs_addons.html",
-      "num": "A",
-      "navLabel": "A · 生態圈：HACS/Add-ons/遠端",
-      "title": "生態圈：HACS、Add-ons、遠端連線",
-      "pagerTitle": "生態圈：HACS/Add-ons/遠端",
-      "card": "官方附加元件、社群套件商店、四種對外連線方案的比較。裝完主線再回來看。",
-      "description": "Home Assistant 生態圈：官方 Add-on 商店、HACS 社群套件商店，以及 Nabu Casa、DDNS、VPN、Cloudflare Tunnel 四種遠端連線方案的比較。"
-    },
-    {
-      "file": "appendix_scenes_helpers_groups.html",
-      "num": "B",
-      "navLabel": "B · 場景/輔助元件/群組",
-      "title": "場景 / 輔助元件 / 群組",
-      "pagerTitle": "B · 場景/輔助元件/群組",
-      "card": "Scene、10 種 Helper、Group 三大進階武器，把家寫得像小程式。",
-      "description": "Home Assistant 進階三件套：Scene 場景、10 種 Helper 輔助元件與 Group 群組的用法與搭配範例，把智慧家庭寫得像小程式。"
-    },
-    {
-      "file": "appendix_hardware_install.html",
-      "num": "C",
-      "navLabel": "C · 裝機前傳：硬體與 HAOS",
-      "title": "裝機前傳：硬體選擇與 HAOS 安裝",
-      "pagerTitle": "C · 裝機前傳：硬體與 HAOS",
-      "card": "還沒有主機？先看這篇。硬體怎麼挑、HAOS 怎麼燒、第一次開機要設什麼。",
-      "description": "Home Assistant 安裝前傳：HAOS 與 Supervised 與 Container 與 Core 四種安裝方式比較、樹莓派與迷你電腦等硬體選擇、SD 卡與 SSD、映像檔燒錄步驟與首次開機設定。"
-    }
-  ]
+  "appendices": [],
+  "sectionLabels": {}
 }

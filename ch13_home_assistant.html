@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>第 13 章 · 與 Home Assistant 整合 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/ch13_home_assistant.html" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:title" content="第 13 章 · 與 Home Assistant 整合 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/ch13_home_assistant.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="第 13 章 · 與 Home Assistant 整合 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>章節</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li><a href="ch2_install.html">安裝</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li><a href="ch12_sources_bridge.html">Source</a></li>
+      <li><a href="ch13_home_assistant.html" class="active">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li><a href="ch15_monitoring.html">監控</a></li>
+      <li><a href="ch16_message_management.html">訊息管理</a></li>
+      <li><a href="ch17_configuration.html">設定</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">備份</a></li>
+      <li><a href="ch21_security.html">安全部署</a></li>
+      <li><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>本章</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#what">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#topic1">主題一</a>
+      <a href="#topic2">主題二</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+    <div class="toc-in-chapter">
+      <h2>附錄</h2>
+
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="chapter-header">
+      <div class="kicker">第 13 章</div>
+      <h1>與 Home Assistant 整合</h1>
+      <p class="lead">把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+    </section>
+
+    <section id="what" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+      </ol>
+    </section>
+
+    <section id="topic1" data-nav="主題一">
+      <h2 data-icon="advanced">主題一</h2>
+      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    </section>
+
+    <section id="topic2" data-nav="主題二">
+      <h2 data-icon="tips">主題二</h2>
+      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
+        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
+        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
+        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>（草稿）問題一</summary>
+        <div class="body"><p>（草稿）回答一。</p></div>
+      </details>
+      <details class="faq">
+        <summary>（草稿）問題二</summary>
+        <div class="body"><p>（草稿）回答二。</p></div>
+      </details>
+      <details class="faq">
+        <summary>（草稿）問題三</summary>
+        <div class="body"><p>（草稿）回答三。</p></div>
+      </details>
+      <details class="faq">
+        <summary>（草稿）問題四</summary>
+        <div class="body"><p>（草稿）回答四。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch12_sources_bridge.html">
+        <span class="label">← 上一章</span>
+        <span class="title">12 · Source</span>
+      </a>
+      <a class="next" href="ch14_client_management.html">
+        <span class="label">下一章 →</span>
+        <span class="title">14 · 客戶端管理</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>《WoowTech EMQX 完整指南》由 <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
+      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
+    </footer>
+  </main>
+</div>
+<script src="assets/js/toc.js"></script>
+</body>
+</html>

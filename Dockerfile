@@ -6,13 +6,8 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
-# 內容頁與目錄
-COPY index.html 404.html ./
-COPY ch1_login.html ch2_system_settings.html ch3_floors_areas.html \
-     ch4_naming_labels.html ch5_users.html ch6_dashboard.html \
-     ch7_notifications.html ch8_first_automation.html ch9_backups.html \
-     ch10_scripts.html ch11_devices.html ch12_domains.html ./
-COPY appendix_hacs_addons.html appendix_scenes_helpers_groups.html ./
+# 內容頁與 hub 手冊（全部 .html）
+COPY *.html ./
 
 # 靜態資源與 SEO / 授權檔
 COPY assets ./assets

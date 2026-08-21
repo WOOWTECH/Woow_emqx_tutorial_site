@@ -8,3 +8,6 @@ package-lock.json
 # 除錯產物
 scripts/probe_login.png
 sitemap.xml.bak
+
+# 截圖與驗證產物（raw 先放這裡，核准後才進 assets）
+artifacts/

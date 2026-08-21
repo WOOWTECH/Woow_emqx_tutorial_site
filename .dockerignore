@@ -1,13 +1,10 @@
-# 不進 build context — 這些是製作流程用的，不該出現在對外站台 image 裡
-.git
-.github
-.gitignore
-.env
-storage_state.json
-node_modules/
-scripts/
-chapters.json
-README.md
-Dockerfile
-.dockerignore
-.nojekyll
+*
+!Dockerfile
+!.dockerignore
+!*.html
+!assets/
+!assets/**
+assets/**/*.raw.png
+!robots.txt
+!sitemap.xml
+!LICENSE

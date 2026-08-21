@@ -3,22 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home Assistant 新居入住指南 · 從零到能用</title>
-  <meta name="description" content="22 章＋3 附錄的繁體中文 Home Assistant 教學：從登入、區域命名、儀表板、通知、自動化，到通訊協定、整合串接、能源監控、歷史數據、語音助理與 LLM、Docker 架構與遠端連線，每章 10 分鐘。" />
+  <title>WoowTech EMQX 完整指南 · EMQX 5.8.9 完整功能</title>
+  <meta name="description" content="22 章繁體中文 EMQX 教學：從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，一路到 Rule Engine、Connector/Sink、Home Assistant 整合、監控、備份與安全，把 EMQX 5.8.9 變成可靠的 IoT 訊息骨幹。" />
   <meta name="author" content="WoowTech" />
-  <link rel="canonical" href="https://woowtech.github.io/Woow_ha_tutorial_site/tutorial.html" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/tutorial.html" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="Home Assistant 新居入住指南" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
   <meta property="og:locale" content="zh_TW" />
-  <meta property="og:title" content="Home Assistant 新居入住指南 · 從零到能用" />
-  <meta property="og:description" content="22 章＋3 附錄的繁體中文 Home Assistant 教學：從登入、區域命名、儀表板、通知、自動化，到通訊協定、整合串接、能源監控、歷史數據、語音助理與 LLM、Docker 架構與遠端連線，每章 10 分鐘。" />
-  <meta property="og:url" content="https://woowtech.github.io/Woow_ha_tutorial_site/tutorial.html" />
-  <meta property="og:image" content="https://woowtech.github.io/Woow_ha_tutorial_site/assets/screenshots/ch1/03_dashboard.png" />
+  <meta property="og:title" content="WoowTech EMQX 完整指南 · EMQX 5.8.9 完整功能" />
+  <meta property="og:description" content="22 章繁體中文 EMQX 教學：從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，一路到 Rule Engine、Connector/Sink、Home Assistant 整合、監控、備份與安全，把 EMQX 5.8.9 變成可靠的 IoT 訊息骨幹。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/tutorial.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Home Assistant 新居入住指南 · 從零到能用" />
-  <meta name="twitter:description" content="22 章＋3 附錄的繁體中文 Home Assistant 教學：從登入、區域命名、儀表板、通知、自動化，到通訊協定、整合串接、能源監控、歷史數據、語音助理與 LLM、Docker 架構與遠端連線，每章 10 分鐘。" />
-  <meta name="twitter:image" content="https://woowtech.github.io/Woow_ha_tutorial_site/assets/screenshots/ch1/03_dashboard.png" />
+  <meta name="twitter:title" content="WoowTech EMQX 完整指南 · EMQX 5.8.9 完整功能" />
+  <meta name="twitter:description" content="22 章繁體中文 EMQX 教學：從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，一路到 Rule Engine、Connector/Sink、Home Assistant 整合、監控、備份與安全，把 EMQX 5.8.9 變成可靠的 IoT 訊息骨幹。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
   <meta name="theme-color" content="#6183FC" />
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,163 +40,142 @@
     </div>
 
     <section class="chapter-index">
-      <h2 class="index-title">基礎：從零到能用</h2>
+      <h2 class="index-title">基礎：認識與安裝</h2>
       <div class="chapter-grid">
-        <a class="chapter-card" href="ch1_login.html">
+        <a class="chapter-card" href="ch1_overview.html">
           <span class="num">01</span>
-          <h3>登入 Home Assistant</h3>
-          <p>認識登入頁、記住我、Companion App 與網頁的差異。</p>
+          <h3>認識 EMQX 與 MQTT Broker</h3>
+          <p>從 MQTT broker 的角色出發，看懂 EMQX 與 Mosquitto 的差異、架構與 Dashboard 全貌。</p>
         </a>
-        <a class="chapter-card" href="ch2_system_settings.html">
+        <a class="chapter-card" href="ch2_install.html">
           <span class="num">02</span>
-          <h3>系統設定</h3>
-          <p>把時區、語言、單位、地理位置一次調對，之後所有自動化都準。</p>
+          <h3>安裝 Woow EMQX add-on</h3>
+          <p>加入 repository、安裝、host_network 與五個連接埠，啟動後首次登入並改掉預設密碼。</p>
         </a>
-        <a class="chapter-card" href="ch3_floors_areas.html">
+        <a class="chapter-card" href="ch3_dashboard.html">
           <span class="num">03</span>
-          <h3>樓層與區域</h3>
-          <p>先畫出你家的樓層與房間，之後控制、儀表板、語音才會分得清。</p>
+          <h3>EMQX Dashboard 導覽</h3>
+          <p>認識 EMQX Dashboard 的側欄模組、Overview 監控、語言與版本資訊。</p>
         </a>
-        <a class="chapter-card" href="ch4_naming_labels.html">
+        <a class="chapter-card" href="ch4_mqtt_basics.html">
           <span class="num">04</span>
-          <h3>命名與標籤</h3>
-          <p>把「switch.0x00abc123」變成「客廳主燈」，並用標籤把同類設備群起來。</p>
+          <h3>MQTT 心智模型</h3>
+          <p>broker、client、topic、QoS、retained、will、keepalive、session 與共享訂閱，一次建立心智模型。</p>
         </a>
-        <a class="chapter-card" href="ch5_users.html">
+      </div>
+    </section>
+
+    <section class="chapter-index" style="margin-top:56px;">
+      <h2 class="index-title">核心：連線與存取控制</h2>
+      <div class="chapter-grid">
+        <a class="chapter-card" href="ch5_first_connection.html">
           <span class="num">05</span>
-          <h3>用戶管理</h3>
-          <p>幫家人、房客、訪客建帳號，決定誰能改設定、誰只能開燈。</p>
+          <h3>建立第一個 MQTT 連線</h3>
+          <p>用內建 WebSocket 工具 publish／subscribe，驗證 QoS，建立第一個 MQTT 連線。</p>
         </a>
-        <a class="chapter-card" href="ch6_dashboard.html">
+        <a class="chapter-card" href="ch6_authentication.html">
           <span class="num">06</span>
-          <h3>儀表板</h3>
-          <p>把最常用的燈、窗簾、冷氣拉到首頁，家人一打開就會用。</p>
+          <h3>Authentication 驗證</h3>
+          <p>Password-Based 內建資料庫、建立使用者、JWT 與 HTTP/LDAP 概念，守住連線入口。</p>
         </a>
-        <a class="chapter-card" href="ch7_notifications.html">
+        <a class="chapter-card" href="ch7_authorization.html">
           <span class="num">07</span>
-          <h3>通知</h3>
-          <p>裝 Companion App、綁定手機、發送第一則通知。</p>
+          <h3>Authorization 與 ACL</h3>
+          <p>授權順序、內建 ACL、主題規則配對與拒絕策略，與驗證搭配做最小權限。</p>
         </a>
-        <a class="chapter-card" href="ch8_first_automation.html">
+        <a class="chapter-card" href="ch8_listeners_tls.html">
           <span class="num">08</span>
-          <h3>第一個自動化</h3>
-          <p>觸發／條件／動作三段式，避開 device_id 陷阱，寫出「日落開燈」。</p>
+          <h3>Listeners 與 TLS</h3>
+          <p>1883／8083／8084／8883、新增修改 Listener、TLS 憑證與 mTLS，處理連接埠衝突。</p>
         </a>
-        <a class="chapter-card" href="ch9_backups.html">
+      </div>
+    </section>
+
+    <section class="chapter-index" style="margin-top:56px;">
+      <h2 class="index-title">進階：規則、整合與資料橋接</h2>
+      <div class="chapter-grid">
+        <a class="chapter-card" href="ch9_rule_engine.html">
           <span class="num">09</span>
-          <h3>備份</h3>
-          <p>3 分鐘設好自動備份，之後可以放心亂試整合、亂改設定。</p>
+          <h3>Rule Engine 規則引擎</h3>
+          <p>SQL 的 SELECT／FROM／WHERE、事件與 topic 作為 source、內建函數，寫出第一條規則。</p>
         </a>
-        <a class="chapter-card" href="ch10_scripts.html">
+        <a class="chapter-card" href="ch10_rule_actions.html">
           <span class="num">10</span>
-          <h3>腳本 Scripts</h3>
-          <p>把重複動作打包成一個按鈕，比自動化更靈活，可以帶參數呼叫。</p>
+          <h3>內建動作與訊息轉發</h3>
+          <p>console output、republish、重寫 topic，把規則命中轉成實際動作。</p>
         </a>
-        <a class="chapter-card" href="ch11_devices.html">
+        <a class="chapter-card" href="ch11_connectors_sinks.html">
           <span class="num">11</span>
-          <h3>裝置詳細設定</h3>
-          <p>裝置頁怎麼看、韌體怎麼升、實體怎麼停用、修復中心怎麼救。</p>
+          <h3>Connectors 與 Sinks</h3>
+          <p>Webhook、HTTP、Kafka、PostgreSQL／MySQL 的 Connector 與 Sink，以 Webhook／HTTP 實作。</p>
         </a>
-        <a class="chapter-card" href="ch12_domains.html">
+        <a class="chapter-card" href="ch12_sources_bridge.html">
           <span class="num">12</span>
-          <h3>Domain 控制圖鑑</h3>
-          <p>light / climate / cover / media_player… 每個 Domain 的常用動作、UI 卡片、常見坑一次講完。</p>
+          <h3>Sources 與資料匯入</h3>
+          <p>MQTT 事件 source、跨 broker 橋接概念、訊息回寫 EMQX。</p>
         </a>
-      </div>
-    </section>
-
-    <section class="chapter-index" style="margin-top:56px;">
-      <h2 class="index-title">擴充：接上更多裝置</h2>
-      <div class="chapter-grid">
-        <a class="chapter-card" href="ch13_themes.html">
+        <a class="chapter-card" href="ch13_home_assistant.html">
           <span class="num">13</span>
-          <h3>主題與外觀個人化</h3>
-          <p>深色模式、社群主題、每個人套自己的風格，把介面調成你想住進去的樣子。</p>
+          <h3>與 Home Assistant 整合</h3>
+          <p>HA MQTT 整合、discovery、birth／will、狀態主題、Zigbee2MQTT 與 Mosquitto 遷移。</p>
         </a>
-        <a class="chapter-card" href="ch14_integrations.html">
+      </div>
+    </section>
+
+    <section class="chapter-index" style="margin-top:56px;">
+      <h2 class="index-title">維運：監控、管理與復原</h2>
+      <div class="chapter-grid">
+        <a class="chapter-card" href="ch14_client_management.html">
           <span class="num">14</span>
-          <h3>整合服務串接 Integrations</h3>
-          <p>天氣、音樂、定位、行事曆——把外面的服務接進來，家才會知道外面發生什麼事。</p>
+          <h3>客戶端與訂閱管理</h3>
+          <p>Clients 清單、踢除、統計、Subscriptions、慢訂閱與主題監控。</p>
         </a>
-        <a class="chapter-card" href="ch15_protocols.html">
+        <a class="chapter-card" href="ch15_monitoring.html">
           <span class="num">15</span>
-          <h3>通訊協定大百科</h3>
-          <p>Wi-Fi / Zigbee / Z-Wave / Matter / KNX / Modbus 一次講完，買設備前先翻這一章。</p>
+          <h3>監控與 Metrics</h3>
+          <p>Dashboard 統計、節點狀態、系統資源、Prometheus 與速率指標。</p>
         </a>
-        <a class="chapter-card" href="ch16_todo_calendar.html">
+        <a class="chapter-card" href="ch16_message_management.html">
           <span class="num">16</span>
-          <h3>待辦清單與行事曆</h3>
-          <p>倒垃圾、繳費、換濾網——讓家自己記得該做什麼，並在對的時間提醒你。</p>
+          <h3>訊息與主題管理</h3>
+          <p>Message publish、retained 管理、主題樹、Topic Metrics 與延遲發布。</p>
         </a>
-      </div>
-    </section>
-
-    <section class="chapter-index" style="margin-top:56px;">
-      <h2 class="index-title">數據、能源與 AI</h2>
-      <div class="chapter-grid">
-        <a class="chapter-card" href="ch17_energy.html">
+        <a class="chapter-card" href="ch17_configuration.html">
           <span class="num">17</span>
-          <h3>能源儀表板與 ESG 實踐</h3>
-          <p>把電費變成看得懂的圖表，找出家裡的吃電怪獸，也做得出 ESG 報告。</p>
+          <h3>設定與組態</h3>
+          <p>Dashboard 設定、EMQX_ 環境變數、設定檔與 Secret 管理。</p>
         </a>
-        <a class="chapter-card" href="ch18_history_data.html">
+        <a class="chapter-card" href="ch18_logs_api_diagnose.html">
           <span class="num">18</span>
-          <h3>歷史數據、Recorder 與資料導出</h3>
-          <p>資料存在哪、能存多久、怎麼下載成 CSV，還有為什麼你的 HA 會愈跑愈慢。</p>
+          <h3>Log、API 與診斷</h3>
+          <p>Log &amp; Trace、診斷工具、REST API 概念與 Health Check。</p>
         </a>
-        <a class="chapter-card" href="ch19_voice_ai.html">
+        <a class="chapter-card" href="ch19_ngrok.html">
           <span class="num">19</span>
-          <h3>語音助理與 LLM 串接</h3>
-          <p>從「開客廳燈」到跟 AI 對話管家裡，本地與雲端兩條路都講。</p>
+          <h3>ngrok TCP 通道</h3>
+          <p>add-on 專屬的 ngrok TCP 1883 通道、authtoken、固定位址與安全風險。</p>
         </a>
-      </div>
-    </section>
-
-    <section class="chapter-index" style="margin-top:56px;">
-      <h2 class="index-title">進階架構與應用</h2>
-      <div class="chapter-grid">
-        <a class="chapter-card" href="ch20_addons_docker.html">
+        <a class="chapter-card" href="ch20_backup_recovery.html">
           <span class="num">20</span>
-          <h3>Add-on 與 Docker 架構</h3>
-          <p>Add-on 其實就是 Docker 容器。看懂這層，你才知道 HA 為什麼這樣長。</p>
+          <h3>備份、還原與更新</h3>
+          <p>資料範圍、驗證／ACL／橋接備份、還原、更新與 Mosquitto 遷移。</p>
         </a>
-        <a class="chapter-card" href="ch21_network_remote.html">
+        <a class="chapter-card" href="ch21_security.html">
           <span class="num">21</span>
-          <h3>網路與遠端連線實務</h3>
-          <p>固定 IP、反向代理、Cloudflare Tunnel、VPN——在外面也能安全地連回家。</p>
+          <h3>安全部署</h3>
+          <p>host_network 風險、對外暴露、Rate Limit、TLS 要求與最小權限。</p>
         </a>
-        <a class="chapter-card" href="ch22_life_logs.html">
+        <a class="chapter-card" href="ch22_troubleshooting.html">
           <span class="num">22</span>
-          <h3>生活紀錄與客製儀表板</h3>
-          <p>喝水、記帳、換濾網、家庭留言板——把生活瑣事變成會自己畫圖表的系統。</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="chapter-index" style="margin-top:56px;">
-      <h2 class="index-title">附錄</h2>
-      <div class="chapter-grid">
-        <a class="chapter-card" href="appendix_hacs_addons.html">
-          <span class="num">A</span>
-          <h3>生態圈：HACS、Add-ons、遠端連線</h3>
-          <p>官方附加元件、社群套件商店、四種對外連線方案的比較。裝完主線再回來看。</p>
-        </a>
-        <a class="chapter-card" href="appendix_scenes_helpers_groups.html">
-          <span class="num">B</span>
-          <h3>場景 / 輔助元件 / 群組</h3>
-          <p>Scene、10 種 Helper、Group 三大進階武器，把家寫得像小程式。</p>
-        </a>
-        <a class="chapter-card" href="appendix_hardware_install.html">
-          <span class="num">C</span>
-          <h3>裝機前傳：硬體選擇與 HAOS 安裝</h3>
-          <p>還沒有主機？先看這篇。硬體怎麼挑、HAOS 怎麼燒、第一次開機要設什麼。</p>
+          <h3>完整疑難排解</h3>
+          <p>無法啟動、無法連線、Dashboard 進不去、連接埠衝突、資源不足、驗證失效的診斷與修復。</p>
         </a>
       </div>
     </section>
 
     <footer class="site-footer">
-      <p>《Home Assistant 新居入住指南》由 <a href="https://github.com/WOOWTECH/Woow_ha_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
-      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_ha_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
+      <p>《WoowTech EMQX 完整指南》由 <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
+      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
     </footer>
   </main>
 </body>
