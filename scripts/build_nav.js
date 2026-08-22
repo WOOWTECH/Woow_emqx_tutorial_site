@@ -160,6 +160,10 @@ function buildSidebar(page, html) {
   const hubLink = HUB
     ? `\n    <a class="hub-link" href="index.html">◂ ${esc(HUB.navLabel || '資源總覽')}</a>`
     : '';
+  // 附錄清單為空時不顯示「附錄」標題（避免空泛的 stub 佔位）。
+  const appendixBlock = appendices.length
+    ? `\n    <div class="toc-in-chapter">\n      <h2>附錄</h2>\n${appendixItems}\n    </div>`
+    : '';
   return `<aside class="sidebar">
     <a class="brand" href="${CATALOG}">${esc(site.brand)}</a>
     <div class="brand-sub">${esc(site.subtitle)}</div>${hubLink}
@@ -170,11 +174,7 @@ ${chapterItems}
     <div class="toc-in-chapter">
       <h2>本章</h2>
 ${inChapter}
-    </div>
-    <div class="toc-in-chapter">
-      <h2>附錄</h2>
-${appendixItems}
-    </div>
+    </div>${appendixBlock}
   </aside>`;
 }
 
@@ -224,7 +224,7 @@ ${nextHtml}
 function buildFooter() {
   return `<footer class="site-footer">
       <p>《${esc(site.title)}》由 <a href="${site.repoUrl}" rel="noopener">${esc(site.license.holder)}</a> 製作，以 <a rel="license noopener" href="${site.license.url}">${esc(site.license.name)}</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
-      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="${site.repoUrl}" rel="noopener">原始碼與勘誤</a></p>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="${site.repoUrl}" rel="noopener">原始碼與勘誤</a></p>
     </footer>`;
 }
 
@@ -294,7 +294,7 @@ function buildIndex() {
 
   const grids = groups
     .map(
-      (g, i) => `<section class="chapter-index"${i ? ' style="margin-top:56px;"' : ''}>
+      (g, i) => `<section class="chapter-index${i ? ' spaced' : ''}">
       <h2 class="index-title">${esc(g.title)}</h2>
       <div class="chapter-grid">
 ${g.items.map(card).join('\n')}

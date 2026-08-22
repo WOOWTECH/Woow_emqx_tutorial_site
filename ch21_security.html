@@ -78,10 +78,6 @@
       <a href="#faq">常見問題</a>
       <a href="#sources">官方來源</a>
     </div>
-    <div class="toc-in-chapter">
-      <h2>附錄</h2>
-
-    </div>
   </aside>
 
   <main class="content">
@@ -137,7 +133,7 @@
 
     <section id="hostnet" data-nav="對外暴露">
       <h2 data-icon="network">host_network 與對外暴露</h2>
-      <p>Woow add-on 的 host_network 代表它直接用 Home Assistant 主機的連接埠：<strong>1883</strong>（MQTT）、<strong>8083</strong>（MQTT over WebSocket）、<strong>8084</strong>（MQTTS/WSS）、<strong>8883</strong>（MQTTS）、<strong>18083</strong>（Dashboard）。沒有容器層的私網隔離。</p>
+      <p>Woow add-on 的 host_network 代表它直接用 Home Assistant 主機的連接埠：<strong>1883</strong>（MQTT）、<strong>8083</strong>（MQTT over WebSocket）、<strong>8084</strong>（WSS，MQTT over secure WebSocket）、<strong>8883</strong>（MQTTS）、<strong>18083</strong>（Dashboard）。沒有容器層的私網隔離。</p>
       <p>風險來自「誰能觸及這些埠」。若主機固定在可信內網，威脅較低；但若你在路由器開啟對外連線，或把主機放到 DMZ、或使用 ngrok 公開 1883，那就把 broker 推向公網。此時：</p>
       <ul>
         <li>只開放必要的 Listener，不要一次把五個埠都曝光。</li>
@@ -237,7 +233,7 @@
 
     <footer class="site-footer">
       <p>《WoowTech EMQX 完整指南》由 <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
-      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
     </footer>
   </main>
 </div>

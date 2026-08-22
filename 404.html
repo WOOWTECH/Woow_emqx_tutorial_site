@@ -28,5 +28,28 @@
       </div>
     </div>
   </div>
+  <script>
+    /* GitHub Pages 404：自訂網域基準根目錄，project subpath 則以 repository 名稱為第一段。
+       不發額外請求（避免 404 console noise），直接依 first segment 判定 site root，
+       再將站內樣式與導覽按鈕改寫為 root-relative，讓 404 在深層路徑下也能正確連結。 */
+    (function () {
+      var ROOT_DIR = 'Woow_emqx_tutorial_site';
+      var parts = (location.pathname || '/').split('/').filter(function (s) { return s !== ''; });
+      var base = parts[0] === ROOT_DIR ? '/' + ROOT_DIR + '/' : '/';
+      var root = base.replace(/\/$/, '');
+      Array.prototype.forEach.call(document.querySelectorAll('a[href]'), function (el) {
+        var val = el.getAttribute('href');
+        if (val && !/^(https?:)?\/\//.test(val) && val.charAt(0) !== '#') {
+          el.setAttribute('href', root + '/' + val.replace(/^\/+/, ''));
+        }
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('link[rel="stylesheet"]'), function (el) {
+        var val = el.getAttribute('href') || '';
+        if (val && !/^(https?:)?\/\//.test(val)) {
+          el.setAttribute('href', root + '/' + val.replace(/^\/+/, ''));
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

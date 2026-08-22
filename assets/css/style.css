@@ -23,10 +23,10 @@
   --warn: #E66D3E;
   --danger: #F45D6D;
 
-  /* Radius — 20px hard rule; 12px chips; pill buttons */
+  /* Radius — 20px cards; 12px chips/kbd; pill buttons */
   --radius: 20px;
   --radius-sm: 12px;
-  --radius-xs: 8px;
+  --radius-xs: 12px;
   --radius-pill: 999px;
 
   /* Soft diffuse shadows */
@@ -148,7 +148,7 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
 
 .sidebar ol li a::before {
   content: counter(chap, decimal-leading-zero);
-  color: var(--ink-300);
+  color: var(--ink-500);
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
   font-size: 12px;
@@ -436,6 +436,7 @@ figure.shot figcaption strong {
   display: block;
 }
 .chapter-index .index-title::before { display: none; }
+.chapter-index.spaced { margin-top: 56px; }
 
 /* Multi-line / inline code blocks stay horizontally scrollable on narrow screens */
 pre, pre.code-block {

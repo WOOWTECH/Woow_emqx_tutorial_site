@@ -77,10 +77,6 @@
       <a href="#faq">常見問題</a>
       <a href="#sources">官方來源</a>
     </div>
-    <div class="toc-in-chapter">
-      <h2>附錄</h2>
-
-    </div>
   </aside>
 
   <main class="content">
@@ -116,7 +112,7 @@
             <tr><td>Nodes</td><td>節點</td><td>叢集裡每一座 EMQX 實例</td></tr>
             <tr><td>Metrics</td><td>指標</td><td>訊息量、事件、流量等統計資料</td></tr>
             <tr><td>Monitoring</td><td>監控</td><td>瀏覽連線、訂閱、系統指標的模組</td></tr>
-            <tr><td>License</td><td>授權</td><td>確認授權狀態與效期的頁面</td></tr>
+            <tr><td>License</td><td>授權</td><td>確認授權狀態的頁面（僅 EMQX Enterprise）</td></tr>
           </tbody>
         </table>
       </div>
@@ -158,11 +154,11 @@
             <tr><td>Integration</td><td>Rule Engine 與資料整合（Connectors、Actions、Sources、Sinks）</td></tr>
             <tr><td>Management</td><td>Cluster Settings、Advanced MQTT、Extensions</td></tr>
             <tr><td>Diagnose</td><td>WebSocket 測試、slow subscriptions、topic metrics</td></tr>
-            <tr><td>System</td><td>使用者、API key、audit log、License、單一登入</td></tr>
+            <tr><td>System</td><td>使用者、API key、audit log；License 與 SSO（單一登入）屬 Enterprise 專有</td></tr>
           </tbody>
         </table>
       </div>
-      <p>要看 <strong>License（授權）</strong>，進 <strong>System</strong> 相關頁面確認授權狀態與效期；要看 <strong>版本</strong>，用 Nodes 分頁的版本欄。Dashboard 的<strong>語言</strong>通常在右上角使用者選單或偏好設定切換，把它改成你舒服的語言即可。</p>
+      <p>要看 <strong>License（授權）</strong>與<strong>SSO（單一登入）</strong>，須使用 EMQX Enterprise——Open Source 5.8.9 的 System 區塊沒有這兩個頁面；要看 <strong>版本</strong>，用 Nodes 分頁的版本欄即可。Dashboard 的<strong>語言</strong>通常在右上角使用者選單或偏好設定切換，把它改成你舒服的語言即可。</p>
       <p>一個實用的歸納法：驗證與權限在 <strong>Access Control</strong>；把資料搬出去、寫規則，在 <strong>Integration</strong>；日常檢查先在 <strong>Monitoring</strong>。記住這三個落點，後續章節的選單路徑你就不容易迷路。</p>
     </section>
 
@@ -219,7 +215,7 @@
 
     <footer class="site-footer">
       <p>《WoowTech EMQX 完整指南》由 <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
-      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
     </footer>
   </main>
 </div>
