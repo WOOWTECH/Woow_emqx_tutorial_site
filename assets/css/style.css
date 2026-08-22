@@ -440,6 +440,7 @@ figure.shot figcaption strong {
 .link-row { display: flex; flex-wrap: wrap; gap: 12px 20px; }
 .link-row a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ww-blue-700); text-decoration: underline; text-underline-offset: 3px; }
 .link-row a:hover { color: var(--ww-blue-600); }
+.dl-note { margin:26px 0 0; padding:14px 18px; border-radius:var(--radius-sm); background:var(--ww-blue-050); border:1px solid var(--ww-blue-100); color:var(--ink-700); font-size:13.5px; }
 
 /* Multi-line / inline code blocks stay horizontally scrollable on narrow screens */
 pre, pre.code-block {
