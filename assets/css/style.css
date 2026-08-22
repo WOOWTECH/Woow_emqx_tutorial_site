@@ -34,9 +34,9 @@
   --shadow-md: 0 8px 24px rgba(27, 32, 51, 0.08), 0 2px 6px rgba(27, 32, 51, 0.04);
   --shadow-lg: 0 20px 48px rgba(27, 32, 51, 0.12), 0 4px 12px rgba(27, 32, 51, 0.06);
 
-  /* Type stacks */
-  --font-display: "Outfit", "Poppins", -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  --font-body: "Poppins", -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  /* Type stacks — WoowTech brand: titles use Poppins, body uses Outfit (Noto Sans TC fallback) */
+  --font-display: "Poppins", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-body: "Outfit", -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
   --font-script: "Yellowtail", cursive;
   --font-mono: "SF Mono", Menlo, Consolas, "Fira Code", monospace;
 
@@ -94,7 +94,9 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
 }
 
 .sidebar .brand {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
@@ -111,7 +113,9 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
 
 /* hub 模式：側欄回資源總覽的連結（build_nav.js 產生） */
 .sidebar .hub-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 12.5px;
   color: var(--ink-500);
   margin: -20px 0 24px;
@@ -132,8 +136,9 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
 
 .sidebar ol li a {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
+  min-height: 44px;
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   color: var(--ink-700);
@@ -174,7 +179,9 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
 }
 
 .sidebar .toc-in-chapter a {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   padding: 6px 12px;
   border-radius: var(--radius-xs);
   color: var(--ink-700);
@@ -430,8 +437,8 @@ figure.shot figcaption strong {
 }
 .chapter-index .index-title::before { display: none; }
 
-/* Multi-line code block */
-pre.code-block {
+/* Multi-line / inline code blocks stay horizontally scrollable on narrow screens */
+pre, pre.code-block {
   background: var(--surface-alt);
   color: var(--ink-900);
   padding: 16px 18px;
@@ -441,7 +448,9 @@ pre.code-block {
   font-size: 13px;
   line-height: 1.6;
   overflow-x: auto;
+  max-width: 100%;
   margin: 12px 0;
+  white-space: pre;
 }
 
 /* Inline code / key */
@@ -757,6 +766,7 @@ section h2[data-icon="wifi"]::before            { content: "\F05A9"; }  /* wifi 
 section h2[data-icon="zigbee"]::before          { content: "\F0D41"; }  /* zigbee */
 
 /* 資料表格 —— 取代先前各章各自寫 inline style 的做法 */
+.table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }
 .data-table {
   width: 100%;
   border-collapse: separate;

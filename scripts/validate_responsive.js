@@ -130,7 +130,7 @@ function pathForPage(file) {
 function screenshotName(file, viewportName) {
   if (file === 'index.html' && viewportName === 'desktop') return 'index-desktop.png';
   if (file === 'index.html' && viewportName === 'mobile-320') return 'index-320.png';
-  if (file === 'ch17_controller_compatibility.html' && viewportName === 'mobile-360') return 'ch17-360.png';
+  if (file === 'ch17_configuration.html' && viewportName === 'mobile-360') return 'ch17-360.png';
   if (file === 'prompts.html' && viewportName === 'mobile-360') return 'prompts-360.png';
   return null;
 }
@@ -357,12 +357,12 @@ async function validateNotFound(browser, baseUrl) {
   const result = {
     path: '/not-found-test',
     status: response ? response.status() : null,
-    hasMatterHubBrand: /Matter Hub/i.test(body),
+    hasEMQXBrand: /WoowTech|EMQX|Woow EMQX/i.test(body),
     has404Message: /404|找不到這一頁/.test(body),
     failures: [],
   };
   if (result.status !== 404) result.failures.push(`response was ${result.status}, expected 404`);
-  if (!result.hasMatterHubBrand) result.failures.push('Matter Hub branding is missing');
+  if (!result.hasEMQXBrand) result.failures.push('EMQX branding is missing');
   if (!result.has404Message) result.failures.push('branded 404 message is missing');
   await context.close();
   return result;
