@@ -92,74 +92,120 @@
 
     <section id="why" data-nav="為什麼">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>從 Mosquitto 輕鬆連線到 Home Assistant，你可以「能動就好」地走完很多年而沒探究過底層。但一旦要排錯——為什麼裝置時好時壞、為什麼重開機後的狀態不是最新、為什麼有複製的訊息——你就得看懂 MQTT 的幾個核心名詞：<strong>topic</strong>、<strong>QoS</strong>、<strong>retained</strong>、<strong>will</strong>、<strong>session</strong>。</p>
+      <p>這章是心智模型而非操作手冊：用智慧家庭的例子把每個名詞變成「你腦中能推演」的概念。之後接上第 5 章「第一個連線」動手驗證、第 8 章 Listeners、第 13 章 HA 整合，這些詞會反覆出現。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p>MQTT 的核心是<strong>發布／訂閱（publish/subscribe）</strong>模型。它把角色拆成三種：<strong>publisher（發布者）</strong>把訊息依 <strong>topic（主題）</strong>送出；<strong>broker（代理伺服器）</strong>負責路由與過濾所有訊息；<strong>subscriber（訂閱者）</strong>只訂閱自己感興趣的主題。</p>
+      <p>關鍵在於發布者與訂閱者彼此不需要知道對方存在，唯一的共同契約是 topic。broker（就是你手上那套 EMQX）在收到某個 topic 的訊息後，把這筆資料同時送給所有正在訂閱該 topic 的 client。這讓新增裝置或新增螢幕都不會打擾既有端點。</p>
+      <p>每個 client 都是一個「端點」：裝置、手機 App、Home Assistant 都是 client。client 建立連線時可以帶上的跟通訊品質有關的參數——例如 <strong>keepalive（保活）</strong>與 <strong>session</strong> 的保持——都在本章稍後說明。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Publish / Subscribe</td><td>發布／訂閱</td><td>broker 居中交換訊息的模型</td></tr>
+            <tr><td>Topic</td><td>主題</td><td>訊息的階層分類名稱</td></tr>
+            <tr><td>QoS</td><td>服務品質</td><td>訊息傳遞可靠度的三級設定</td></tr>
+            <tr><td>Retained</td><td>保留訊息</td><td>broker 記住每個主題的「最新一則」</td></tr>
+            <tr><td>Will</td><td>遺囑訊息</td><td>client 斷線時由 broker 代送的通知</td></tr>
+            <tr><td>Keepalive</td><td>保活</td><td>定期心跳避免被當成掉線</td></tr>
+            <tr><td>Clean Session</td><td>乾淨 session</td><td>連線結束就清除 session 的設定</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>開 Dashboard 的 WebSocket 測試工具</h3><p>在 EMQX Dashboard 找到內建的視覺化 WebSocket client（Diagnose 區 / 診斷工具）。它以 MQTT over WebSocket 方式連到你的 broker。</p></li>
+        <li><h3>訂一個主題</h3><p>新增一個 subscriber，訂閱 <code>客廳/濕度</code> 這類主題。先不帶任何實務，重點是先建立「訂閱 → 收到」的直接印象。</p></li>
+        <li><h3>發布一則訊息</h3><p>換成 publisher 角色，主題打 <code>客廳/濕度</code>，payload 打一個數值，送出後觀察 subscriber 有沒有即時收到。</p></li>
+        <li><h3>試 QoS 與 retained</h3><p>把發布的 QoS 改成 1，再把「Retain」勾起來，感受 retained 的「後到的訂閱者也立刻收到」行為。完整示範在第 5 章，這裡先建立直覺。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="topic1" data-nav="主題與萬用字元">
+      <h2 data-icon="protocol">Topic 架構與萬用字元</h2>
+      <p>Topic 是 UTF-8 字串，用斜線 <code>/</code> 切分層次，例如 <code>客廳/溫度</code> 表示「客廳」下的「溫度」。發布者把訊息打在具體主題；訂閱者可以用<strong>萬用字元（wildcard）</strong>一次訂閱多個主題。</p>
+      <p>MQTT 提供兩種萬用字元：</p>
+      <ul>
+        <li><strong><code>+</code>（單層）</strong>：只配對「剛好一層」。例如 <code>客廳/+/溫度</code> 會收到 <code>客廳/東/溫度</code>、<code>客廳/西/溫度</code>，但<strong>不會</strong>收到 <code>客廳/東/上/溫度</code>。</li>
+        <li><strong><code>#</code>（多層）</strong>：配出任意層數，且必須放在最後。例如 <code>客廳/#</code> 可收到 <code>客廳</code>、<code>客廳/溫度</code>、<code>客廳/東/上/溫度</code>。</li>
+      </ul>
+      <p>規則很重要：<code>+</code> 與 <code>#</code> 只能用於<strong>訂閱</strong>，不能用於發布；且要嘛占滿一整層，要嘛讓 <code>#</code> 在最後。</p>
+      <p><strong>QoS（服務品質）</strong>是每則訊息獨立的可靠度設定，三級如下：</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>QoS</th><th>保證</th><th>情境</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>至多一次，可能遺失</td><td>溫濕度這類掉一筆無妨的遙測</td></tr>
+            <tr><td>1</td><td>至少一次，多會重複</td><td>開關命令，但可能收到重複副本</td></tr>
+            <tr><td>2</td><td>剛好一次，不重複</td><td>金流、帳務這類絕對不能重複的邏輯</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>QoS 越高，協商與傳輸的複雜度也越高。日常遙時資料用 QoS 0 很划算；需要可靠控制保障的裝置，才用 1 或 2。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="topic2" data-nav="Session、retained、will 與共享訂閱">
+      <h2 data-icon="tips">Session、retained、will 與共享訂閱</h2>
+      <p><strong>Session（session）</strong>是 client 與 broker 之間的狀態互動，它是「QoS 1、2 能正確執行」的基礎。MQTT 5.0 用 <strong>clean start</strong> 與 <strong>session expiry interval</strong> 控制 session；MQTT 3.1.1 則用 <strong>clean session</strong> 開關。設定「乾淨 session」時，client 一斷線，session 就立刻廢止；想讓離線期間的 QoS1/2 訊息在重連後補送，就改用持久 session。</p>
+      <p><strong>Keepalive（保活）</strong>是 client 承諾的多長時間內送一次控制封包給 broker，broker 超過這個時間沒收到就會把連線當掉線處理。你調整「多久算掉線」時，其實就是在調整 keepalive。</p>
+      <p><strong>Retained message（保留訊息）</strong>：把某則訊息標記為 Retain，broker 就會為這個主題「存下最新一則」。只要有任何新訂閱者訂閱這個主題，立刻收到它，不必等 publisher 重新發布。代價是每個主題只記最新一筆；想清除就發布空訊息到該主題。</p>
+      <p><strong>Will（遺囑訊息）</strong>：client 連線時先設定一組 will（主題＋payload），當 client「意外斷線」發生時，broker 就代它把這則 will 發給訂閱者，好讓其他人立刻知道它的狀態改變。</p>
+      <p><strong>共享訂閱（shared subscription）</strong>用 <code>$share/群組名/主題</code> 的形式，讓同一個群組裡的訂閱者平分訊息負載（預設 round_robin），而不是每個人都收到重複副本。想提高吞吐或做備援載入，就拆給多台訂閱者各忙自己那份。</p>
     </section>
 
     <section id="troubleshoot" data-nav="排錯">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>訂了萬用主題但沒收到訊息</strong>：先確認 <code>+</code>/<code>#</code> 只用在訂閱、放在正確位置；例如 <code>sensor/#/temp</code> 思考 <code>#</code> 放錯、不合法。</li>
+        <li><strong>訊息看起來會「吃重複」</strong>：硬 QoS 1 的本質就是「至少一次、可能重複」。若不能重複，改用 QoS 2，或讓接收端做冪等。</li>
+        <li><strong>重啟後沒收到舊狀態</strong>：因為 retained 沒設。把狀態訊息標 Retain，或改用持久 session 補送離線期間 QoS1/2 資料。</li>
+        <li><strong>斷線後 session 沒有保全</strong>：只有 QoS1/2 且保留 session 的訊息會在離線時置入佇列；純 QoS 0 不會保留。希望離線期間的資料能補送回，就用持久 session 而非 clean session。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>MQTT 一定要 broker 嗎</summary>
+        <div class="body"><p>對。MQTT 就是靠 broker 轉發的協定；沒有 broker，兩個端點之間就沒有「第三者」可路由，也就不叫 MQTT。你的 EMQX 就是那座 broker。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>retained 跟一般訊息差在哪</summary>
+        <div class="body"><p>一般訊息只送給「當下正在訂閱」的人；retained 會被 broker 記住，任何「之後」才訂閱同一主題的 client 也會立刻收到。只保留每主題最新一則。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>will 與 retained 能混用嗎</summary>
+        <div class="body"><p>可以。設定 will 時可以一併勾「Retain」，這樣除了意外斷線時發 will，broker 也會把它當 retained 存住，之後訂閱的人立刻拿得到狀態。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>共享訂閱時每則訊息誰收到</summary>
+        <div class="body"><p>同一個 <code>$share/群組/</code> 群組裡，每則訊息只由群組中其中一個 client 收到（依策略選）；不同群組之間則各自收到一份副本。這適合做負載分擔。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-concepts.md">EMQX 5.8 MQTT 核心概念（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-wildcard-subscription.md">EMQX 5.8 Wildcard Subscription</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-retained-message.md">EMQX 5.8 Retained Message</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-will-message.md">EMQX 5.8 Will Message</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-shared-subscription.md">EMQX 5.8 Shared Subscription</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/mqtt-guide.md">EMQX 5.8 MQTT Guide</a></li>
       </ul>
     </section>
 

@@ -92,74 +92,117 @@
 
     <section id="why" data-nav="為什麼">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>EMQX 把 broker 的大小事都收進 Dashboard 這張管理介面。如果你只想靠設定檔案與 Log 逐一猜狀態，一定會掛掉一大半除錯循環——誰連上了、哪個訂閱有沒有成立、訊息是否有送出去，這些 Dashboard 用幾張卡片就講清楚。</p>
+      <p>這章目標是讓你把「這張介面的地圖」先在腦海裡建起來：側欄各模組管什麼、Overview 頁重點指標放在哪裡、版本與授權去哪確認。之後每一章（驗證、ACL、Listeners、Connector、監控、備份）你都會知道該前往哪個選單，而不是第一次操作才開始找。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p>EMQX Dashboard 是內建的管理主控台，預設以 HTTP 監聽連接埠 <strong>18083</strong>。在 Home Assistant 裡，你可以用 Ingress（左側欄 EMQX 圖示）直接開，也可以開 <code>http://&lt;主機&gt;:18083</code>。</p>
+      <p>有個概念值得先記：Dashboard 只是可視化操作層，<strong>你不用開啟它 EMQX 也照常收發訊息</strong>。它的作用是讓你在一個地方監控叢集、連線、訂閱、規則與安全設定，而不是 broker 的必要零件。</p>
+      <p>登入後進首頁「Cluster Overview」（叢集總覽），這是整個 Dashboard 的地基。它告訴你「目前有多少連線與訂閱、訊息進出速率、叢集裡有幾個節點」，是你在任何排錯之前最該先瞄一眼的地方。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Dashboard</td><td>管理面板</td><td>EMQX 網頁管理介面</td></tr>
+            <tr><td>Cluster Overview</td><td>叢集總覽</td><td>登入後的首頁，叢集級數據</td></tr>
+            <tr><td>Nodes</td><td>節點</td><td>叢集裡每一座 EMQX 實例</td></tr>
+            <tr><td>Metrics</td><td>指標</td><td>訊息量、事件、流量等統計資料</td></tr>
+            <tr><td>Monitoring</td><td>監控</td><td>瀏覽連線、訂閱、系統指標的模組</td></tr>
+            <tr><td>License</td><td>授權</td><td>確認授權狀態與效期的頁面</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>從 Home Assistant 開</h3><p>Home Assistant 左側找 <strong>EMQX</strong> 圖示（Ingress 入口），點下就會開 Dashboard。</p></li>
+        <li><h3>或直接打 18083</h3><p>瀏覽器開 <code>http://&lt;主機位址&gt;:18083</code>。兩種進法都是同一座 Dashboard。</p></li>
+        <li><h3>登入並先改密碼</h3><p>以 <code>admin</code>／<code>public</code> 首次登入，依系統指示改成自己的密碼（見第 2 章）。</p></li>
+        <li><h3>把側欄走一遍</h3><p>沿左欄從 Monitoring、Access Control、Integration，一路看過 System，把每個模組的「用途一句話」記下來。回到 <strong>Monitoring → Cluster Overview</strong> 再看一次整体。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="topic1" data-nav="Overview 總覽">
+      <h2 data-icon="plan">Overview 總覽在看什麼</h2>
+      <p>Dashboard 首頁是 <strong>Cluster Overview</strong>，上半部左右兩張卡是核心指標：</p>
+      <ul>
+        <li><strong>Message Rate（訊息速率）</strong>：系統每秒進出的訊息量，左上角卡片即時呈現。</li>
+        <li><strong>Connections／Subscriptions／Topics</strong>：目前連線數、訂閱總數、唯一主題數；連線一有變化就即時更新。</li>
+      </ul>
+      <p>下方是時間序列圖表，可選「過去 1 小時、6 小時、12 小時、1 天、3 天、7 天」來觀察連線數與訊息量走勢。圖太多訊息時，可以用「Reset Monitoring Data」把前面資料清掉，重新累積。</p>
+      <p>切到 <strong>Nodes</strong> 分頁，你能看整個叢集每個節點：名稱、狀態、持續運行時間、連線數、<strong>版本</strong>、Erlang 處理程序數、記憶體與 CPU 用量。節點畫成灰色表示它已停止。點節點名稱可再進「節點細節」看 system paths、log 路徑與更細統計。</p>
+      <p>要找<strong>目前運作的 EMQX 版本</strong>（本書目標是 5.8.9），最直接的地方就是 Nodes 分頁的版本欄。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="topic2" data-nav="側欄模組與語言／授權">
+      <h2 data-icon="tabs">側欄模組與語言／授權</h2>
+      <p>Dashboard 左側選單大致分成下面幾組：</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>側欄群組</th><th>你的主用途</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Monitoring</td><td>看叢集總覽、連線、訂閱、retained 訊息</td></tr>
+            <tr><td>Access Control</td><td>Authentication 與 Authorization（驗證與授權）</td></tr>
+            <tr><td>Integration</td><td>Rule Engine 與資料整合（Connectors、Actions、Sources、Sinks）</td></tr>
+            <tr><td>Management</td><td>Cluster Settings、Advanced MQTT、Extensions</td></tr>
+            <tr><td>Diagnose</td><td>WebSocket 測試、slow subscriptions、topic metrics</td></tr>
+            <tr><td>System</td><td>使用者、API key、audit log、License、單一登入</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>要看 <strong>License（授權）</strong>，進 <strong>System</strong> 相關頁面確認授權狀態與效期；要看 <strong>版本</strong>，用 Nodes 分頁的版本欄。Dashboard 的<strong>語言</strong>通常在右上角使用者選單或偏好設定切換，把它改成你舒服的語言即可。</p>
+      <p>一個實用的歸納法：驗證與權限在 <strong>Access Control</strong>；把資料搬出去、寫規則，在 <strong>Integration</strong>；日常檢查先在 <strong>Monitoring</strong>。記住這三個落點，後續章節的選單路徑你就不容易迷路。</p>
     </section>
 
     <section id="troubleshoot" data-nav="排錯">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>登入後 Dashboard 進不去</strong>：確認走的是 Ingress 還是 18083；若主機在其他網段，改打 <code>http://&lt;主機位址&gt;:18083</code>。</li>
+        <li><strong>找不到「版本」</strong>：進 <strong>Monitoring → Nodes</strong>，節點名稱旁的 version 欄就是目前運行的版本（預期 5.8.9）。</li>
+        <li><strong>某個側欄沒有出現</strong>：進階功能（例如 Delayed Publish、Alarms）在 Open Source 版預設不顯示，是正常的，不代表壞掉。</li>
+        <li><strong>首頁數字似乎沒更新</strong>：Overview 的圖有時間範圍可選；要重新累積可用「Reset Monitoring Data」。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>Dashboard 一定要啟動嗎</summary>
+        <div class="body"><p>不必。EMQX 即使不開 Dashboard 也照常收發 MQTT 訊息，Dashboard 只是管理介面。是以圖方式操作、監看與除錯的便利層。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>語言在哪切換</summary>
+        <div class="body"><p>通常在右上角使用者選單或偏好設定裡。換語言不會影響 broker 的行為，純粹是操作方便。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>Overview 裡的「節點」是什麼</summary>
+        <div class="body"><p>每個 EMQX 實例就是一節點。你家用 add-on 通常一個節點；叢集才是多節點。Nodes 分頁能看每個節點的狀態、版本與系統資源。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>為什麼有些功能在側欄看不到</summary>
+        <div class="body"><p>進階資料整合與安全功能多屬 EMQX Enterprise（付費版）。Open Source 5.8.9 不顯示這些項目，不是設定出錯。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/introduction.md">EMQX 5.8 Dashboard Introduction（側欄模組、首登、18083）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 首頁（Cluster Overview／Nodes／Metrics）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md">EMQX 5.8 Monitoring 總覽</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（Dashboard 進入方式）</a></li>
       </ul>
     </section>
 

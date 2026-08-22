@@ -92,74 +92,110 @@
 
     <section id="why" data-nav="為什麼">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>Home Assistant 的附加元件商店裡預設沒有 Woow EMQX，所以要裝它必須先把 WoowTech 的 repository 加進你的 Home Assistant。這個過程不算難，但如果你沒先搞懂「host_network 模式」、「連接埠 1883／18083」與「Ingress」這三個關鍵字，啟動後常常只會看到它開不起來，然後卡在 Log 前一頭霧水。</p>
+      <p>讀完這章，你會能自己完成：加入 repository → 安裝 → 啟動 → 用 <code>admin</code>／<code>public</code> 初次登入 → 改掉預設密碼，並知道五個連接埠各是幹什麼的、遇上 Mosquitto 搶埠時該怎麼解。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p><strong>Woow EMQX</strong> 是 WOOWTECH 基於 hassio-addons/addon-emqx 的 fork 維護的 Home Assistant add-on。它內建 <strong>EMQX 5.8.9</strong>（Open Source），搭配 Erlang/OTP 執行環境與內建 SQLite 儲存設定。add-on 使用 <code>host_network: true</code>，意思是它不把網封進容器內的小型虛擬網路，而是直接用 Home Assistant 主機本身的連接埠收發 MQTT。</p>
+      <p>這樣做的好處是其他瀏覽器、手機 App、外部裝置都能直接連到你主機的 <code>1883</code>、<code>8883</code> 等埠，不必轉接。代價是你得在乎連接埠被誰佔用：如果你保留著 Home Assistant 的 Mosquitto add-on，兩者同樣使用 1883，就無法同時啟動。</p>
+      <p>另外，add-on 用 <code>ingress</code> 模式提供管理介面：Home Assistant 左側選單裡可以直接開 EMQX Dashboard，而不必記憶 <code>http://&lt;主機&gt;:18083</code>。add-on 的 <code>config.yaml</code> 已經把 <code>ingress_port: 18083</code> 與 <code>host_network: true</code> 都寫好。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Repository</td><td>儲存庫</td><td>Home Assistant 額外附加元件的來源位址</td></tr>
+            <tr><td>Host Network</td><td>主機網路模式</td><td>add-on 直接使用主機網路的模式</td></tr>
+            <tr><td>Ingress</td><td>入口通道</td><td>從 Home Assistant 左側直接開 add-on 網頁</td></tr>
+            <tr><td>Listener Port</td><td>監聽連接埠</td><td>broker 在哪些埠收 MQTT／管理流量</td></tr>
+            <tr><td>Web UI</td><td>網頁管理介面</td><td>EMQX Dashboard 的入口</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>這裡指一個關鍵的 repo 位址：<code>https://github.com/WOOWTECH/Woow_ha_emqx</code>，就是你等一下要加進 Home Assistant 的儲存庫來源。</p>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>加入 WoowTech repository</h3><p>在 Home Assistant 進入 <strong>設定 → 附加元件 → 商店</strong>，點右上的 ⋯ 選單 → <strong>新增儲存庫</strong>，貼上 <code>https://github.com/WOOWTECH/Woow_ha_emqx</code>，按新增。</p></li>
+        <li><h3>安裝 Woow EMQX</h3><p>重新整理商店，找到 <strong>Woow EMQX</strong>，點進去按 <strong>安裝</strong>（可能需要一些時間下載）。</p></li>
+        <li><h3>啟動 add-on</h3><p>確認 add-on 頁面的 <code>host_network</code> 有開啟，再按 <strong>啟動</strong>。之後看 Log 確認沒有「連接埠被佔用」的錯誤。</p></li>
+        <li><h3>開啟 Web UI 並初次登入</h3><p>點 <strong>開啟 Web UI</strong>，用使用者名稱 <code>admin</code>、密碼 <code>public</code> 登入。系統若要求改密碼，請當場改成 <code>&lt;你的新密碼&gt;</code>，並在後續章節建立正式 MQTT 帳號前都不要再使用 <code>public</code>。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="topic1" data-nav="主連線的五個埠">
+      <h2 data-icon="network">連線用的五個連接埠</h2>
+      <p>因為 host_network，這五個埠直接開在 Home Assistant 主機上。add-on README 列出的預設如下。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>連接埠</th><th>協定</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1883</td><td>MQTT</td><td>標準 MQTT（TCP）</td></tr>
+            <tr><td>8083</td><td>MQTT/WS</td><td>MQTT over WebSocket</td></tr>
+            <tr><td>8084</td><td>MQTT/WSS</td><td>MQTT over 安全 WebSocket（TLS）</td></tr>
+            <tr><td>8883</td><td>MQTTS</td><td>MQTT over SSL/TLS</td></tr>
+            <tr><td>18083</td><td>HTTP</td><td>EMQX Dashboard（管理介面）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>你只需要在日常最常用 <strong>1883</strong> 給裝置與 Home Assistant、<strong>18083</strong> 開 Dashboard，其餘是 WebSocket 與 TLS 選項。若某一埠被別的服務佔用，例如 WebRTC 用 8083，就必須先停掉衝突的一方，再於 Dashboard 的 Listeners 頁改埠。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="topic2" data-nav="首次登入與改密碼">
+      <h2 data-icon="login">首次登入與改密碼</h2>
+      <p>EMQX Dashboard 的預設帳號是 <code>admin</code>／<code>public</code>。官方文件明確規範：第一次用預設帳密登入後，系統會偵測到你還在用預設密碼，並<strong>強制你更換密碼</strong>；新的密碼不能跟原本一樣，也<strong>不建議再把 <code>public</code> 當成正式使用</strong>。</p>
+      <p>這是保護管理面很重要的第一步：Dashboard 就是控制整個 broker 的入口，如果有人猜中 <code>admin/public</code>，就能改你所有的驗證與授權。之後你在第 6 章會建立真正的 MQTT 帳號給裝置與 Home Assistant 使用；本章只需先把 Dashboard 的登入密碼換掉。</p>
+      <p>如果你忘了新密碼，EMQX 提供 <code>emqx ctl admins passwd &lt;帳號&gt; &lt;新密碼&gt;</code> 這個 CLI 指令重設，細節會在第 18 章的診斷與 API 主題帶到。</p>
     </section>
 
     <section id="troubleshoot" data-nav="排錯">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>儲存庫加到商店後沒出現 Woow EMQX</strong>：先重新整理頁面，或退出商店再進一次；確認網址完整貼上（含末段的 <code>Woow_ha_emqx</code>）。</li>
+        <li><strong>無法啟動、Log 看連接埠被佔用</strong>：你最有可能同時開著 Mosquitto add-on 或 WebRTC，兩個都卡 1883 或 8083。先把衝突的服務暫停，再啟動 EMQX。</li>
+        <li><strong>Dashboard 進不去</strong>：用 Ingress（左側 <strong>EMQX</strong> 圖示）進；或改用 <code>http://&lt;Home Assistant 位址&gt;:18083</code>。確認 18083 沒被其他服務占用。</li>
+        <li><strong>改完後就真的不要再用 <code>public</code></strong>：初次登入若沒被要求改密碼，代表你已經不是新安裝；若仍用預設帳密，請在 Dashboard 的使用者設定中手動更換。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>安裝後為什麼必須立刻改密碼</summary>
+        <div class="body"><p>預設 <code>admin/public</code> 對任何看過文件的人都是公開值。若你的主機有對外暴露，等於把整個 broker 的掌控權交出去。第一步就把它改成你自己的強密碼。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>Mosquitto 和 Woow EMQX 能同時跑嗎</summary>
+        <div class="body"><p>不行。兩個 add-on 都把 MQTT 監聽在 1883，連接埠一衝突就有一方無法啟動。要嘛二選一，要嘛用 Listeners 把其中一個搬到別的埠。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>Ingress 是什麼，跟直接打 18083 差在哪</summary>
+        <div class="body"><p>Ingress 是 Home Assistant 提供的反向代理入口：從左側欄開 EMQX，不必記連接埠或擔心被其他人直連。直接打 18083 也能進同一套 Dashboard，差別在於安全與方便性。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>裝完後資源吃比較重，會不會拖慢 Home Assistant</summary>
+        <div class="body"><p>EMQX 比 Mosquitto 多花一點 RAM／CPU。Woow 的 README 說建議至少 512MB RAM。若主機記憶體緊繃，Mosquitto 可能仍是更輕的選擇；若要用 EMQX，先確認你的硬體撐得住。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit：安裝、連接埠、首次設定、衝突）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml">Woow EMQX config.yaml（host_network、ingress、版本）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/CHANGELOG.md">Woow EMQX CHANGELOG.md（add-on 5.9.0 變更）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/DOCS.md">Woow EMQX DOCS.md（使用者說明）</a></li>
       </ul>
     </section>
 
