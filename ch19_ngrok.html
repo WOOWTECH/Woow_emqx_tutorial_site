@@ -71,8 +71,9 @@
       <a href="#concept">核心概念</a>
       <a href="#what">名詞對照</a>
       <a href="#steps">動手做</a>
-      <a href="#topic1">主題一</a>
-      <a href="#topic2">主題二</a>
+      <a href="#options">三個選項</a>
+      <a href="#announce">公開位址</a>
+      <a href="#risk">風險與替代</a>
       <a href="#troubleshoot">排錯</a>
       <a href="#faq">常見問題</a>
       <a href="#sources">官方來源</a>
@@ -92,74 +93,124 @@
 
     <section id="why" data-nav="為什麼">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>家裡的 EMQX 預設只接受區域網路的連線，外部裝置根本進不來。但只要你想「人在外面也能訂閱或發布」——例如出門要看客廳的感測器、想遠端把玄關的燈關掉——就需要在內網與外面世界之間開一條路。Woow EMQX 從 add-on 5.9.0 版本開始內建 ngrok，能用一行設定把 raw MQTT（連接埠 1883）變成公開的 TCP 通道。</p>
+      <p>如果你沒想清楚 authtoken、固定位址與暴露風險，等於把 broker 的入口直接掀給整個網際網路。讀完這章，你會懂：ngrok 三個選項各自控制什麼、公開網址要去哪一行 Log 找、什麼情況該改走 Cloudflare Tunnel，以及上線前必須先完成的保護動作。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p><strong>ngrok</strong>是內網穿透（tunnel）服務：它在你的機器上跑一個 agent，與 ngrok 雲端建立連線，外部流量就能經由它轉回到本地連接埠。Woow add-on 用這個做法，把 broker 的 1883 轉成一條公開的 TCP 位址，外部 MQTT 用戶端連這條位址即可發布或訂閱。</p>
+      <p>先分清楚兩層版本：add-on 版本<strong>5.9.0</strong> 只新增內建 ngrok TCP 通道，底下的核心仍是<strong>EMQX 5.8.9</strong>。你調整 <code>ngrok_enabled</code>、<code>ngrok_authtoken</code> 這類選項，修改的是 add-on 層，不會改變 EMQX 5.8.9 原有的驗證、ACL 或監控行為。</p>
+      <p>ngrok 通道有它自己的安全含義：把 1883 開到公網之後，任何能連到那條位址的人都能嘗試連線。EMQX 若尚未設定 Authentication，會允許所有 client 連線；所以「先設好驗證與 ACL，再決定是否開啟 ngrok」，是本章的黃金規範。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ngrok</td><td>內網穿透服務</td><td>把本地連接埠變成公開 TCP 端點</td></tr>
+            <tr><td>TCP Tunnel</td><td>TCP 通道</td><td>直接轉發 raw MQTT（1883）的隧道</td></tr>
+            <tr><td>Authtoken</td><td>授權碼</td><td>你的 ngrok 帳號授權，啟用時必填</td></tr>
+            <tr><td>Reserved Address</td><td>固定位址</td><td>向 ngrok 保留的 TCP 位址，重啟後不變</td></tr>
+            <tr><td>Public URL</td><td>公開網址</td><td>ngrok 產生的外部端點，印在 Log</td></tr>
+            <tr><td>Cloudflare Tunnel</td><td>Cloudflare 隧道</td><td>替代方案，特別適合 WebSocket（8083）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>其中 <code>authtoken</code> 是秘密值：它等同 ngrok 帳號權限。請不要把自己的 token 寫進 HTML 或貼進 log，教學一律以佔位符（<code>YOUR_TOKEN</code>、<code>&lt;你的 ngrok authtoken&gt;</code>）表示。</p>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>先檢查驗證狀態</h3><p>開啟 ngrok 前，先去 EMQX Dashboard 的 Access Control → Authentication 建立一組使用者，並在 Authorization 設好最小權限。至少要確保公開後不會讓網際匿名連線。</p></li>
+        <li><h3>開啟 add-on 的 ngrok 設定</h3><p>到 Home Assistant：設定 → 附加元件 → Woow EMQX → 設定（Configuration）分頁，找到 ngrok 三個選項，把 <code>ngrok_enabled</code> 改成 <code>true</code>。</p></li>
+        <li><h3>填入 authtoken（必要）</h3><p>在 <code>ngrok_authtoken</code> 貼上你的 ngrok 授權碼（此處以 <code>&lt;你的 ngrok authtoken&gt;</code> 代替）。若你已在 ngrok 帳號保留固定 TCP 位址，就填進 <code>ngrok_tcp_addr</code>；否則留空。</p></li>
+        <li><h3>重啟並確認 Log</h3><p>回到概覽分頁按「重新啟動」。等 add-on 上線後，打開 Log 找一行形如 <code>&gt;&gt;&gt; MQTT ngrok: &lt;public_url&gt;</code>，那就是外部 MQTT client 要連的公開位址。</p></li>
       </ol>
+      <p>add-on 的 <code>config.yaml</code> 把這三個選項的 schema 定義為：<code>ngrok_enabled</code> 是 <code>bool</code>（預設 <code>false</code>）、<code>ngrok_authtoken</code> 是 <code>password?</code>、<code>ngrok_tcp_addr</code> 是 <code>str?</code>。</p>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="options" data-nav="三個選項">
+      <h2 data-icon="network">ngrok 的三個選項</h2>
+      <p>ngrok 功能由這三個選項控制。掌握型態與預設值，才知道自己到底開放了多少風險。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>選項</th><th>型態</th><th>預設</th><th>作用</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ngrok_enabled</td><td>bool</td><td>false</td><td>啟停 ngrok TCP 1883 通道</td></tr>
+            <tr><td>ngrok_authtoken</td><td>password</td><td>空</td><td>帳號授權，開啟時必填</td></tr>
+            <tr><td>ngrok_tcp_addr</td><td>string</td><td>空</td><td>指定保留位址以取得固定端點</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>執行行為很直接：<code>ngrok_enabled</code> 為 <code>false</code> 時，ngrok service 直接 idle；啟用了但 authtoken 沒填則記一則錯誤並保持 idle（EMQX 本體照常運行）。authtoken 有值之後，才執行 <code>ngrok tcp 1883</code>，若填了 <code>ngrok_tcp_addr</code> 則是 <code>ngrok tcp 1883 --remote-addr=&lt;位址&gt;</code>。</p>
+      <p>若只想偶爾讓外部連一下，最單純就是 authtoken 有值、其餘留空，讓 ngrok 指派臨時位址。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="announce" data-nav="公開位址">
+      <h2 data-icon="records">公開位址與 Log</h2>
+      <p>啟用 ngrok 時 add-on 會跑第二個服務 <strong>ngrok-announce</strong>：它每兩秒查一次 ngrok agent 的本地 API（<code>http://127.0.0.1:4040/api/tunnels</code>），最長查找約 120 秒，取得第一個隧道的 public URL 後印進 add-on Log。</p>
+      <p>所以「看公開網址」的位置是：Home Assistant → 設定 → 附加元件 → Woow EMQX → Log。若啟動後一時找不到，可能它還在等 ngrok 上線，最多約兩分鐘。若超過仍沒有，再去查看 ngrok service 自己的 log（常見原因是 authtoken 沒填好）。</p>
+      <p>這條公開 URL 很有實際作用：外部裝置的 MQTT client 設定必須用它（含端口），而不是你內網的 Home Assistant 位址。</p>
+    </section>
+
+    <section id="risk" data-nav="風險與替代">
+      <h2 data-icon="warning">公開 1883 的風險與替代</h2>
+      <p>公開 raw MQTT 不是無腦把埠推出去。看完以下幾點再決定：</p>
+      <ul>
+        <li><strong>任何人都能嘗試連線</strong>：ngrok 位址本身就是公開的，等於把 broker 的 1883 入口送到整個網際網路。Authentication 沒設好時，EMQX 會放行匿名 client。</li>
+        <li><strong>TLS 需另行處理</strong>：ngrok TCP 通道是原始 TCP，不會自動為整條連線加密。若要加密，請改用或另開 MQTTS（8883）式的監聽。</li>
+        <li><strong>臨時位址不持久</strong>：不填固定位址時，ngrok 自動指派的端點在每次重啟都可能變號。</li>
+        <li><strong>維持最小暴露</strong>：若只是偶爾需要，可只在特定時段開、用完就關；長期對外，務必先完成驗證、ACL 與必要的 TLS。</li>
+      </ul>
+      <p>如果你的需求是 WebSocket 而不是 raw TCP，就接不上：add-on 的 ngrok 只涵蓋 1883（raw MQTT），<strong>8083（MQTT over WebSocket）不在 ngrok 範圍</strong>，此時請改用 <strong>Cloudflare Tunnel</strong>。</p>
     </section>
 
     <section id="troubleshoot" data-nav="排錯">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>已啟用但 Log 沒出現 URL</strong>：先確認 ngrok_enabled 是 true、authtoken 有填；再看 Log 是否有「已啟用但 authtoken 為空」的錯誤。若都正確仍沒有，重啟 add-on 或查看 ngrok service 自己的 log。</li>
+        <li><strong>只看到「ngrok 未啟用」</strong>：代表設定沒有生效。回到設定分頁檢查 ngrok_enabled，重新啟動後再看 Log。</li>
+        <li><strong>外部 client 連不上</strong>：確認是用 ngrok 印出的完整網址與端口，而不是內網位址；並確認已在 EMQX 建立帳號、ACL 允許該主題。位址若常變，就改用固定位址（ngrok_tcp_addr）。</li>
+        <li><strong>發現公網上的任何 client 都能連進 1883</strong>：先把 ngrok 關掉，回到 EMQX 設好 Authentication 與 Authorization，再考慮要不要重新公開。匿名可連的公開 broker 是很明顯的警訊。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>一定要用 ngrok 才能讓外網連 EMQX 嗎</summary>
+        <div class="body"><p>不是。ngrok 只是 add-on 內建最方便的方法；VPN、Cloudflare Tunnel 或其他反向代理一樣能轉到 1883。若你本來就有 VPN 或內網穿透，優先沿用，能減少把 broker 推到公網。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>自動位址每次重啟真的都會變嗎</summary>
+        <div class="body"><p>很可能。ngrok 自動指派的臨時 TCP 端點在重開後常會換號，所以希望固定的公開端點時，就到 ngrok 帳號保留並填進 ngrok_tcp_addr，如此重啟後同一個位址可以維持。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>8083（MQTT over WebSocket）能用 ngrok 嗎</summary>
+        <div class="body"><p>不行。add-on 的 ngrok 只處理 1883 raw MQTT；要對外提供 WebSocket 就改用 Cloudflare Tunnel，這是官方 CHANGELOG 與 README 指明的替代方向。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>公開之前至少要完成哪些設定</summary>
+        <div class="body"><p>至少要能拒絕匿名連線：在 EMQX 的 Access Control → Authentication 建立驗證（建議 Password-Based → Built-in Database），再以 Authorization 設定最小權限。若要加密，則考慮 MQTTS（8883）Listener。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit：ngrok 章、連接埠、設定說明）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml">Woow EMQX config.yaml（ngrok 三選項 schema）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/CHANGELOG.md">Woow EMQX CHANGELOG.md（5.9.0 加 ngrok TCP 通道）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/rootfs/etc/s6-overlay/s6-rc.d/ngrok/run">Woow EMQX s6-ngrok 啟動腳本（執行行為）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs 分支）</a></li>
       </ul>
     </section>
 

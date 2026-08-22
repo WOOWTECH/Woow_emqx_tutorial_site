@@ -70,10 +70,11 @@
       <a href="#why">為什麼</a>
       <a href="#concept">核心概念</a>
       <a href="#what">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#topic1">主題一</a>
-      <a href="#topic2">主題二</a>
-      <a href="#troubleshoot">排錯</a>
+      <a href="#steps">診斷基線</a>
+      <a href="#boot">無法啟動</a>
+      <a href="#connect">無法連線</a>
+      <a href="#ui">Dashboard 進不去</a>
+      <a href="#troubleshoot">快速修復對照</a>
       <a href="#faq">常見問題</a>
       <a href="#sources">官方來源</a>
     </div>
@@ -92,74 +93,117 @@
 
     <section id="why" data-nav="為什麼">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>EMQX 出問題時，最怕的不是「壞掉」，而是不知道從哪裡開始看。很多人一看到 add-on 開不起來就整包移除重裝，結果把設定清光、帳號也消失。正確順序是先看 Log、確認埠、再檢查資源——多數問題其實是這三個根源。</p>
+      <p>讀完這章，你會有四組「症狀 → 檢查 → 安全修復」清單：無法啟動、無法連線、Dashboard 進不去、資源或連接埠被吃光。你也能分辨哪些是設定失誤、哪些是環境限制，不再靠盲猜。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p>先建立診斷的順位。Woow add-on 的 README 與 EMQX 文件共同的建議是「從 Log 開始」：Log 會告訴你啟動失敗的真正原因，而不是只看到加載旋轉。</p>
+      <ol class="steps">
+        <li><h3>看 Log</h3><p>add-on 的 Log 顯示啟動過程、ngrok 狀態與 EMQX 錯誤。多數「啟動失敗」都能在這裡找到原因。</p></li>
+        <li><h3>確認連接埠</h3><p>1883、18083 若被其他 add-on 占用，EMQX 就無法監聽。先確認 Mosquitto、WebRTC 等是否還在跑。</p></li>
+        <li><h3>看資源</h3><p>EMQX 比 Mosquitto 吃得多。記憶體不足會讓 add-on 反覆重啟或無法啟動。</p></li>
+      </ol>
+      <p>修復的每一步都應是「安全的最小動作」：不隨意刪資料、不默默把埠搬到全網。真要動資料前，先備份。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Symptom</td><td>症狀</td><td>你觀察到的異常現象</td></tr>
+            <tr><td>Diagnosis</td><td>診斷</td><td>找出根因的過程</td></tr>
+            <tr><td>Safe Fix</td><td>安全修復</td><td>不刪資料的小幅調整</td></tr>
+            <tr><td>Log</td><td>記錄檔</td><td>add-on 啟動與錯誤的日誌</td></tr>
+            <tr><td>Port Conflict</td><td>連接埠衝突</td><td>兩個服務搶同一個埠</td></tr>
+            <tr><td>Resource Limit</td><td>資源上限</td><td>RAM／CPU 不足壓迫 add-on</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="診斷基線">
+      <h2 data-icon="steps">建立診斷基線</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>先確認 add-on 是否真的啟動</h3><p>到 Home Assistant 的 Woow EMQX 一頁，看狀態是「啟動」或反覆重啟。反覆重啟常在 Log 顯示端口或記憶體原因。</p></li>
+        <li><h3>檢查 1883 與 18083</h3><p>確認沒有 Mosquitto 或 WebRTC 占用 1883／8083，EMQX 才不會在啟動時因監聽被佔而退場。</p></li>
+        <li><h3>用 Log 搜關鍵字</h3><p>在 add-on Log 搜「address already in use」「不能 binding」或「out of memory」等，可以很快縮窄問題。</p></li>
+        <li><h3>測試一個已知的 MQTT client</h3><p>用後端的小工具（WebSocket client、或你的 HA MQTT）連 1883，若連得上表示 broker 有收連線；若連不上，就看驗證是否成立、埠與位址是否正確。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
-    </section>
-
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
-    </section>
-
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="boot" data-nav="無法啟動">
+      <h2 data-icon="warning">無法啟動與資源不足</h2>
+      <p><strong>症狀</strong>：add-on 啟動後很快掉回「已停止」，或一直卡在啟動。</p>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>檢查</strong>：先看 Log；接著確認連接埠是否被其他服務占用（Mosquitto 用 1883、WebRTC 用 8083），也確認主機記憶體還夠。</li>
+        <li><strong>安全修復</strong>：先停掉衝突的 add-on 或減載，再一次啟動 EMQX。若記憶體不足，就關閉其他吃資源的 add-on。不要動資料目錄。</li>
+      </ul>
+      <p>EMQX 比 Mosquitto 需要更多 RAM／CPU；Woow README 建議至少 512MB RAM。若你的主機同時跑影片或 AI 服務，先縮減再加。</p>
+    </section>
+
+    <section id="connect" data-nav="無法連線">
+      <h2 data-icon="login">無法連線與驗證失效</h2>
+      <p><strong>症狀</strong>：HA、Z2M 或外部裝置連 1883 掉；或錯誤是「驗證失敗」。</p>
+      <ul>
+        <li><strong>檢查</strong>：確認 EMQX 已設定 Authentication；確認使用的帳號密碼在 built-in database 裡存在且正確；確認 broker 位址（homeassistant、1883）無誤。</li>
+        <li><strong>安全修復</strong>：若驗證未設好，先建立使用者；若帳號被誤改，重新建立並改用正確密碼。勿把真實密碼印進 Log 回答中。</li>
+      </ul>
+      <p>特別注意：EMQX 若「尚未設定認證」，會允許 all client 連線——那不是正常連上的證明。要嘛設驗證，要嘛關閉匿名。</p>
+    </section>
+
+    <section id="ui" data-nav="Dashboard 進不去">
+      <h2 data-icon="network">Dashboard 進不去／連接埠衝突</h2>
+      <p><strong>症狀</strong>：點「開啟 Web UI」沒有畫面，或打不開 18083。</p>
+      <ul>
+        <li><strong>檢查</strong>：18083 是否被其他服務占用；add-on 是否在啟動狀態；Ingress 是否真的可達。</li>
+        <li><strong>安全修復</strong>：用 Home Assistant 左側的 EMQX 圖示（Ingress）進；停止或調整與 18083 衝突的服務；重啟 add-on 後再試。</li>
+      </ul>
+      <p>Dashboard 是控制整個 broker 的入口。若你想直接連 18083 來用，記得確認它沒有暴露在公網。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="快速修復對照">
+      <h2 data-icon="troubleshoot">快速修復對照表</h2>
+      <ul>
+        <li><strong>症狀：add-on 無法啟動，Log 出現端口占用</strong>→先停掉 Mosquitto 或 WebRTC；確認 1883／8083 空出後再啟動。</li>
+        <li><strong>症狀：無法連線、老是認證失敗</strong>→確認 Authentication 已建立、帳密正確、broker 位址與端口無誤；不要把預設 public 繼續使用。</li>
+        <li><strong>症狀：Dashboard 打不開</strong>→用 Ingress 進；若直打 18083，確認沒有端口衝突、且不被公網直接暴露。</li>
+        <li><strong>症狀：連線一陣子就斷</strong>→檢查資源上限與 Rate Limit；EMQX 比 Mosquitto 吃資源，主機若記憶體吃緊會影響穩定性。</li>
+        <li><strong>症狀：ngrok 已啟用但無公開 URL</strong>→見第 19 章：檢查 authtoken、重啟、看 ngrok service log。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>重裝 add-on 會不會比修好更快</summary>
+        <div class="body"><p>很多時候並不會更快。要注意：升級 add-on 不會清資料，重裝（尤其是移除後重裝）則可能一併清掉。先看 Log 確認不是簡單能修的原因，再考慮重裝；真要動手，先備份 /data/emqx。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>1883 被誰占用該怎麼查</summary>
+        <div class="body"><p>通常是 Mosquitto（1883）或 WebRTC 整合（8083）。檢查 Home Assistant 的 add-on／整合清單，把衝突者暫停即可。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>記憶體不足時該怎麼判斷</summary>
+        <div class="body"><p>看 add-on Log 裡的「out of memory」或「系統 RAM 不足」之類訊息。建議至少 512MB。多吃資源的 add-on 暫停時，EMQX 較容易穩定。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>外部無法連上，是 EMQX 還是我的網路問題</summary>
+        <div class="body"><p>先用同一網路的 client 測試內網連線；內網可連而外網不行，就回到路由器／ngrok 或防火牆。若連內也失敗，多半是驗證或監聽埠的設定。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit：疑難排解、連接埠、資源）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/security-checklist.md">EMQX 5.8 Security Checklist（pinned docs：驗證與監聽建議）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/CHANGELOG.md">Woow EMQX CHANGELOG（版本與 ngrok 行為）</a></li>
       </ul>
     </section>
 
