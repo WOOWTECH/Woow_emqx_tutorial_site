@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">EMQX 5.8.9 完整指南 資源中心</title>
+  <desc id="desc">WoowTech 繁體中文教學、導入評估、提示詞與 Skill 手冊</desc>
+  <rect width="1200" height="630" fill="#F7F8FC"/>
+  <rect x="64" y="64" width="1072" height="502" rx="28" fill="#FFFFFF" stroke="#E2E5EF"/>
+  <rect x="104" y="112" width="116" height="12" rx="6" fill="#6183FC"/>
+  <text x="104" y="222" fill="#6183FC" font-family="Poppins, Noto Sans TC, sans-serif" font-size="24" font-weight="600" letter-spacing="3">WOOWTECH · EMQX 5.8.9</text>
+  <text x="104" y="314" fill="#1B2033" font-family="Poppins, Noto Sans TC, sans-serif" font-size="58" font-weight="700">EMQX 完整指南</text>
+  <text x="104" y="388" fill="#1B2033" font-family="Poppins, Noto Sans TC, sans-serif" font-size="58" font-weight="700">資源中心</text>
+  <text x="104" y="478" fill="#6B7186" font-family="Outfit, Noto Sans TC, sans-serif" font-size="27">22 章教學 · 導入評估 · 提示詞 · Skill 手冊</text>
+</svg>

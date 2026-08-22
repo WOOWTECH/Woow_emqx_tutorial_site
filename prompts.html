@@ -1,21 +1,170 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>提示詞工具箱 · WoowTech EMQX 指南</title>
-  <meta name="description" content="WoowTech EMQX 提示詞工具箱：安裝、連線、驗證、ACL、TLS、規則、整合、監控與維運。" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EMQX 5.8.9 提示詞庫 · WoowTech</title>
+<meta name="description" content="超過 45 條 EMQX 5.8.9 安裝、連線、驗證、ACL、TLS、規則、Data Integration、HA 整合、監控、備份與安全提示詞。" />
+<meta name="author" content="WoowTech" />
+<meta name="theme-color" content="#6183FC" />
+<link rel="canonical" href="https://emqx-guide.woowtech.io/prompts.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="EMQX 5.8.9 提示詞庫" />
+<meta property="og:description" content="超過 45 條 EMQX 5.8.9 安裝、連線、驗證、ACL、TLS、規則、Data Integration、HA 整合、監控、備份與安全提示詞。" />
+<meta property="og:url" content="https://emqx-guide.woowtech.io/prompts.html" />
+<meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="EMQX 5.8.9 提示詞庫" />
+<meta name="twitter:description" content="超過 45 條 EMQX 5.8.9 作業提示詞，搜尋後一鍵複製。" />
+<meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Yellowtail&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+<link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <main class="content">
-    <div class="chapter-header">
-      <div class="kicker">WoowTech</div>
-      <h1>EMQX 提示詞工具箱</h1>
-      <p class="lead">（草稿，待 hub lane 替換）涵蓋安裝、連線、驗證、ACL、TLS、規則、整合、監控與維運的提示詞。</p>
-    </div>
-    <p><a href="index.html">回資源總覽</a> · <a href="tutorial.html">看完整教學</a></p>
-  </main>
-</body>
-</html>
+<main class="resource-page">
+<header class="topbar">
+<a class="site-name" href="./">EMQX 指南</a>
+<nav class="topnav" aria-label="主要導覽">
+<a class="nav-link" href="index.html">資源總覽</a>
+<a class="nav-link" href="tutorial.html">教學</a>
+<a class="nav-link" href="sales.html">導入評估</a>
+<a class="nav-link" aria-current="page" href="prompts.html">提示詞</a>
+<a class="nav-link" href="skills.html">Skill 手冊</a>
+</nav>
+</header>
+<div class="resource-hero">
+<span class="script-accent" aria-hidden="true">talk to your broker</span>
+<p class="eyebrow">WoowTech · EMQX 5.8.9 提示詞庫</p>
+<h1>50 條可搜尋、可複製的 EMQX 提示</h1>
+<p class="lead">把中括號佔位符換成你的環境資料。提示詞預設先查證、先預覽、再變更；涉及刪除、還原或暴露時仍要由你批准，別把秘密貼進第三方模型。</p>
+</div>
+<div class="prompt-tools" role="search">
+<label class="visually-hidden" for="promptSearch">搜尋提示詞</label>
+<input class="prompt-search" id="promptSearch" type="search" placeholder="搜尋分類、驗證、ACL、規則、TLS、備份…" autocomplete="off" />
+<span class="prompt-count" id="promptCount" aria-live="polite"></span>
+</div>
+<p class="copy-status" id="copyStatus" role="status" aria-live="polite">按下卡片的「複製」按鈕即可複製完整提示詞。</p>
+
+<section class="prompt-group" data-category="安裝與啟動">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>安裝與啟動</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>以 EMQX 5.8.9 為基準，教我從加入 WoowTech repository 到啟動 add-on 5.9.0 的完整步驟；特別說明 host_network 、五個連接埠與第一次登入改密碼。</p><button class="button button-secondary copy-button" type="button" aria-label="複製安裝與啟動提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我的 [Home Assistant 版本] 想安裝 [Woow EMQX add-on]，請先盤點現有 Mosquitto 是否佔住 [1883]，再給可以避免連接埠衝突的安裝順序。</p><button class="button button-secondary copy-button" type="button" aria-label="複製安裝與啟動提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>EMQX add-on 5.9.0 與 EMQX 5.8.9 差別在哪？請用一段話說明「add-on 版本」與「EMQX 版本」不要混用的原因，並講清 ngrok TCP 通道的定位。</p><button class="button button-secondary copy-button" type="button" aria-label="複製安裝與啟動提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我安裝 [Woow EMQX add-on] 後 Dashboard 打不開。請依「無法啟動、無法連線、Dashboard 進不去、連接埠衝突」四個症狀，先確認 [主機網址] 與 [帳號]，再給唯讀檢查順序。</p><button class="button button-secondary copy-button" type="button" aria-label="複製安裝與啟動提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>為 [emqx-guide.woowtech.io] 建一份 EMQX 5.8.9 安裝前檢查表，含 [host_network]、[監控]，以及備份與憑證的預先規劃；只給建議，不建立任何資料。</p><button class="button button-secondary copy-button" type="button" aria-label="複製安裝與啟動提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="連線與診斷">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>連線與診斷</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>我無法用 [MQTT 用戶端] 連上 EMQX。請依 Listener、Authentication、ACL、網路四層列出可能原因，每層給一句驗證方式；先用唯讀檢查，不踢掉 client。</p><button class="button button-secondary copy-button" type="button" aria-label="複製連線與診斷提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>幫我建立一段可驗證的 MQTT 連線診斷流程：先確認 [EMQX 位址 1883]，再用內建 WebSocket 工具做 publish／subscribe，記錄 [QoS] 與錯誤訊息。</p><button class="button button-secondary copy-button" type="button" aria-label="複製連線與診斷提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我的 client 一直斷線重連。請說明 EMQX 的 keepalive、session 與 will 遺囑如何影響斷線，並建議一組可採用的 [keepalive] 與 [will 主題]。 </p><button class="button button-secondary copy-button" type="button" aria-label="複製連線與診斷提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我用 [MQTT 工具] 連上後「沒有訊息」。請檢查是否訂錯 topic、有沒有 ACL 擋住、訂閱是不是 [QoS 0]；逐項給驗證方法。</p><button class="button button-secondary copy-button" type="button" aria-label="複製連線與診斷提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>為 EMQX 設計「怎麼確認 client 真的在線」的方式：看 Clients、Subscriptions、birth／will 主題與節點監控，說明哪些是存活、哪些是過期資訊。</p><button class="button button-secondary copy-button" type="button" aria-label="複製連線與診斷提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="驗證">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>Authentication 驗證</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>幫我建立 Password-Based（內建資料庫）驗證的最低安全做法：建立使用者、停用不需要的帳號、修改預設密碼；所有密碼一律用 [placeholder]，不輸出實值。</p><button class="button button-secondary copy-button" type="button" aria-label="複製驗證提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>比較 EMQX 5.8.9 的 authentication backend：Password-Based、JWT、HTTP 與 LDAP。寫成一份「哪些能在 Dashboard 直接用 UI 設定」的對照表。</p><button class="button button-secondary copy-button" type="button" aria-label="複製驗證提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我想用 JWT 驗證連線。請以官方 EMQX v5.8 文件為準，說明 JWT payload 與簽署 [secret] 該怎麼對；若 5.8.9 預設未在 UI 直接開啟，就寫成「需進階設定」。</p><button class="button button-secondary copy-button" type="button" aria-label="複製驗證提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要接 [HTTP Authentication backend]。請用 placeholder 寫範例：endpoint 回傳的 HTTP 狀態與「拒絕」判斷，並說明該如何測試「無權用戶端真的被擋」。</p><button class="button button-secondary copy-button" type="button" aria-label="複製驗證提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>寫一份「首次登入 EMQX 的驗證就緒 check-list」：改預設密碼、建立測試使用者、確認拒絕的 client 有 log；密碼一律用 [your_password] 佔位。</p><button class="button button-secondary copy-button" type="button" aria-label="複製驗證提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="ACL 授權">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>Authorization／ACL</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>教我用 EMQX 的 Built-in Database ACL 建立最小權限：只准特定 client 訂閱 [home/+/status]，其他主題全部拒絕；先寫規則配對順序與 deny 策略。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 ACL 提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我的 client [ex-client] 需要能 publish。把 ACL 授權順序、內建規則與「拒絕優先」的關係講清楚，並給一個最少權限範例。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 ACL 提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>做一份「EMQX ACL vs HA Mosquitto 設定」的對照：授權順序、主題 regex、以及測試時該看哪些 Metrics 或 logs。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 ACL 提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我只想准許客廳燈具的 client 控制。請用 EMQX ACL 主題規則設計最小權限清單，並說明它與驗證（Authentication）搭配的必要性。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 ACL 提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>授權測試：有個使用者只能訂閱 home/*。請告訴我如何在 EMQX 驗證「他不能寫其他主題」，而不實際踢除該 client。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 ACL 提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="Listener 與 TLS">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>Listener／TLS</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>幫我理解 EMQX 預設埠：1883（MQTT）、8083（WS）、8084（WSS）、8883（MQTTS）。請一個一個說明用途，並提醒連接埠衝突。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Listener 提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我想在不同網段各開多個 Listener。請用 EMQX 5.8.9 的「新增／修改 Listener」流程示範，用占位 IP；不改動任何現有設定。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Listener 提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要為 [8883] 設定 TLS。說明證書使用 [占位憑證路徑] 的方式、EMQX 5.8.9 的 TLS／mTLS 概念，以及「憑證私鑰不進文件」的處理。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Listener 提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我碰到埠衝突 [1883]。請說明 EMQX、HA Mosquitto 與其他服務誰可能佔住，該改哪一側；寫成一次的做法，不改動任何設定。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Listener 提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要測試 WSS 連線。請給 8084 端點走法，並提醒裏面只放 test 用戶與佔位憑證，憑證私鑰永遠不進教學文件。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Listener 提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="規則引擎">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>Rule Engine 規則</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>教我寫第一條 EMQX SQL 規則：以 [topic] 為 source，用 SELECT／FROM／WHERE 過濾，先在 console output 看命中再放行。</p><button class="button button-secondary copy-button" type="button" aria-label="複製規則提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>比較 EMQX 內建動作：console output、republish、重寫主題。各給一則適合的情境，並說明「先測試、再上線」的順序。</p><button class="button button-secondary copy-button" type="button" aria-label="複製規則提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>把 [溫度感測主題] 的 payload 抽成欄位寫規則。請用 EMQX 5.x 的 Data Integration（Rules／Actions）用語，不要混用 4.x 的 Data Bridge。</p><button class="button button-secondary copy-button" type="button" aria-label="複製規則提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要把 [topic A] republish 到 [topic B] 的規則。請示範 SQL 與動作，並提醒若兩邊訂到同一地方可能造成迴圈。</p><button class="button button-secondary copy-button" type="button" aria-label="複製規則提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>用 EMQX 規則做智慧家庭情境：當 [客廳感測器] 高於 [28 度] 就 republish 到 [alert] 主題。先給 SQL，再給 console 測試與風險提醒。</p><button class="button button-secondary copy-button" type="button" aria-label="複製規則提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="Data Integration">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>Connector／Sink／Source</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>解釋 EMQX 5.8.9 的 Data Integration：Connector、Sink、Source 與 Rule 如何串接。以 Webhook 為例，把訊息外送到 [HTTP URL] 占位。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Data Integration 提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要把 EMQX 訊息送到 [REST API]。用 Webhook／HTTP Connector 範例，強調用 placeholder（[api_base_url]、[your_api_key]），並注意 secret 不進文件。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Data Integration 提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>Kafka、PostgreSQL、MySQL 各類 Sink 概念：各給一則「當我要存訊息」的設計方向，並標明哪些在 v5.8.9 UI 較難直接設定。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Data Integration 提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要把外部服務資料「回寫」EMQX。請比較用 Source 與跨 broker bridge 的注意事項。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Data Integration 提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>若 Sink 的 HTTP 呼叫失敗要重試幾次？請先講 EMQX 文件裏 Timeout 與錯誤記錄，再提供容錯做法與 [retry 值] placeholder。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 Data Integration 提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="HA 整合">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>與 Home Assistant 整合</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>我要把 Home Assistant 從內建 Mosquitto 遷到 EMQX。列出遷移步驟：備份、停舊、改 HA MQTT 整合、驗 discovery／birth／will。不要假裝一定零停機。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 HA 整合提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我只有一台 EMQX 想跟 Zigbee2MQTT 共用。說明共用 broker 時 EMQX 需要先滿足的驗證與 ACL，否則 Z2M 的 discovery 會被拒。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 HA 整合提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>EMQX 接到 Home Assistant 後，該確認的 birth／will、狀態主題與 discovery 是否進 Dashboard；列成一份驗收 check 清單。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 HA 整合提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>把 [所有 HA 實體] 接過來之前，寫一份「哪些主題、需要哪些連線測試」的清單；帳密一律用 placeholder。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 HA 整合提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>Home Assistant 打不開 EMQX Web UI。請說明「開啟 Web UI」的 Ingress 進入方式，以及 [Dashboard URL] 可能被哪一設定阻擋。</p><button class="button button-secondary copy-button" type="button" aria-label="複製 HA 整合提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="監控與維運">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>監控與維運</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>為 EMQX 建立監控基線：Overview、節點資源、客戶端數、訊息速率。請輸出主機與 [門檻值]，不跑任何會變更狀態的操作。</p><button class="button button-secondary copy-button" type="button" aria-label="複製監控提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>審查 [EMQX logs] 的 [時間範圍]，依重複訊息分組、標出第一個根因候選與連鎖錯誤；敏感內容可遮蔽。</p><button class="button button-secondary copy-button" type="button" aria-label="複製監控提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>教我看法 EMQX Dashboard 的 Clients／Subscriptions。只列可唯讀確認「誰在線、訂了哪里」的方法，不踢除任何人。</p><button class="button button-secondary copy-button" type="button" aria-label="複製監控提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>設計「EMQX 半夜斷線」的排錯 runbook：先找 Node Metrics、系統資源、Rate 與 Log，再檢查 [WAN]，把 reset 當最後一步。</p><button class="button button-secondary copy-button" type="button" aria-label="複製監控提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>寫 EMQX Prometheus 概念說明：Dashboard 統計、節點狀態、系統資源、速率指標是數據來源，並指出哪些在 v5.8.9 可直接看。</p><button class="button button-secondary copy-button" type="button" aria-label="複製監控提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<section class="prompt-group" data-category="備份與安全">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-message-processing-outline" aria-hidden="true"></i></span>備份、還原與安全</h2>
+<div class="prompt-list">
+<article class="prompt-card"><p>為 EMQX 5.8.9 寫一份備份範圍：<code>/data/emqx</code>（資料、ACL、驗證、規則）、設定檔、ngrok authtoken 的處理；未知路徑先查官方來源。</p><button class="button button-secondary copy-button" type="button" aria-label="複製備份提示詞 1"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>設計 EMQX 還原演練：備份可讀驗證、隔離還原、比對驗證／ACL、重接 client；不在正式環境還原。</p><button class="button button-secondary copy-button" type="button" aria-label="複製備份提示詞 2"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>審查 [EMQX 部署] 攻擊面：管理面不暴露公網、host_network 風險、Rate Limit、TLS、最小權限、Secret 管理；按嚴重度列修正。</p><button class="button button-secondary copy-button" type="button" aria-label="複製備份提示詞 3"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>我要把 ngrok authtoken 放進環境變數。請用 placeholder（<code>your_ngrok_authtoken</code>）寫說明，強調 token 不進文件，並比較 Cloudflare Tunnel 作為替代。</p><button class="button button-secondary copy-button" type="button" aria-label="複製備份提示詞 4"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+<article class="prompt-card"><p>寫 EMQX 備份、還原、更新與遷移的注意。用「先備份、再更新、重新驗證」的階層寫出，並補一句何時該回到官方文件。</p><button class="button button-secondary copy-button" type="button" aria-label="複製備份提示詞 5"><i class="mdi mdi-content-copy" aria-hidden="true"></i>複製</button></article>
+</div></section>
+
+<footer class="page-footer">
+<p><a href="index.html">資源總覽</a><a href="skills.html">Agent Skill 手冊</a><a href="tutorial.html">22 章教學</a></p>
+<p>提示詞不能取代 exact-tag 查證與實機驗收。秘密（MQTT 密碼、API key、ngrok authtoken、憑證私鑰）一律用 placeholder，不要貼進第三方模型。</p>
+</footer>
+</main>
+<script>
+(function(){
+ var search=document.getElementById('promptSearch'),cards=[].slice.call(document.querySelectorAll('.prompt-card')),count=document.getElementById('promptCount'),status=document.getElementById('copyStatus');
+ function filter(){var q=search.value.trim().toLocaleLowerCase('zh-Hant'),shown=0;cards.forEach(function(card){var group=card.closest('.prompt-group'),ok=!q||(group.dataset.category+' '+card.innerText).toLocaleLowerCase('zh-Hant').indexOf(q)>-1;card.hidden=!ok;if(ok)shown++;});document.querySelectorAll('.prompt-group').forEach(function(g){g.hidden=![].some.call(g.querySelectorAll('.prompt-card'),function(c){return !c.hidden;});});count.textContent='顯示 '+shown+'／'+cards.length+' 條';}
+ search.addEventListener('input',filter);filter();
+ function fallback(text){var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){ok=false;}ta.remove();return ok;}
+ cards.forEach(function(card){card.querySelector('button').addEventListener('click',function(){var text=card.querySelector('p').innerText,btn=this,original=btn.innerHTML;function success(){status.className='copy-status';status.textContent='已複製提示詞。';btn.textContent='已複製';setTimeout(function(){btn.innerHTML=original;},1600);}function failed(){status.className='copy-status error';status.textContent='複製失敗。請選取卡片文字後手動複製。';btn.focus();}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(success,function(){fallback(text)?success():failed();});}else{fallback(text)?success():failed();}});});
+})();
+</script>
+</body></html>

@@ -36,6 +36,67 @@ const sharedCss = fs.readFileSync(path.join(ROOT, 'assets', 'css', 'style.css'),
 const brand = (sharedCss.match(/--ww-blue\s*:\s*(#[0-9a-f]{6})/i) || [])[1];
 record('brand spot token remains #6183FC', brand === '#6183FC', brand || 'missing');
 
+// ---- WoowTech brand + responsive regressions ----
+function cssVar(css, name) {
+  const match = css.match(new RegExp(`--${name}\\s*:\\s*(#[0-9a-fA-F]{6})`));
+  return match ? match[1].toLowerCase() : null;
+}
+function cssRuleProperty(css, selector, property) {
+  const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const rule = css.match(new RegExp(`^\\s*${escape(selector)}\\s*\\{([^}]*)\\}`, 'm'));
+  if (!rule) return null;
+  const decl = rule[1].match(new RegExp(`(?:^|;)\\s*${escape(property)}\\s*:\\s*([^;]+)`));
+  return decl ? decl[1].trim() : null;
+}
+function resolveColor(value, css) {
+  const match = value && value.match(/^var\(--([\w-]+)\)$/);
+  if (!match) return /^#[0-9a-f]{6}$/i.test(value || '') ? value.toLowerCase() : null;
+  return cssVar(css, match[1]);
+}
+function luminance(hex) {
+  const channel = (offset) => {
+    const n = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+    return n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
+}
+function ratio(fg, bg) {
+  const a = luminance(fg);
+  const b = luminance(bg);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
+const linkSelector = cssRuleProperty(sharedCss, 'a', 'color');
+const link = resolveColor(linkSelector, sharedCss);
+const linkTarget = cssVar(sharedCss, 'ww-blue-700');
+const paper = resolveColor('var(--paper)', sharedCss);
+record('global link selector uses accessible darker link blue', linkSelector === 'var(--ww-blue-700)', linkSelector || 'missing');
+record('global link color resolves to the 3A57C4 accessible blue token', link === linkTarget, link || 'missing');
+record('global links meet 4.5:1 contrast on paper', Boolean(link && paper && ratio(link, paper) >= 4.5), link && paper ? ratio(link, paper).toFixed(3) : 'missing');
+
+const partLabelSelector = cssRuleProperty(sharedCss, '.sidebar ol li.part-label', 'color');
+const partLabel = resolveColor(partLabelSelector, sharedCss);
+const white = resolveColor('var(--surface)', sharedCss);
+record('sidebar part labels use the accessible dark neutral token', partLabelSelector === 'var(--ink-500)', partLabelSelector || 'missing');
+record('small sidebar part labels meet 4.5:1 contrast on white', Boolean(partLabel && white && ratio(partLabel, white) >= 4.5),
+  partLabel && white ? ratio(partLabel, white).toFixed(3) : 'missing');
+
+// mobile + table-scroll responsive regressions
+record('mobile top nav wraps into a 2-column grid at 720px',
+  /@media\s*\(max-width\s*:\s*720px\)[\s\S]*?\.topnav\s*\{[^}]*grid-template-columns\s*:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/.test(sharedCss));
+const tableScrollRule = sharedCss.match(/^\.table-scroll\s*\{([^}]*)\}/m);
+record('table-scroll wrapper provides contained horizontal scroll',
+  Boolean(tableScrollRule && /overflow-x\s*:\s*auto/.test(tableScrollRule[1]) && /max-width\s*:\s*100%/.test(tableScrollRule[1])),
+  tableScrollRule ? tableScrollRule[1].replace(/\s+/g, ' ').trim() : 'missing rule');
+for (const file of ['sales.html', 'skills.html']) {
+  const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
+  const tables = (html.match(/<table class="data-table"/g) || []).length;
+  const wrapped = (html.match(/<div class="table-scroll"><table class="data-table"/g) || []).length;
+  record(`${file} keeps every responsive data table inside a table-scroll wrapper`, tables > 0 && wrapped === tables, `${wrapped}/${tables}`);
+}
+const promptCount = (fs.readFileSync(path.join(ROOT, 'prompts.html'), 'utf8').match(/<article class="prompt-card">/g) || []).length;
+record('prompts hub ships at least 45 searchable copyable prompts', promptCount >= 45, String(promptCount));
+record('prompts hub clipboard failure feedback is visible', /id="copyStatus"/.test(fs.readFileSync(path.join(ROOT, 'prompts.html'), 'utf8')));
 // check_content
 run('valid chapter fixture passes', ['scripts/check_content.js', '--fixture=tests/fixtures/valid-chapter.html'], 0);
 run('listed positional chapter passes', ['scripts/check_content.js', 'ch1_overview.html'], 0);

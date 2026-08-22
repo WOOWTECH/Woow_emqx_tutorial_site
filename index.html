@@ -3,65 +3,83 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EMQX 指南 · WoowTech</title>
-  <meta name="description" content="WoowTech EMQX 5.8.9 完整指南：22 章教學、銷售手冊、提示詞庫與 Skill 手冊。把 EMQX 變成智慧家庭的 MQTT 訊息骨幹。" />
+  <title>EMQX 5.8.9 完整資源中心 · WoowTech</title>
+  <meta name="description" content="EMQX 5.8.9 的繁體中文 22 章教學、銷售與導入評估、提示詞庫與 AI agent Skill 手冊。把 EMQX 變成你家的 MQTT 訊息骨幹。" />
   <meta name="author" content="WoowTech" />
-  <link rel="canonical" href="https://emqx-guide.woowtech.io/" />
-  <meta name="robots" content="index, follow" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="WoowTech EMQX 指南" />
-  <meta property="og:locale" content="zh_TW" />
-  <meta property="og:title" content="EMQX 指南 · WoowTech" />
-  <meta property="og:description" content="22 章 EMQX 5.8.9 完整教學、銷售手冊、提示詞庫與 Skill 手冊。" />
-  <meta property="og:url" content="https://emqx-guide.woowtech.io/" />
   <meta name="theme-color" content="#6183FC" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:title" content="EMQX 5.8.9 完整資源中心" />
+  <meta property="og:description" content="EMQX 5.8.9 的繁體中文 22 章教學、銷售與導入評估、提示詞庫與 AI agent Skill 手冊。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="EMQX 5.8.9 完整資源中心" />
+  <meta name="twitter:description" content="EMQX 5.8.9 的繁體中文 22 章教學、銷售與導入評估、提示詞庫與 AI agent Skill 手冊。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-    .res-card { display: flex; flex-direction: column; padding: 28px 26px; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
-    .res-card h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
-    .res-card p { margin: 0 0 18px; color: var(--ink-700); font-size: 14.5px; flex: 1; }
-    .res-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-pill, .btn-ghost { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14.5px; text-decoration: none; }
-    .btn-pill { background: var(--ww-blue-700); color: #fff; }
-    .btn-ghost { border: 1px solid var(--hairline); color: var(--ink-700); }
-    @media (max-width: 720px) { .res-grid { grid-template-columns: 1fr; } }
-  </style>
 </head>
 <body>
-  <main class="home">
-    <div class="hero">
-      <div class="kicker">WoowTech 資源中心</div>
-      <h1>EMQX 指南</h1>
-      <p>把 EMQX 5.8.9 變成智慧家庭的 MQTT 訊息骨幹。</p>
+<main class="resource-page">
+  <header class="topbar">
+    <a class="site-name" href="./">EMQX 指南</a>
+    <nav class="topnav" aria-label="主要導覽">
+      <a class="nav-link" aria-current="page" href="index.html">資源總覽</a>
+      <a class="nav-link" href="tutorial.html">教學</a>
+      <a class="nav-link" href="sales.html">導入評估</a>
+      <a class="nav-link" href="prompts.html">提示詞</a>
+      <a class="nav-link" href="skills.html">Skill 手冊</a>
+    </nav>
+  </header>
+  <div class="resource-hero">
+    <span class="script-accent" aria-hidden="true">your message bus</span>
+    <p class="eyebrow">WoowTech · EMQX 5.8.9</p>
+    <h1>EMQX 完整資源中心</h1>
+    <p class="lead">把 EMQX 5.8.9 變成你家智慧家庭的 MQTT 訊息骨幹。從 22 章完整教學、導入評估、可搜尋提示詞庫，到給 AI agent 的 Skill 實戰手冊，四本手冊一次備齊。</p>
+  </div>
+  <section class="resource-section" aria-labelledby="resources">
+    <h2 id="resources">四本實用手冊</h2>
+    <div class="resource-grid">
+      <article class="resource-card">
+        <span class="icon-tile" aria-hidden="true"><i class="mdi mdi-book-open-page-variant-outline"></i></span>
+        <h2>22 章完整教學</h2><p class="meta">給安裝者與日常管理者</p>
+        <p>從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，到 Rule Engine、Connector／Sink、Home Assistant 整合、監控、備份與安全，按章動手做。</p>
+        <div class="card-actions"><a class="button button-primary" href="tutorial.html"><i class="mdi mdi-arrow-right" aria-hidden="true"></i>開始閱讀</a></div>
+      </article>
+      <article class="resource-card">
+        <span class="icon-tile" aria-hidden="true"><i class="mdi mdi-clipboard-check-outline"></i></span>
+        <h2>銷售與導入評估</h2><p class="meta">給顧問、經銷商與決策者</p>
+        <p>先問探索問題，再比較 EMQX 與 Home Assistant 內建 Mosquitto，判斷規模、規則引擎需求、部署階段、風險與驗收條件，不做無條件效能承諾。</p>
+        <div class="card-actions"><a class="button button-primary" href="sales.html"><i class="mdi mdi-arrow-right" aria-hidden="true"></i>查看評估</a></div>
+      </article>
+      <article class="resource-card">
+        <span class="icon-tile" aria-hidden="true"><i class="mdi mdi-message-processing-outline"></i></span>
+        <h2>提示詞庫</h2><p class="meta">給研究、設定與維運工作</p>
+        <p>超過 45 條 EMQX 5.8.9 專用提示詞，涵蓋安裝、連線、驗證、ACL、TLS、規則、Data Integration、HA 整合、監控、備份與安全；搜尋後一鍵複製。</p>
+        <div class="card-actions"><a class="button button-primary" href="prompts.html"><i class="mdi mdi-arrow-right" aria-hidden="true"></i>開啟詞庫</a></div>
+      </article>
+      <article class="resource-card">
+        <span class="icon-tile" aria-hidden="true"><i class="mdi mdi-robot-outline"></i></span>
+        <h2>AI Agent Skill 手冊</h2><p class="meta">給研究與教材製作 agent</p>
+        <p>定義 EMQX 5.8.9 來源優先序、功能清單、22 章寫作、安全唯讀截圖、事實與安全審查、驗證與部署流程，讓 agent 照規格產出可提交的教材。</p>
+        <div class="card-actions"><a class="button button-primary" href="skills.html"><i class="mdi mdi-arrow-right" aria-hidden="true"></i>閱讀手冊</a></div>
+      </article>
     </div>
-    <section class="chapter-index">
-      <div class="res-grid">
-        <div class="res-card">
-          <h3>完整教學</h3>
-          <p>22 章，從安裝、MQTT 心智模型、驗證與 ACL、TLS，到 Rule Engine、資料整合、監控與安全。</p>
-          <div class="res-actions"><a class="btn-pill" href="tutorial.html">開始閱讀</a></div>
-        </div>
-        <div class="res-card">
-          <h3>銷售與導入指南</h3>
-          <p>需求盤點、與 Mosquitto 的比較、部署階段、風險與驗收。</p>
-          <div class="res-actions"><a class="btn-ghost" href="sales.html">看銷售手冊</a></div>
-        </div>
-        <div class="res-card">
-          <h3>提示詞工具箱</h3>
-          <p>安裝、連線、驗證、ACL、TLS、規則、整合、監控與維運的提示詞。</p>
-          <div class="res-actions"><a class="btn-ghost" href="prompts.html">看提示詞庫</a></div>
-        </div>
-        <div class="res-card">
-          <h3>Skill 手冊</h3>
-          <p>給 AI agent 的實戰手冊：查核、撰寫、審查與發布 EMQX 教學。</p>
-          <div class="res-actions"><a class="btn-ghost" href="skills.html">看 Skill 手冊</a></div>
-        </div>
-      </div>
-    </section>
-  </main>
+  </section>
+  <div class="notice"><strong>版本提醒：</strong>功能基準為 <strong>EMQX 5.8.9</strong>；WoowTech add-on 版本 <strong>5.9.0</strong> 只在底層多了一條 ngrok TCP 1883 通道，不改變 EMQX 版本。所有選單路徑、預設值與限制以官方 EMQX v5.8 文件與 add-on 原始碼為事實邊界。</div>
+  <footer class="page-footer">
+    <p>WoowTech 製作 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site">原始碼與勘誤</a><a href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a></p>
+    <p>EMQX 為其權利人的商標；本站與其無隸屬關係。</p>
+  </footer>
+</main>
 </body>
 </html>

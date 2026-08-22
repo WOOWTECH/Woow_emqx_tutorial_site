@@ -4,45 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>找不到這一頁 · WoowTech EMQX 指南</title>
+  <meta name="description" content="404：找不到這一頁。回 WoowTech EMQX 5.8.9 資源總覽或教學目錄。" />
   <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#6183FC" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <main class="home">
-    <div class="hero">
-      <span class="kicker-script">page not found</span>
-      <div class="kicker">404</div>
-      <h1>找不到這一頁</h1>
-      <p>網址可能打錯了，或這一章已經改名。回目錄挑一章開始看吧。</p>
-    </div>
-    <section class="chapter-index">
-      <h2 class="index-title">你可能要找</h2>
-      <div class="chapter-grid">
-        <a class="chapter-card" href="index.html">
-          <span class="num">↖</span>
-          <h3>回資源總覽</h3>
-          <p>教學、銷售手冊、提示詞庫、Skill 手冊的入口。</p>
-        </a>
-        <a class="chapter-card" href="tutorial.html">
-          <span class="num">目</span>
-          <h3>教學目錄</h3>
-          <p>22 章 EMQX 5.8.9 完整教學清單。</p>
-        </a>
-        <a class="chapter-card" href="ch1_overview.html">
-          <span class="num">01</span>
-          <h3>從第 1 章開始</h3>
-          <p>認識 EMQX 與 MQTT Broker。</p>
-        </a>
-        <a class="chapter-card" href="ch2_install.html">
-          <span class="num">02</span>
-          <h3>安裝 Woow EMQX</h3>
-          <p>把 EMQX 裝進 Home Assistant。</p>
-        </a>
+  <div class="not-found">
+    <div class="not-found-card">
+      <span class="script-accent" aria-hidden="true">page not found</span>
+      <p class="eyebrow">WoowTech · EMQX 5.8.9</p>
+      <div class="not-found-code">404</div>
+      <h1 style="font-family:var(--font-display);font-size:clamp(28px,5vw,40px);margin:0 0 20px;line-height:1.15;color:var(--ink-900);">找不到這一頁</h1>
+      <p>網址可能打錯了，或這一章已經改名。回資源總覽挑一本手冊，或從第 1 章開始看。</p>
+      <div class="not-found-actions">
+        <a class="button button-primary" href="index.html"><i class="mdi mdi-home-outline" aria-hidden="true"></i>回資源總覽</a>
+        <a class="button button-secondary" href="tutorial.html"><i class="mdi mdi-view-list-outline" aria-hidden="true"></i>教學目錄</a>
+        <a class="button button-secondary" href="ch1_overview.html"><i class="mdi mdi-arrow-right" aria-hidden="true"></i>從第 1 章開始</a>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
 </body>
 </html>

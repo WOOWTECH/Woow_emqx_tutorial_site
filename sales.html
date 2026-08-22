@@ -1,21 +1,149 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>銷售與導入指南 · WoowTech EMQX 指南</title>
-  <meta name="description" content="WoowTech EMQX 銷售與導入指南：需求盤點、與 Mosquitto 比較、部署階段、風險與驗收。" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EMQX 5.8.9 銷售與導入評估 · WoowTech</title>
+<meta name="description" content="EMQX 5.8.9 導入評估：與 Home Assistant 內建 Mosquitto 比較、規模判斷、部署階段、風險與安全、驗收清單。" />
+<meta name="author" content="WoowTech" />
+<meta name="theme-color" content="#6183FC" />
+<link rel="canonical" href="https://emqx-guide.woowtech.io/sales.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:title" content="EMQX 5.8.9 導入評估" />
+<meta property="og:description" content="EMQX 5.8.9 導入評估：與 Home Assistant 內建 Mosquitto 比較、規模、部署階段、風險、安全與驗收清單。" />
+<meta property="og:url" content="https://emqx-guide.woowtech.io/sales.html" />
+<meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="EMQX 5.8.9 導入評估" />
+<meta name="twitter:description" content="EMQX 5.8.9 導入評估：與 Mosquitto 比較、規模、部署階段、風險、安全與驗收清單。" />
+<meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Yellowtail&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+<link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <main class="content">
-    <div class="chapter-header">
-      <div class="kicker">WoowTech</div>
-      <h1>EMQX 銷售與導入指南</h1>
-      <p class="lead">（草稿，待 hub lane 替換）需求盤點、與 Mosquitto 的比較、部署階段、風險與驗收。</p>
-    </div>
-    <p><a href="index.html">回資源總覽</a> · <a href="tutorial.html">看完整教學</a></p>
-  </main>
-</body>
-</html>
+<main class="resource-page">
+<header class="topbar">
+<a class="site-name" href="./">EMQX 指南</a>
+<nav class="topnav" aria-label="主要導覽">
+<a class="nav-link" href="index.html">資源總覽</a>
+<a class="nav-link" href="tutorial.html">教學</a>
+<a class="nav-link" aria-current="page" href="sales.html">導入評估</a>
+<a class="nav-link" href="prompts.html">提示詞</a>
+<a class="nav-link" href="skills.html">Skill 手冊</a>
+</nav>
+</header>
+<div class="resource-hero">
+<span class="script-accent" aria-hidden="true">scale with care</span>
+<p class="eyebrow">WoowTech · EMQX 5.8.9</p>
+<h1>先比功能與規模，再談導入</h1>
+<p class="lead">這份手冊協助你做探索會議、需求盤點、與 Home Assistant 內建 Mosquitto 的比較、分階段部署與驗收。EMQX 5.8.9 是開源 MQTT Broker，不是「什麼都做」的平台；本頁不誇大效能承諾，只列可驗證的差距與你的下一步。</p>
+</div>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-magnify" aria-hidden="true"></i></span>探索會議先問什麼</h2>
+<div class="resource-grid">
+<article class="info-card"><h3>需求盤點</h3>
+<ul>
+<li>你目前有多少 MQTT 客戶端與訂閱？預估一年內會成長到多少？</li>
+<li>訊息量是每分鐘幾百則，還是需要高輸送量的裝置骨幹？</li>
+<li>需不需要規則引擎、資料外送（Connector／Sink）或跨 broker 橋接？</li>
+<li>是否只有一台 Home Assistant，還是想預留叢集／多節點擴充？</li>
+</ul></article>
+<article class="info-card"><h3>現況與責任</h3>
+<ul>
+<li>現在是否用 Home Assistant 內建 Mosquitto？遷移的停機窗口多大？</li>
+<li>誰負責維護 EMQX、備份 /data/emqx 與憑證輪替？</li>
+<li>有沒有 Zigbee2MQTT、ESPhome 或其他 client 已經接在某個 broker？</li>
+<li>管理 Dashboard 要由本機 HA 開啟，還是需要獨立 URL？</li>
+</ul></article>
+</div>
+</section>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-scale-balance" aria-hidden="true"></i></span>EMQX 與 Mosquitto 的定位</h2>
+<p>Home Assistant 內建 Mosquitto 是「夠用就好」的入門 broker；EMQX 5.8.9 是「可成長、可管理、可整合」的訊息骨幹。兩者都講 MQTT，差別在管理面與擴充面。</p>
+<div class="table-scroll"><table class="data-table"><thead><tr><th>面向</th><th>Mosquitto（HA 內建）</th><th>EMQX 5.8.9</th></tr></thead><tbody>
+<tr><td>介面</td><td>HA 整合畫面的選項與寫入 HA 設定檔</td><td>完整 Dashboard：使用者、ACL、Listeners、規則、監控一頁在手</td></tr>
+<tr><td>驗證與授權</td><td>以普通使用設定為主</td><td>Password-based Built-in Database、JWT、HTTP／LDAP 認證概念＋ ACL 主題規則</td></tr>
+<tr><td>規則與資料整合</td><td>需自行外寫程式</td><td>內建 SQL 規則引擎、Actions（republish／console）、Connector／Sink／Source</td></tr>
+<tr><td>監控與維運</td><td>簡易狀態、仰賴 HA 面</td><td>Overview、Metrics、客戶端清單、Log＆Trace、RBAC 概念、Health Check</td></tr>
+<tr><td>適合</td><td>入門、定量的標準訂閱</td><td>多客戶端、需要規則、需要監控與成長照顧</td></tr>
+</tbody></table></div>
+<div class="notice"><strong>銷售用語：</strong>說「EMQX 在管理面、規則面與監控面多了這些能力」，不要說「Mosquitto 不好」或「EMQX 一定更快」。效能與規模要看你的實際負載驗收。</div>
+</section>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-server-network" aria-hidden="true"></i></span>規模判斷</h2>
+<p>規模不是只看裝置總數。請同時記錄客戶端數、訂閱數、每則訊息大小、保留訊息、規則命中次數、連線頻率與 HA 主機資源。EMQX 5.8.9 的實際限制由你建的 Listener 數、QoS──訂閱負荷與硬體決定，先用代表性的資料集壓測，不把單次成功外推成保證上限。</p>
+<div class="table-scroll"><table class="data-table"><thead><tr><th>指標</th><th>為什麼重要</th></tr></thead><tbody>
+<tr><td>客戶端與訂閱數</td><td>決定會話、保持連線與 ACL 規則的負載。</td></tr>
+<tr><td>訊息速率</td><td>決定閘道能跟不上，還是規則引擎忙。</td></tr>
+<tr><td>保留訊息</td><td>大量 retained 主題佔記憶體與樹。</td></tr>
+<tr><td>規則與 Connector</td><td>SQL 規則、HTTP Sink 的吞吐與延遲是另一層。</td></tr>
+<tr><td>持久層</td><td>HA 主機記憶體、磁碟、網路是共同此案的瓶頸。</td></tr>
+</tbody></table></div></section>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-format-list-numbered" aria-hidden="true"></i></span>建議部署階段</h2>
+<ol class="phase-list">
+<li><strong>發現與基線：</strong>鎖定 EMQX 5.8.9 與 add-on 5.9.0，盤點現有 broker、遷移權責與功能清單。</li>
+<li><strong>實驗室試點：</strong>以少量開發工具或測試用 publish／subscribe 驗證 Dashboard、驗證、ACL 與規則。</li>
+<li><strong>同網段遷移：</strong>把現有 HA 重要訂閱一條條搬到 EMQX，逐一驗證 Zigbee2MQTT、QoS 與 will。</li>
+<li><strong>分批上線：</strong>依區域或風險分批切換，每批保留備份、回復點與變更紀錄。</li>
+<li><strong>營運移交：</strong>交付備份、憑證輪替、監控基線、升級與責任分工與定期複驗。</li>
+</ol></section>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-alert-circle-outline" aria-hidden="true"></i></span>主要風險與控制</h2>
+<div class="table-scroll"><table class="data-table"><thead><tr><th>風險</th><th>影響</th><th>控制方式</th></tr></thead><tbody>
+<tr><td>連接埠衝突</td><td>與 HA Mosquitto 或其他 broker 搶 1883</td><td>先停用或改 HA 的 Mosquitto 連接埠，再安裝 EMQX；在 Listener 設好。</td></tr>
+<tr><td>誤把 add-on 5.9.0 當成 EMQX 版本</td><td>升級判斷錯誤</td><td>教學、銷售一律寫 EMQX 5.8.9 + add-on 5.9.0。</td></tr>
+<tr><td>驗證／ACL 未設</td><td>任何 client 都可讀寫</td><td>首登改密碼，建 Auth 與最小權限 ACL。</td></tr>
+<tr><td>宿主網暴露</td><td>Broker 經 host_network 或 ngrok 被看到</td><td>不直接開公網 1883；要外連用 TLS、ngrok 風險說明。</td></tr>
+<tr><td>規則寫錯</td><td>訊息被覆寫或發送到錯的地方</td><td>先在 console output 測試，確認再放行。</td></tr>
+</tbody></table></div></section>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-shield-lock-outline" aria-hidden="true"></i></span>安全與資料界線</h2>
+<ul class="check-list">
+<li>MQTT 密碼、client ID、username、API key、ngrok authtoken、TLS 私鑰與連線字串一律用佔位符，不進 HTML／log／commit。</li>
+<li>Dashboard 管理面不要直接暴露到公網；用 Home Assistant 的「開啟 Web UI」Ingress 或其他最小化代理。</li>
+<li>對外開放 1883 前，先講明公開 broker 的風險與 TLS 要求；最小化 Rate Limit 與權限。</li>
+<li>首次設定驗證（Authentication）是最低界線，不把它描述成任意防護。</li>
+<li>備份範圍 = <code>/data/emqx</code>（資料、ACL、驗證、規則設定）；還原前先告知影響面。</li>
+</ul></section>
+
+<section class="resource-section">
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-clipboard-check-outline" aria-hidden="true"></i></span>驗收清單</h2>
+<div class="resource-grid">
+<article class="info-card"><h3>功能驗收</h3>
+<ul class="check-list">
+<li>Dashboard 顯示 EMQX 5.8.9 版本；add-on 顯示 5.9.0。</li>
+<li>MQTT 使用者在 Dashboard 建立後可用認證連線。</li>
+<li>ACL 主題規則照最小權限生效，顯示拒絕的 logs。</li>
+<li>一條規則能在 console 輸出觸發成功，再轉到 Sink。</li>
+<li>HA 內建 Mosquitto 遷移後原有訂閱仍在。</li>
+</ul></article>
+<article class="info-card"><h3>營運驗收</h3>
+<ul class="check-list">
+<li>備份可從 <code>/data/emqx</code> 復原。</li>
+<li>對外 Listener 已設定 TLS 或明確不開放。</li>
+<li>監控基線（Clients、訊息、節點資源）已留存。</li>
+<li>連接埠衝突、閘道不穩、驗證失效有可執行 runbook。</li>
+<li>與 Mosquitto 的差距、未驗收項目列為例外。</li>
+</ul></article>
+</div></section>
+
+<footer class="page-footer">
+<p><a href="index.html">資源總覽</a><a href="tutorial.html">22 章教學</a><a href="https://docs.emqx.com/en/emqx/v5.8/">EMQX v5.8 官方文件</a></p>
+<p>本頁是評估框架，不構成特定環境的效能或容量保證。實際結果以指定版本、硬體與負荷的驗收紀錄為準。</p>
+</footer>
+</main></body></html>
