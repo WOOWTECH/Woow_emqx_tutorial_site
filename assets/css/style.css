@@ -867,7 +867,7 @@ button, .button, .nav-link, .copy-button { min-height: 44px; }
 .resource-section { margin:0 0 80px; }
 .resource-section > h2, .resource-section h2:not(.icon-heading) { font-size:30px; line-height:1.12; margin-bottom:24px; }
 .icon-heading { display:flex; align-items:center; gap:14px; }
-.icon-tile { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; flex:0 0 48px; border-radius:var(--radius-sm); background:var(--ww-blue-050); color:var(--ww-blue-700); font-size:26px; }
+.icon-tile { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; flex:0 0 48px; border-radius:var(--radius-sm); background:var(--ww-blue-050); color:var(--ww-blue); font-size:26px; }
 .resource-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
 .resource-card, .info-card { padding:28px; border:1px solid var(--hairline); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow-sm); }
 .resource-card { display:flex; flex-direction:column; min-height:310px; }
@@ -890,7 +890,7 @@ button, .button, .nav-link, .copy-button { min-height: 44px; }
 .content .table-scroll { margin:20px 0; }
 .check-list { list-style:none; padding:0; }
 .check-list li { position:relative; padding:8px 0 8px 30px; }
-.check-list li::before { content:"\F05E0"; position:absolute; left:0; font-family:"Material Design Icons"; color:var(--ww-blue-700); }
+.check-list li::before { content:"\F05E0"; position:absolute; left:0; font-family:"Material Design Icons"; color:var(--ww-blue); }
 .phase-list { counter-reset:phase; display:grid; gap:16px; list-style:none; padding:0; }
 .phase-list li { counter-increment:phase; padding:22px 22px 22px 68px; position:relative; background:var(--surface); border:1px solid var(--hairline); border-radius:var(--radius); }
 .phase-list li::before { content:counter(phase); position:absolute; left:20px; top:20px; display:grid; place-items:center; width:34px; height:34px; border-radius:var(--radius-pill); background:var(--ww-blue-700); color:#fff; font-weight:700; }
@@ -929,5 +929,9 @@ code { overflow-wrap:anywhere; }
   .prompt-tools { align-items:stretch; flex-direction:column; }
   .prompt-count { padding-left:10px; }
   .not-found-card { padding:32px 20px; }
+  .steps > li { padding:64px 18px 20px; }
+  .pager { flex-direction:column; }
+  .pager a { min-height:44px; }
+  section p, section li, .info-card p, .info-card li { font-size:16px; }
 }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
