@@ -90,76 +90,121 @@
       <p class="lead">EMQX Listeners 與 TLS：1883／8083／8084／8883 各埠用途、新增與修改 Listener、TLS 憑證與 mTLS 概念，以及連接埠衝突的處理。</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
+    <section id="why" data-nav="為什麼要學這個">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>到目前為止，你連線多半用純 TCP 的 1883，但 EMQX 5.8.9 的一個特色，就是同一個 broker 可以同時監聽多個「出口」：標準 MQTT（TCP）、WebSocket、安全 WebSocket、以及走 SSL/TLS 的加密連線。你想讓某些裝置走加密、Home Assistant 走 WebSocket、測試走 1883，就得看懂這些<strong>監聽器（Listener）</strong>是誰、如何新增與編輯，以及最重要的憑證概念。</p>
+      <p>這章帶你看看五個埠各自用途、在 <strong>Management → Listeners</strong> 新增／編輯監聽器、理解 SSL/TLS 與 mTLS 的單向與雙向驗證；還有家用最常絆腳的<strong>連接埠衝突</strong>（Mosquitto 卡 1883、WebRTC 卡 8083）該怎麼在 Dashboard 安全地遷移。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p>監聽器（Listener）是 EMQX 對外接受 MQTT client 連線的「伺服端監聽點」：每一個都有<strong>傳輸協定（TCP／SSL／WebSocket／WSS）＋綁定位址與埠</strong>，並可設定這支監聽器能接受多少並發連線（max_connections）。EMQX 一個實例同時可以啟動多支監聽器，因此你能讓不同用途的 client 走不同協定與埠。</p>
+      <p>官方文件明確列出四種主要傳輸：TCP（1883）、SSL（8883）、WebSocket（8083）、Secure WebSocket（8084）。Dashboard 管理介面本身則由 add-on 開在 18083（HTTP），所以你日常常講的「五個埠」是：1883、8083、8084、8883 與 18083。</p>
+      <p>要連進加密入口，client 會自動做 SSL/TLS 交握，驗證 server 憑證。它區分<strong>單向驗證</strong>（client 驗 server）與<strong>雙向驗證（mTLS）</strong>（server 也驗 client 的憑證）。這章後段把憑證與交握說清楚。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Listener</td><td>監聽器</td><td>EMQX 對外接收 client 連線的監聽點</td></tr>
+            <tr><td>TLS</td><td>傳輸層安全</td><td>加密傳輸的協定，SSL 是其前身</td></tr>
+            <tr><td>Certificate</td><td>憑證</td><td>數位身分證明（X.509）</td></tr>
+            <tr><td>CA</td><td>憑證機構</td><td>發出並信任憑證的機構</td></tr>
+            <tr><td>mTLS</td><td>雙向 TLS</td><td>server 也驗證 client 的憑證</td></tr>
+            <tr><td>WebSocket</td><td>網頁套件通道</td><td>瀏覽器端的 MQTT 通道</td></tr>
+            <tr><td>Port</td><td>連接埠</td><td>協定進出的編號</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>瀏覽現有監聽器</h3><p>登入 Dashboard，左側 <strong>Management → Listeners</strong>。你可以在這裡看到既有監聽器，例如 TCP（1883）、SSL（8883）、WebSocket（8083）、WSS（8084），各有對應的協定與埠。用 <strong>Add（新增）</strong>也可以建立新的監聽器。</p></li>
+        <li><h3>編輯 SSL 監聽器並換憑證</h3><p>在 Listeners 列表點 SSL 監聽器的 Name（例如 <code>default</code>），進編輯頁。該頁可更換 <strong>TLS Cert</strong>（伺服器憑證）、<strong>TLS Key</strong>（對應私鑰）與 <strong>CA Cert</strong>（信任的 CA）；EMQX 預設使用內建的測試憑證（在 <code>etc/certs</code>）。改完按 <strong>Update</strong>。</p></li>
+        <li><h3>啟用／關閉 mTLS 交握</h3><p>在同頁的 <strong>TLS Verify</strong> 開關決定是否要驗證 client 憑證（雙向）；要強制 mTLS，就把 <strong>TLS Verify</strong> 設為 Enable、並把 <strong>Fail If No Peer Cert</strong> 設為 <code>true</code>，這樣沒有憑證的 client 在交握階段就會失敗。</p></li>
+        <li><h3>處理連接埠衝突</h3><p>若某一埠（如 8083 被 WebRTC 用）卡住，先暫停衝突的一方，再到 Listeners 頁把該監聽器的埠改掉並 <strong>Update</strong>。注意：若監聽器是由 <code>emqx.conf</code> 定義的，Dashboard 的變更只會生效到下次 EMQX 重啟之前。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="topic1" data-nav="五個埠與協定">
+      <h2 data-icon="network">五個埠與協定</h2>
+      <p>因為 add-on 以 host_network 模式開在 Home Assistant 主機上，這五個埠直接用到 HA 的連接埠。核心對照如下。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>連接埠</th><th>協定</th><th>用途</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1883</td><td>MQTT（TCP）</td><td>標準 MQTT，Home Assistant 與 Zigbee 最常用</td></tr>
+            <tr><td>8083</td><td>MQTT/WS</td><td>MQTT over WebSocket（瀏覽器測試工具走這裡）</td></tr>
+            <tr><td>8084</td><td>MQTT/WSS</td><td>安全 WebSocket（TLS 加密的 WebSocket）</td></tr>
+            <tr><td>8883</td><td>MQTTS</td><td>MQTT over SSL/TLS，加密的標準 MQTT</td></tr>
+            <tr><td>18083</td><td>HTTP</td><td>EMQX Dashboard 管理介面</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>照文件說法，WebSocket 監聽器的 MQTT path 預設是 <code>/mqtt</code>。你可能有些裝置只用 1883，另一些走 8883 加密；web 瀏覽器若要塞網頁，就走 8083（或 8084 的安全版）。你並不需要同時把五個都顧著，加裝需求逐一選一個「用得上」的即可。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="topic2" data-nav="TLS、憑證與 mTLS">
+      <h2 data-icon="security">TLS、憑證與 mTLS</h2>
+      <p><strong>TLS（Transport Layer Security）</strong>在傳輸層加密資料，EMQX 把它用在 MQTT 連線、資料整合往外部資源、以及叢集節點之間，都可以單向或雙向。單向（one-way）時 client 驗證 server 的身分憑證；雙向（mTLS）時 server 還要驗證 client 的憑證，可防中間人攻擊。</p>
+      <p>SSL/TLS 需要三支檔案：<strong>certfile</strong>（伺服器憑證）、<strong>keyfile</strong>（對應的私鑰）與 <strong>cacertfile</strong>（受信任的 CA 清單）。EMQX 出貨自帶一組只用於測試的憑證（在 <code>etc/certs</code>），所以你看的 8883 監聽預設是「單向」可用的測試環境。要上線務必要換成受信 CA 簽發的憑證（例如你家網域＋可被信任的 CA），私鑰只放系統與你自己看。</p>
+      <p>mTLS（雙向）的實作，就是把 SSL 監聽器的 <strong>TLS Verify</strong> 打開、並把 <strong>Fail If No Peer Cert</strong> 設為 true，強迫每個 client 握手都要提供受信任的憑證。另外，EMQX 預設每 120 秒重新載入憑證，所以更換 server 憑證不一定需要重啟 EMQX。</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
+    <section id="topic3" data-nav="連接埠衝突">
+      <h2 data-icon="warning">連接埠衝突與遷移</h2>
+      <p>因為 host_network，這五個埠與 Home Assistant 主機上的其他服務共用編號，最常見的衝突，要談兩個例子：官方 README 明說「無法與 Mosquitto 同時運行」（兩個都盯 1883），以及 WebRTC（AlexxIT）與 EMQX 共用 8083。</p>
+      <p>處置的流程照 add-on README：先暫停衝突的一方（如 Mosquitto），再啟動 EMQX；若想兩者共存，就到 <strong>Management → Listeners</strong> 把衝突監聽器的埠改掉或新增一支監聽器定在別的埠，再重新啟動該服務。也可以完全只保留你需要的 listener（例如只開 1883 與 8883），把不用的埠關掉，減少被掃描的攻擊面。</p>
+      <p>要注意官方文件的一條提示：<strong>若監聽器在 <code>emqx.conf</code> 中被定義，Dashboard 上的變更只會生效到下次 EMQX 重啟為止。</strong>想讓啟動後就固定生效，就得用設定檔或環境變數（add-on 的 <code>EMQX_LISTENERS__*</code> 環境變數在第 17 章談）。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="故障排除">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>EMQX 啟動失敗、Log 顯示「連接埠被佔用」</strong>：找出是哪一埠，暫停衝突的 Mosquitto（1883）或 WebRTC（8083），再啟動 EMQX；之後想長期共存，再到 Listeners 把其中一方的埠改掉。</li>
+        <li><strong>換憑證後 8883 一直連不上</strong>：確認 certfile／keyfile 成對、CA 與 server 憑證是 PEM 格式，且 server 憑證的 CN（或 SAN）與 client 連線的位址相符（否則會見 Hostname/IP does not match certificate 的錯誤）。可在 Listeners 用 Reset 換回測試憑證，用來隔離問題。</li>
+        <li><strong>啟用 mTLS 後無憑證 client 全部斷掉</strong>：這是 mTLS 的預期——雙向就是堅持 client 提供「受信任憑證」。若你只是想暫時不嚴，把 TLS Verify 關回單向，或先幫該 client 簽發一張受信任的用戶端憑證。</li>
+        <li><strong>在 Dashboard 改了埠，重啟後又變回原本</strong>：多半是該監聽器由 <code>emqx.conf</code> 定義，Dashboard 變更只到重啟前。想持久，用 add-on 環境變數（<code>EMQX_LISTENERS__*</code>）在啟動時覆寫，細節在第 17 章。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>五個埠都要開嗎，能不能關</summary>
+        <div class="body"><p>不必全部都開。你可以只留你實際用的埠（例如 1883＋18083），把 WebSocket／SSL 那幾支停掉或換埠。規則是用得越少越安全，多開一個就是多一分攻擊面。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>8883 與 8084 聽起來很像，差在哪</summary>
+        <div class="body"><p>8883 是「加密的標準 MQTT（MQTT over SSL/TLS）」；8084 是「加密的 WebSocket 通道（MQTT over WSS）」。通訊內容都加密，差在傳輸層：前者給原生 MQTT client（TCP），後者給瀏覽器用的 WebSocket。非加密版本就是 1883 與 8083。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>單向與 mTLS（雙向）我該選哪個</summary>
+        <div class="body"><p>先從單向開始：client 加密收送，也會驗證 server 的憑證，已能保證資料不被偷看。若你希望「只有持有你核發證書的設備才能進」，再升級到 mTLS，但要先為每個裝置準備好憑證，否則沒憑證的裝置就會全部無法登入。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>憑證用自己簽的可以嗎</summary>
+        <div class="body"><p>可以「測試」，但不建議「上線」。EMQX 出貨用的就是測試證，官方明說生產環境要用受信 CA 核發的憑證。自簽憑證再讓每個 client 安裝你的 CA 才能信任，對家用多裝置來說更容易出錯。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md">EMQX 5.8 Listener Configuration（四協定與埠）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/emqx-mqtt-tls.md">EMQX 5.8 Enable SSL/TLS（單向／雙向 mTLS）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/mqtt-client-tls.md">EMQX 5.8 Client TLS 連線範例</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/overview.md">EMQX 5.8 Network and TLS 總覽</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（連接埠與衝突）</a></li>
       </ul>
     </section>
 

@@ -90,76 +90,105 @@
       <p class="lead">EMQX Authentication 驗證：Password-Based Built-in Database 建立與停用使用者、憑證格式、JWT 概念、HTTP／LDAP 概念，以及首次設定驗證的必要性。</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
+    <section id="why" data-nav="為什麼要學這個">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>第 5 章你已經能用 WebSocket 工具連上 broker，但那時多半是「空帳密」狀態。EMQX 在你還沒建立任何驗證資源之前，client 是可以直接連的——這對生命週期單機的確認很方便，但也意味著<strong>任何人只要能碰到你的 1883 或 8083，就能發布、收看你整個主題空間</strong>。Woow 的 add-on 文件把「首次登入後必須先設定 MQTT 驗證」列為必做事項，不是可選。</p>
+      <p>這章帶你實際建立 <strong>Password-Based（密碼式）＋ 內建資料庫（Built-in Database）</strong> 的驗證，新增你要給 Home Assistant 與裝置使用的帳號，並學會停用驗證資源與刪除使用者的做法；同時把 <strong>JWT</strong>、<strong>HTTP</strong>、<strong>LDAP</strong> 三種機制「看得懂、知道何時才用」的概念講清楚，之後才會跟著裝出更符合你需要的驗證架構。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p>EMQX 把「驗證」與「授權」分成兩件事：<strong>驗證（Authentication）</strong>回答「你是誰」，用帳號密碼、client ID、JWT 等機制確認；<strong>授權（Authorization）</strong>回答「這個身分能做哪些 publish／subscribe」，是第 7 章的主題。Dashboard 從左側 <strong>Access Control</strong> 展開，可以看到 <strong>Authentication</strong>、<strong>Authorization</strong> 與 <strong>Banned Clients（黑名單）</strong>。</p>
+      <p>建立驗證通常分四步：先選<strong>機制（Mechanism）</strong>，再選<strong>後端（Backend）</strong>存放或取得資料，然後設定連線資訊，最後「建立」。機制有 <strong>Password-Based</strong>（帳號／密碼）、<strong>JWT</strong>（權杖）、以及 MQTT 5.0 的 <strong>SCRAM</strong>（增強式、雙向驗證）。後端有 EMQX 內建資料庫、外部資料庫（MySQL／PostgreSQL／MongoDB／Redis）、以及 <strong>HTTP Server</strong>；JWT 不需要後端。</p>
+      <p><strong>家用 add-on 務實的一步，就是 Password-Based ＋ Built-in Database</strong>：不需要另外維護一套資料庫，直接在 Dashboard 新增使用者，就能讓 Home Assistant 與 Zigbee2MQTT 用帳密連入。</p>
     </section>
 
     <section id="what" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Authentication</td><td>驗證</td><td>確認「你是誰」</td></tr>
+            <tr><td>Password-Based</td><td>密碼式</td><td>用帳號（或 client ID）＋密碼驗證</td></tr>
+            <tr><td>Built-in Database</td><td>內建資料庫</td><td>EMQX 自行存放使用者與密碼</td></tr>
+            <tr><td>Credential</td><td>憑證／帳密</td><td>用來證明身分的資料</td></tr>
+            <tr><td>JWT</td><td>權杖代碼</td><td>由簽發方簽署、帶着聲明的權杖</td></tr>
+            <tr><td>HTTP Server</td><td>HTTP 後端</td><td>由你的 HTTP 服務回答驗證結果</td></tr>
+            <tr><td>LDAP</td><td>目錄服務協定</td><td>查證 user 與密碼的企業目錄</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>進到 Authentication 驗證頁</h3><p>登入 Dashboard，左側 <strong>Access Control → Authentication</strong>，按右上 <strong>Create</strong>。</p></li>
+        <li><h3>建立 Password-Based ＋ 內建資料庫</h3><p>在 Create 頁選機制 <strong>Password-Based</strong>，後端選 <strong>Built-in Database</strong>（外部資料庫、HTTP Server 先留到概念段）。依你的需求設定是使用 Username 還是 ClientID、密碼加密方式，最後按 <strong>Create</strong>。</p></li>
+        <li><h3>新增使用者</h3><p>在 Authenticator List 找到剛建立的那筆，點 <strong>User Management</strong>，新增一組帳號與密碼（例如 <code>ha_broker</code>／<code>&lt;你的密碼&gt;</code>），它會被存在 EMQX 內建資料庫。</p></li>
+        <li><h3>驗證成功連線與停用</h3><p>回到第 5 章的 WebSocket 工具，用剛建立的帳密連線，確認驗證真的生效（錯的密碼會被拒）。再到 Authenticator List 把這筆驗證器的 <strong>Enable</strong> 開關關掉觀察「所有 client 都能連」的後果，實驗完記得立刻恢復。個別多餘的使用者可在 User Management 刪除。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="topic1" data-nav="Password-Based 內建資料庫">
+      <h2 data-icon="login">Password-Based 內建資料庫</h2>
+      <p>內建資料庫是最省心的後端：使用者帳密存在 EMQX 自己的資料庫中，不需要另外跑一套資料服務。你可以用 <strong>User Management</strong> 手動新增、刪除帳號，也可以下載官方範本填好後 <strong>Import 匯入</strong>來一次建立多筆。</p>
+      <p>設定時有兩個細節要留意。第一是 <strong>UserID Type</strong>：帳戶連線時要用「username」還是用「client ID」當作辨識基準，跟你實際送出的欄位一致才行。第二是<strong>密碼加密（Password Hash）與 Salt 位置</strong>：<strong>改動 Password Hash 或 Salt Position 之後，已建立的認證資料全部失效</strong>，必須重新建立使用者。</p>
+      <p>停用方面，EMQX 的 <strong>Enable</strong> 開關可即時停用整個驗證器。官方文件特別強調：停用之後「所有 client 都能連線」——它不是一刀擋下所有人，而是把這層身分檢查拿掉。如果你是為了維運暫時停用，記得用畢立刻恢復；想要「連得上但不見得能做事」，那是第 7 章授權的責任。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="topic2" data-nav="JWT 驗證概念">
+      <h2 data-icon="profile">JWT 驗證概念</h2>
+      <p><strong>JWT（JSON Web Token）</strong>是權杖式驗證：client 在連線時把一顆 JWT token 放進 <strong>username 或 password 欄位</strong>，EMQX 驗證簽名與 Payload 聲明即可，因此 JWT 不需另外的後端。建立時可選 <strong>Secret</strong>（以密鑰驗證）或 <strong>Public Key</strong>（以公鑰驗證），搭配是否對 secret 做 Base64，並在 <strong>Payload</strong> 填入需要驗證的聲明。</p>
+      <p>若你使用 <strong>JWKS Endpoint</strong>，EMQX 會定期向授權伺服器取回一組 RSA／ECDSA 公開金鑰來驗證 JWT，並可設定取得更新的間隔（秒）。JWT 適合「權杖已由既有的身分服務簽發、你只是想讓 EMQX 也認這些 token」的場景。</p>
+      <p>對純 Home Assistant 自建環境來說，這通常是加分項而不是必選：如果你還沒有任何 token 簽發服務，直接走帳號密碼會更簡單。</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
+    <section id="topic3" data-nav="HTTP 與 LDAP 概念">
+      <h2 data-icon="network">HTTP 與 LDAP 概念</h2>
+      <p><strong>HTTP Server</strong> 是把驗證交給你自己準備的外部 HTTP 服務：EMQX 將每次連線請求送到該 URL，依回應決定允許或拒絕。設定需要提供請求方法（POST 或 GET）、請求網址（需含 http／https 協定）、Header，以及在 Body 裡放入要驗證的資訊（通常含 <code>username</code> 與 <code>password</code>）。它可以配合現有的帳號系統，但你要自行維護並確保回應格式符合 EMQX 期待。</p>
+      <p><strong>LDAP（Lightweight Directory Access Protocol）</strong>是走到目錄伺服器查證使用者的協定。重點要先講在這裡：<strong>LDAP 在 EMQX 只有 Enterprise 付費版提供</strong>，你 Open Source 的 5.8.9 Dashboard 裡不會看到它。因此概念上它是「借既有的 LDAP 目錄當帳號來源」，但對家用 add-on 來說，先用內建資料庫或 HTTP 會更務實。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="故障排除">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>建立驗證後，Home Assistant 開始連不上去</strong>：多數原因是你對齊的欄位或密碼不對。回頭確認 UserID Type 是看 username 還是 client ID、增設的帳號大小寫與密碼、以及驗證器沒有被帶停用。如果你的實驗把 Enable 關掉了，重新開啟即可恢復。</li>
+        <li><strong>把 Enable 關掉後「所有 client 都能連」</strong>：這是設計行為：停用代表把整層驗證規則拿掉，不是「防護更強」。想「擋掉不認得的 client」，需要授權（第 7 章）與正確的驗證器共存；不要以為關掉驗證器等於開啟防護。</li>
+        <li><strong>JWT 一直驗證失敗</strong>：檢查你選的是 Secret 還是 Public Key、Base64 開關是否一致、Payload 聲明與你在 JWT 內的 claims 匹配；先拿一顆你在簽發端就能看的 token，到 Dashboard 最小路徑測試。</li>
+        <li><strong>外部資料庫／HTTP 後端顯示 Disconnected</strong>：表示 EMQX 連不到該伺服器或查詢失敗。檢查伺服器位址、埠、帳密與回應格式是否符合期待；修好外部狀態後回到 Authenticator List，再讓它重新連一次。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>驗證與授權不是同一件事嗎</summary>
+        <div class="body"><p>不是。驗證確認「你是誰」、授權決定「你能對哪些主題做什麼」。有了帳號密碼只完成驗證，沒有授權規則時，連得上帳號的 client 對所有主題仍然有發布／訂閱的自由；授權讓你把這道門關到最小，是第 7 章內容。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>內建資料庫跟 MySQL／Redis 哪個適合家用</summary>
+        <div class="body"><p>家用 add-on 用內建資料庫就已足夠，也不用多維護一套資料庫。外部資料庫適合帳號很大、要集中管理或已有既有身份系統時使用；想保留乾淨、少一層失敗點的設定，就選內建。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>JWT 在智慧家庭用在哪</summary>
+        <div class="body"><p>若你已經由某種權杖簽發服務統一發 token、希望 EMQX 也認同這些 token，JWT 是自然解。純自建 Home Assistant 想讓 HA 與 Zigbee 連入時，帳號密碼通常更直覺；JWT 等有集中 token 需求再回本。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>為什麼我找不到 LDAP</summary>
+        <div class="body"><p>因為 LDAP 認証後端只在 EMQX Enterprise 版提供，Open Source 的 5.8.9 沒有它。若你想沿用現成的帳號目錄，Open Source 下的可選方案是用內建資料庫，或是透過 HTTP Server 去接你既有的身份服務。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authn.md">EMQX 5.8 Dashboard Authentication（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/overview.md">EMQX 5.8 Access Control（驗證／授權總覽）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（首次登入必先設定驗證）</a></li>
       </ul>
     </section>
 
