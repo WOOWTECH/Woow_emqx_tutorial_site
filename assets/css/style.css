@@ -437,6 +437,9 @@ figure.shot figcaption strong {
 }
 .chapter-index .index-title::before { display: none; }
 .chapter-index.spaced { margin-top: 56px; }
+.link-row { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.link-row a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ww-blue-700); text-decoration: underline; text-underline-offset: 3px; }
+.link-row a:hover { color: var(--ww-blue-600); }
 
 /* Multi-line / inline code blocks stay horizontally scrollable on narrow screens */
 pre, pre.code-block {
