@@ -69,10 +69,11 @@
       <h2>本章</h2>
       <a href="#why">為什麼</a>
       <a href="#concept">核心概念</a>
-      <a href="#what">名詞對照</a>
+      <a href="#words">名詞對照</a>
       <a href="#steps">動手做</a>
-      <a href="#topic1">主題一</a>
-      <a href="#topic2">主題二</a>
+      <a href="#overview">Cluster Overview</a>
+      <a href="#stats">指標 Metrics</a>
+      <a href="#prometheus">Prometheus</a>
       <a href="#troubleshoot">排錯</a>
       <a href="#faq">常見問題</a>
       <a href="#sources">官方來源</a>
@@ -92,74 +93,119 @@
 
     <section id="why" data-nav="為什麼">
       <h2 data-icon="why">為什麼要學這個</h2>
-      <p>（草稿，待作者替換）說明本章要解決的痛點，以及讀完之後會多出什麼能力。所有預設值、選單路徑與版本行為都需以 EMQX 5.8 文件或 add-on 原始碼查證後才寫入。</p>
+      <p>broker 用起來正常，不代表它負載健康。要守住一間房子的訊息骨幹，你需要知道「目前有多少連線與訂閱、每台節點還剩多少記憶體、訊息進出速率是不是爆炸」。EMQX 的 <strong>Monitoring</strong> 模組，就是把這些數值集中在一起看的地方。</p>
+      <p>這章會帶你讀懂 Dashboard 裡的叢集統計、節點狀態與系統資源欄，以及 EMQX 提供的 Stats 與 Metrics 兩種指標。最後再用 Prometheus 說明「把 EMQX 監控搬進自己的監控系統」的入門概念，讓你在家也能搭自己的 Grafana 儀表。</p>
     </section>
 
     <section id="concept" data-nav="核心概念">
       <h2 data-icon="concept">核心概念</h2>
-      <p>（草稿，待作者替換）先建立名詞與心智模型，再進入操作步驟。不使用未經查證的 4.x 舊名詞。</p>
+      <p>EMQX 把監控資料分成兩類：<strong>Statistics</strong>（統計）是整數型計值，給你某一個時間點的單一數值；<strong>Metrics</strong>（計量）是整數型的累加計數器，例如累計的位元組數與訊息數。兩者都是 Dashboard 最直接的觀察方式。</p>
+      <p>在 Dashboard 左側展開 <strong>Monitoring</strong>，會看到幾個子選單：<strong>Cluster Overview</strong>（叢集總覽）、<strong>Clients</strong>、<strong>Subscriptions</strong>、<strong>Retained Messages</strong>，以及 <strong>Delayed Publish</strong> 與 <strong>Alarms</strong>——後兩個是 EMQX Enterprise 版的功能。</p>
+      <p>若不想打開 Dashboard，你還有三條路：用 REST API 抓同一份資料、訂閱 <code>$SYS/</code> 開頭的系統主題，或把指標推給 Prometheus 等第三方監控。這章尾段會帶到 Prometheus。</p>
     </section>
 
-    <section id="what" data-nav="名詞對照">
+    <section id="words" data-nav="名詞對照">
       <h2 data-icon="what">名詞對照</h2>
-      <p>（草稿，待作者替換）本章會用到的中英文名詞與縮寫對照，首次出現採「中文（English）」，之後只用中文。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Monitoring</td><td>監控</td><td>Dashboard 中觀察叢集狀態的模組</td></tr>
+            <tr><td>Cluster Overview</td><td>叢集總覽</td><td>登入後的首頁，叢集級數字</td></tr>
+            <tr><td>Node</td><td>節點</td><td>叢集裡的一座 EMQX 實例</td></tr>
+            <tr><td>Statistics</td><td>統計</td><td>某一時間點的整數型計值</td></tr>
+            <tr><td>Metrics</td><td>指標</td><td>累計型的計數器（位元組、封包、訊息、事件）</td></tr>
+            <tr><td>Prometheus</td><td>普羅米修斯</td><td>第三方監控／蒐集指標的服務</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="steps" data-nav="動手做">
       <h2 data-icon="steps">動手做</h2>
       <ol class="steps">
-        <li><h3>第一步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第二步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第三步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
-        <li><h3>第四步</h3><p>（草稿）由作者補上確切操作路徑與點擊位置。</p></li>
+        <li><h3>進入 Monitoring 模組</h3><p>左側選 <strong>Monitoring → Cluster Overview</strong>，先看到叢集層級的連線數、訂閱數與主題數。</p></li>
+        <li><h3>切到 Nodes 分頁</h3><p>上半部把群組切到 <strong>Nodes</strong>，展開叢集裡的每一顆節點（你家用 add-on 一般是單節點）。</p></li>
+        <li><h3>看系統資源與版本</h3><p>節點欄可看到連線數、版本、持續運行時間、Erlang 進程數與記憶體／CPU 用量。點節點名能再進「節點細節」。</p></li>
+        <li><h3>利用〔Metrics〕分頁看累計指標</h3><p>再切 <strong>Metrics</strong> 分頁，逐項看 bytes、packets、messages、 events 四組計量；把數字與時間選取範圍一起觀察。</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="主題一">
-      <h2 data-icon="advanced">主題一</h2>
-      <p>（草稿，待作者替換）本章第一個主題，可用 data-table 呈現對照或規格。</p>
+    <section id="overview" data-nav="Cluster Overview">
+      <h2 data-icon="plan">Cluster Overview：連線與節點總覽</h2>
+      <p><strong>Cluster Overview</strong> 是 Monitoring 的第一個子選單。切到 <strong>Nodes</strong> 分頁，能看到每個節點的名稱、狀態、持續時間、連線數、版本、Erlang 進程數、記憶體與 CPU 用量。節點畫成灰色表示它已停止，點名稱可進「節點細節」看 system paths 與 log 路徑。</p>
+      <p>居家環境通常是單節點，因此 Node 分頁的第一個預設就是你的 add-on 本身。版本欄是確認「目前 EMQX 是 5.8.9」最直接的地方。</p>
+      <p>下方時間序列圖可以選過去 1 小時、6 小時…… 到 7 天，觀察連線數與訊息量的走勢。</p>
+      <p>若想讓 Dashboard 重新開始計數，可以用 <strong>Reset Monitoring Data</strong> 把前面累積的資料清掉再累積。</p>
     </section>
 
-    <section id="topic2" data-nav="主題二">
-      <h2 data-icon="tips">主題二</h2>
-      <p>（草稿，待作者替換）本章第二個主題，可用 callout 提示常見坑。</p>
+    <section id="stats" data-nav="指標 Metrics">
+      <h2 data-icon="network">Statistics 與 Metrics</h2>
+      <p>在 Cluster Overview 的 <strong>Metrics</strong> 分頁，EMQX 的 Metrics 分四個維度：<strong>bytes</strong>（輸入輸出的位元組數）、<strong>packets</strong>（各種 MQTT 封包收發數）、<strong>messages</strong>（訊息數，含 QoS 0／1／2、接收、送出、轉發、捨棄）、<strong>events</strong>（事件數，如連線、session、認證與存取）。</p>
+      <p>另有一部分是 <strong>Statistics</strong>，例如：</p>
+      <ul>
+        <li><code>connections.count</code>／<code>connections.max</code>：目前連線數與歷史最大值。</li>
+        <li><code>sessions.count</code>／<code>sessions.max</code>：目前的 session 數。</li>
+        <li><code>subscriptions.count</code>：目前訂閱總數（含共享訂閱）。</li>
+        <li><code>topics.count</code>：目前唯一主題數。</li>
+        <li><code>retained.count</code>：目前保留（retained）資訊數量。</li>
+        <li><code>delayed.count</code>：目前延遲發布的資訊數。</li>
+      </ul>
+      <p>多數指標都用「目前值＋歷史最大」的形式給你看，適合做長期趨勢。</p>
+    </section>
+
+    <section id="prometheus" data-nav="Prometheus">
+      <h2 data-icon="advanced">跟 Prometheus 整合</h2>
+      <p>EMQX 可以把監控名片揭露給第三方監控系統，最常見的是 <strong>Prometheus</strong>。好處是讓 EMQX 與主機其他量在同一張圖上，或用 <strong>Grafana</strong> 畫出視覺化儀表、用 Alertmanager 通知異常。</p>
+      <p>在 Dashboard 的 <strong>Management → Monitoring</strong> 頁，「Integration」分頁選 Prometheus 設定。EMQX 支援兩種模式：</p>
+      <ul>
+        <li><strong>Pull（拉取）模式</strong>：Prometheus 定期來打 EMQX 的 REST API，例如 <code>/api/v5/prometheus/stats</code>（基本指標與計數器）、<code>/api/v5/prometheus/auth</code>（存取控制）、<code>/api/v5/prometheus/data_integration</code>（規則、Connector、Action、Sink）、Sink 相關）。</li>
+        <li><strong>Push（推送）模式</strong>：EMQX 把指標推給 Pushgateway（預設關閉），再由 Prometheus 去收集；此模式目前只包含 basic 指標。</li>
+      </ul>
+      <p>基本上最常用的是「拉取模式」——你只要在 Prometheus 設定底下 url 指到 EMQX，就能收 metrics。</p>
+      <p class="note">拉模式 API 預設不需驗證；若要啟用 Basic Auth，需在 EMQX 建立一組 API key，並把 key 放進 Prometheus 設定。</p>
     </section>
 
     <section id="troubleshoot" data-nav="排錯">
       <h2 data-icon="troubleshoot">故障排除</h2>
       <ul>
-        <li>（草稿）症狀一：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀二：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀三：由作者補上檢查與安全修復。</li>
-        <li>（草稿）症狀四：由作者補上檢查與安全修復。</li>
+        <li><strong>首頁數字看似沒有更新</strong>：Overview 的圖有時間範圍與整理間隔可選；改長範圍再觀察，或按 Reset Monitoring Data 重新累積。</li>
+        <li><strong>某節點畫成灰色</strong>：表示該節點停止。別把資料誤判成「缺號」；先看到節點狀態欄。</li>
+        <li><strong>想找目前 EMQX 版本</strong>：進 <strong>Monitoring → Nodes</strong>，Version 欄就是正在運作的 EMQX 版本（本書目標是 5.8.9）。</li>
+        <li><strong>Delayed Publish／Alarms 在左欄消失</strong>：這兩項是 EMQX Enterprise 版功能，Open Source 5.8.9 不提供，不是壞掉。</li>
       </ul>
     </section>
 
     <section id="faq" data-nav="常見問題">
       <h2 data-icon="faq">常見問題</h2>
       <details class="faq">
-        <summary>（草稿）問題一</summary>
-        <div class="body"><p>（草稿）回答一。</p></div>
+        <summary>Statistics 跟 Metrics 到底差在哪</summary>
+        <div class="body"><p>Statistics 是一次抓的整數型計值（例如現在有幾個訂閱、歷史最大幾個）；Metrics 是累計型計數器（例如累計收了多少 bytes、發出多少封包）。Dashboard 把兩者都擺在 Monitoring 裡。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題二</summary>
-        <div class="body"><p>（草稿）回答二。</p></div>
+        <summary>為什麼 Dashboard 看不到 Alarms／Delayed Publish</summary>
+        <div class="body"><p>因為它們是 EMQX Enterprise 版的功能。Open Source 5.8.9 不會在 Monitoring 左欄顯示，這是授權界線，不是設定錯。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題三</summary>
-        <div class="body"><p>（草稿）回答三。</p></div>
+        <summary>Prometheus 的 Pull 與 Push 我該選哪種</summary>
+        <div class="body"><p>多數人選 Pull（拉取），EMQX 官方文件也建議 Pull，因為 Pushgateway push 模式目前只包含 basic 指標，沒有 auth 或 data_integration 的那麼完整。</p></div>
       </details>
       <details class="faq">
-        <summary>（草稿）問題四</summary>
-        <div class="body"><p>（草稿）回答四。</p></div>
+        <summary>怎麼看一座節點的系統資源</summary>
+        <div class="body"><p>進 Monitoring → Nodes，點節點名稱開啟細節頁，裡面有記憶體／CPU 用量、Erlang 進程數與連線數等。家用單節點把它當作「EMQX 實例的健康狀態」即可。</p></div>
       </details>
     </section>
 
     <section id="sources" data-nav="官方來源">
       <h2 data-icon="url">官方來源</h2>
       <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 首頁（Cluster Overview／Nodes）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md">EMQX 5.8 Monitoring 總覽</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/metrics-and-stats.md">EMQX 5.8 Statistics 與 Metrics</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/prometheus.md">EMQX 5.8 Prometheus 整合</a></li>
         <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 文件（pinned docs branch）</a></li>
       </ul>
     </section>
 
@@ -176,7 +222,7 @@
 
     <footer class="site-footer">
       <p>《WoowTech EMQX 完整指南》由 <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> 製作，以 <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.zh-hant">CC BY 4.0</a> 授權釋出 — 可自由分享與改作，請保留出處。</p>
-      <p class="footer-meta">截圖取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
+      <p class="footer-meta">擷取取自 Home Assistant 官方介面。Home Assistant 為 Open Home Foundation 的商標，本站與其無隸屬關係。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">原始碼與勘誤</a></p>
     </footer>
   </main>
 </div>
