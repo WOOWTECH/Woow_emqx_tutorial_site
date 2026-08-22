@@ -36,7 +36,7 @@
 
   /* Type stacks — WoowTech brand: titles use Poppins, body uses Outfit (Noto Sans TC fallback) */
   --font-display: "Poppins", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
-  --font-body: "Outfit", -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-body: "Outfit", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
   --font-script: "Yellowtail", cursive;
   --font-mono: "SF Mono", Menlo, Consolas, "Fira Code", monospace;
 
@@ -169,7 +169,7 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
   font-weight: 600;
 }
 .sidebar ol li a.active::before {
-  color: var(--ww-blue);
+  color: var(--ww-blue-700);
 }
 
 .sidebar .toc-in-chapter {
@@ -207,7 +207,7 @@ a:hover { color: var(--ww-blue-700); text-decoration: underline; }
 }
 
 .chapter-header .kicker {
-  color: var(--ww-blue);
+  color: var(--ww-blue-700);
   font-family: var(--font-display);
   font-size: 12px;
   font-weight: 600;
@@ -328,7 +328,7 @@ section p, section li {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--ww-blue);
+  background: var(--ww-blue-700);
   color: #fff;
   font-family: var(--font-display);
   font-weight: 700;
@@ -443,7 +443,8 @@ figure.shot figcaption strong {
 .dl-note { margin:26px 0 0; padding:14px 18px; border-radius:var(--radius-sm); background:var(--ww-blue-050); border:1px solid var(--ww-blue-100); color:var(--ink-700); font-size:13.5px; }
 
 /* Multi-line / inline code blocks stay horizontally scrollable on narrow screens */
-pre, pre.code-block {
+.content pre,
+pre.code-block {
   background: var(--surface-alt);
   color: var(--ink-900);
   padding: 16px 18px;
@@ -455,7 +456,6 @@ pre, pre.code-block {
   overflow-x: auto;
   max-width: 100%;
   margin: 12px 0;
-  white-space: pre;
 }
 
 /* Inline code / key */
@@ -467,7 +467,16 @@ code {
   border-radius: var(--radius-xs);
   color: var(--ww-blue-700);
 }
-kbd {
+pre > code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  white-space: pre;
+}
   font-family: var(--font-body);
   font-size: 12px;
   padding: 2px 8px;
@@ -582,7 +591,7 @@ details.faq .body {
   display: block;
 }
 .home .hero .kicker {
-  color: var(--ww-blue);
+  color: var(--ww-blue-700);
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -591,7 +600,7 @@ details.faq .body {
   margin-bottom: 16px;
 }
 .home .hero h1 {
-  font-family: "Noto Sans TC", var(--font-display);
+  font-family: var(--font-display);
   font-size: 48px;
   font-weight: 700;
   margin: 0 0 20px;
@@ -808,6 +817,7 @@ section h2[data-icon="zigbee"]::before          { content: "\F0D41"; }  /* zigbe
 @media (max-width: 960px) {
   .data-table { display: block; overflow-x: auto; white-space: nowrap; }
   .data-table tbody td, .data-table thead th { white-space: normal; min-width: 120px; }
+  .table-scroll .data-table { display: table; overflow: visible; }
 }
 
 /* 側欄的篇章分隔標籤（22 章之後需要分組） */
@@ -830,6 +840,8 @@ section h2[data-icon="zigbee"]::before          { content: "\F0D41"; }  /* zigbe
    min-width:0 讓欄位可以縮，寬內容才會改由自己的 overflow-x 處理。 */
 .layout > *, .content > * { min-width: 0; }
 .content pre, .content .data-table, .content .table-scroll { max-width: 100%; }
+.content :not(pre) > code { white-space: normal; overflow-wrap: anywhere; }
+.chapter-header h1 { overflow-wrap: anywhere; }
 
 /* ---------- Resource hub pages (index/sales/prompts/skills/404) ---------- */
 :root {
@@ -867,6 +879,7 @@ button, .button, .nav-link, .copy-button { min-height: 44px; }
 .button:hover { transform:translateY(-1px); text-decoration:none; }
 .button:active { transform:scale(.97); }
 .button-primary { background:var(--ww-blue-700); color:#fff; }
+.button-primary:hover { background:#2F49A8; color:#fff; }
 .button-secondary { background:var(--surface); border-color:var(--hairline); color:var(--ink-900); }
 .button-secondary:hover { border-color:var(--ww-blue); color:var(--ww-blue-700); }
 .notice { padding:18px 20px; border-radius:var(--radius-sm); background:var(--ww-blue-050); border:1px solid var(--ww-blue-100); color:var(--ink-700); }
