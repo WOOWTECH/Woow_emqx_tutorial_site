@@ -3,25 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chapter 6 · Authentication 驗證 · WoowTech EMQX 完整指南</title>
-  <meta name="description" content="EMQX Authentication 驗證：Password-Based Built-in Database 建立與停用使用者、憑證格式、JWT 概念、HTTP／LDAP 概念，以及首次設定驗證的必要性。" />
+  <title>Chapter 6 · Authentication · The WoowTech EMQX Complete Guide</title>
+  <meta name="description" content="EMQX Authentication: create and disable users in the Password-Based Built-in Database, credential formats, JWT, HTTP and LDAP, and why you set it up first." />
   <meta name="author" content="WoowTech" />
   <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch6_authentication.html" />
   <meta name="robots" content="noindex, follow" />
   <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:site_name" content="The WoowTech EMQX Complete Guide" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="zh_TW" />
-  <meta property="og:title" content="Chapter 6 · Authentication 驗證 · WoowTech EMQX 完整指南" />
-  <meta property="og:description" content="EMQX Authentication 驗證：Password-Based Built-in Database 建立與停用使用者、憑證格式、JWT 概念、HTTP／LDAP 概念，以及首次設定驗證的必要性。" />
+  <meta property="og:title" content="Chapter 6 · Authentication · The WoowTech EMQX Complete Guide" />
+  <meta property="og:description" content="EMQX Authentication: create and disable users in the Password-Based Built-in Database, credential formats, JWT, HTTP and LDAP, and why you set it up first." />
   <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch6_authentication.html" />
   <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Chapter 6 · Authentication 驗證 · WoowTech EMQX 完整指南" />
-  <meta name="twitter:description" content="EMQX Authentication 驗證：Password-Based Built-in Database 建立與停用使用者、憑證格式、JWT 概念、HTTP／LDAP 概念，以及首次設定驗證的必要性。" />
+  <meta name="twitter:title" content="Chapter 6 · Authentication · The WoowTech EMQX Complete Guide" />
+  <meta name="twitter:description" content="EMQX Authentication: create and disable users in the Password-Based Built-in Database, credential formats, JWT, HTTP and LDAP, and why you set it up first." />
   <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
   <meta name="theme-color" content="#6183FC" />
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
@@ -35,38 +35,38 @@
 <body>
 <div class="layout">
   <aside class="sidebar">
-    <a class="brand" href="tutorial.html">EMQX 指南</a>
-    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <a class="brand" href="tutorial.html">EMQX Guide</a>
+    <div class="brand-sub">Everything in EMQX 5.8.9</div>
     <nav class="lang-switch" aria-label="Language"><a href="../ch6_authentication.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch6_authentication.html" lang="en" aria-current="page">EN</a></nav>
-    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <a class="hub-link" href="index.html">◂ Resource Hub</a>
     <h2>Chapters</h2>
     <ol>
-      <li class="part-label">基礎：認識與安裝</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li class="part-label">Basics: what it is and how to install it</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
       <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
-      <li class="part-label">核心：連線與存取控制</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li class="part-label">Core: connecting and access control</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
       <li data-i18n="pending"><a href="ch6_authentication.html" class="active">Authentication</a></li>
       <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
-      <li class="part-label">進階：規則、整合與資料橋接</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
-      <li class="part-label">維運：監控、管理與復原</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li class="part-label">Advanced: rules, integrations and data bridging</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li class="part-label">Operations: monitoring, management and recovery</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
       <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -196,7 +196,7 @@
     <div class="pager">
       <a class="prev" href="ch5_first_connection.html">
         <span class="label">← Previous</span>
-        <span class="title">05 · 第一個連線</span>
+        <span class="title">05 · First connection</span>
       </a>
       <a class="next" href="ch7_authorization.html">
         <span class="label">Next →</span>
@@ -205,9 +205,9 @@
     </div>
 
     <footer class="site-footer">
-      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
-      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
-      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+      <p>The WoowTech EMQX Complete Guide is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX website</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">Official docs</a><a href="https://github.com/emqx/emqx" rel="noopener">Official source code</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Site source</a></div>
+      <p class="footer-meta">Screens and menu paths are written against the EMQX 5.8.9 (Open Source) Dashboard; EMQX is open source software from EMQ Technologies. · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
     </footer>
   </main>
 </div>

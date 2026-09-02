@@ -1,25 +1,25 @@
 {
   "_readme": "Single source for the en/ site root (nav, SEO, catalog, sitemap). Human-readable fields are translation units tracked in i18n/ledger.json. Rebuild with: SITE_ROOT=en node scripts/build_nav.js",
   "site": {
-    "title": "WoowTech EMQX 完整指南",
-    "brand": "EMQX 指南",
-    "subtitle": "EMQX 5.8.9 完整功能",
+    "title": "The WoowTech EMQX Complete Guide",
+    "brand": "EMQX Guide",
+    "subtitle": "Everything in EMQX 5.8.9",
     "baseUrl": "https://emqx-guide.woowtech.io/en",
     "repoUrl": "https://github.com/WOOWTECH/Woow_emqx_tutorial_site",
     "locale": "en_US",
-    "description": "22 章繁體中文 EMQX 教學：從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，一路到 Rule Engine、Connector/Sink、Home Assistant 整合、監控、備份與安全，把 EMQX 5.8.9 變成可靠的 IoT 訊息骨幹。",
-    "footerMeta": "介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。",
+    "description": "22-chapter EMQX tutorial: the Woow EMQX add-on, MQTT, authentication and ACL, TLS, the Rule Engine, Connectors, Home Assistant, monitoring and backup — EMQX 5.8.9 as a reliable IoT message backbone.",
+    "footerMeta": "Screens and menu paths are written against the EMQX 5.8.9 (Open Source) Dashboard; EMQX is open source software from EMQ Technologies.",
     "footerLinks": [
       {
-        "label": "EMQX 官方網站",
+        "label": "EMQX website",
         "href": "https://www.emqx.io/"
       },
       {
-        "label": "官方文件",
+        "label": "Official docs",
         "href": "https://docs.emqx.com/en/emqx/v5.8/"
       },
       {
-        "label": "官方原始碼",
+        "label": "Official source code",
         "href": "https://github.com/emqx/emqx"
       },
       {
@@ -27,7 +27,7 @@
         "href": "https://github.com/WOOWTECH/Woow_ha_emqx"
       },
       {
-        "label": "本站原始碼",
+        "label": "Site source",
         "href": "repo"
       }
     ],
@@ -61,7 +61,7 @@
   "hub": {
     "_readme": "index.html 是四類資源總覽(hub),由人手維護、build_nav 不碰。教學目錄頁由 build_nav 產生到 catalog 指定的檔案。pages 是 hub 底下的獨立單檔手冊(自帶 head 與樣式),納入 sitemap 與 check_links 白名單。",
     "catalog": "tutorial.html",
-    "navLabel": "資源總覽",
+    "navLabel": "Resource Hub",
     "pages": [
       "sales.html",
       "prompts.html",
@@ -80,222 +80,222 @@
     {
       "file": "ch1_overview.html",
       "num": "01",
-      "navLabel": "EMQX 是什麼",
-      "title": "認識 EMQX 與 MQTT Broker",
-      "pagerTitle": "01 · EMQX 是什麼",
-      "card": "從 MQTT broker 的角色出發，看懂 EMQX 與 Mosquitto 的差異、架構與 Dashboard 全貌。",
-      "description": "認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。",
-      "part": "基礎：認識與安裝"
+      "navLabel": "What EMQX is",
+      "title": "Getting to know EMQX and the MQTT Broker",
+      "pagerTitle": "01 · What EMQX is",
+      "card": "Start from what an MQTT broker does, then see how EMQX differs from Mosquitto, how it is built, and what the Dashboard covers.",
+      "description": "Get to know EMQX, the open source MQTT broker: how it differs from Home Assistant's Mosquitto, EMQX 5.x architecture and clustering, and where the add-on fits.",
+      "part": "Basics: what it is and how to install it"
     },
     {
       "file": "ch2_install.html",
       "num": "02",
-      "navLabel": "安裝",
-      "title": "安裝 Woow EMQX add-on",
-      "pagerTitle": "02 · 安裝",
-      "card": "加入 repository、安裝、host_network 與五個連接埠，啟動後首次登入並改掉預設密碼。",
-      "description": "安裝 Woow EMQX add-on（EMQX 5.8.9）：加入 WoowTech repository、安裝與啟動、host_network、五個連接埠、Ingress 進入方式、首次登入與改密碼，以及與 Mosquitto 的連接埠衝突。",
-      "part": "基礎：認識與安裝"
+      "navLabel": "Install",
+      "title": "Install the Woow EMQX add-on",
+      "pagerTitle": "02 · Install",
+      "card": "Add the repository, install, set host_network and the five ports, then log in for the first time and change the default password.",
+      "description": "Install the Woow EMQX add-on (EMQX 5.8.9): the WoowTech repository, install and start, host_network, the five ports, Ingress, first login and password change.",
+      "part": "Basics: what it is and how to install it"
     },
     {
       "file": "ch3_dashboard.html",
       "num": "03",
       "navLabel": "Dashboard",
-      "title": "EMQX Dashboard 導覽",
+      "title": "A tour of the EMQX Dashboard",
       "pagerTitle": "03 · Dashboard",
-      "card": "認識 EMQX Dashboard 的側欄模組、Overview 監控、語言與版本資訊。",
-      "description": "EMQX Dashboard 導覽：側欄各模組、Overview 與監控概覽、授權 banner、語言與版本資訊，以及從 Home Assistant 開啟 Web UI 的方式。",
-      "part": "基礎：認識與安裝"
+      "card": "Get to know the EMQX Dashboard sidebar modules, the Overview monitoring page, and the language and version information.",
+      "description": "A tour of the EMQX Dashboard: sidebar modules, Overview and monitoring, the license banner, language and version, and opening the Web UI from Home Assistant.",
+      "part": "Basics: what it is and how to install it"
     },
     {
       "file": "ch4_mqtt_basics.html",
       "num": "04",
-      "navLabel": "MQTT 基礎",
-      "title": "MQTT 心智模型",
-      "pagerTitle": "04 · MQTT 基礎",
-      "card": "broker、client、topic、QoS、retained、will、keepalive、session 與共享訂閱，一次建立心智模型。",
-      "description": "MQTT 心智模型：broker／client、topic 與 + # 萬用字元、QoS 0-1-2、retained、will 遺囑、keepalive、clean session 與 shared subscription，把抽象概念落到智慧家庭情境。",
-      "part": "基礎：認識與安裝"
+      "navLabel": "MQTT basics",
+      "title": "The MQTT mental model",
+      "pagerTitle": "04 · MQTT basics",
+      "card": "broker, client, topic, QoS, retained, will, keepalive, session and shared subscriptions — the whole mental model in one pass.",
+      "description": "The MQTT mental model: broker/client, topics and the + # wildcards, QoS 0-1-2, retained, will, keepalive, clean session and shared subscriptions at home.",
+      "part": "Basics: what it is and how to install it"
     },
     {
       "file": "ch5_first_connection.html",
       "num": "05",
-      "navLabel": "第一個連線",
-      "title": "建立第一個 MQTT 連線",
-      "pagerTitle": "05 · 第一個連線",
-      "card": "用內建 WebSocket 工具 publish／subscribe，驗證 QoS，建立第一個 MQTT 連線。",
-      "description": "建立第一個 MQTT 連線：使用 EMQX 內建 WebSocket 測試工具與診斷頁 publish／subscribe，驗證 QoS，認識連線與訂閱的基本操作。",
-      "part": "核心：連線與存取控制"
+      "navLabel": "First connection",
+      "title": "Make your first MQTT connection",
+      "pagerTitle": "05 · First connection",
+      "card": "Publish and subscribe with the built-in WebSocket client, verify QoS, and make your first MQTT connection.",
+      "description": "Make your first MQTT connection: publish and subscribe with the built-in WebSocket test client and the diagnose page, verify QoS, and learn the basics.",
+      "part": "Core: connecting and access control"
     },
     {
       "file": "ch6_authentication.html",
       "num": "06",
       "navLabel": "Authentication",
-      "title": "Authentication 驗證",
+      "title": "Authentication",
       "pagerTitle": "06 · Authentication",
-      "card": "Password-Based 內建資料庫、建立使用者、JWT 與 HTTP/LDAP 概念，守住連線入口。",
-      "description": "EMQX Authentication 驗證：Password-Based Built-in Database 建立與停用使用者、憑證格式、JWT 概念、HTTP／LDAP 概念，以及首次設定驗證的必要性。",
-      "part": "核心：連線與存取控制"
+      "card": "The Password-Based built-in database, creating users, and JWT plus HTTP/LDAP concepts, so you guard the way in.",
+      "description": "EMQX Authentication: create and disable users in the Password-Based Built-in Database, credential formats, JWT, HTTP and LDAP, and why you set it up first.",
+      "part": "Core: connecting and access control"
     },
     {
       "file": "ch7_authorization.html",
       "num": "07",
       "navLabel": "Authorization",
-      "title": "Authorization 與 ACL",
+      "title": "Authorization and ACL",
       "pagerTitle": "07 · Authorization",
-      "card": "授權順序、內建 ACL、主題規則配對與拒絕策略，與驗證搭配做最小權限。",
-      "description": "EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。",
-      "part": "核心：連線與存取控制"
+      "card": "Authorization order, the built-in ACL, topic rule matching and deny strategy, paired with authentication for least privilege.",
+      "description": "EMQX Authorization and ACL: authorization order, the Built-in Database ACL, topic rule matching, deny strategy, and least privilege alongside Authentication.",
+      "part": "Core: connecting and access control"
     },
     {
       "file": "ch8_listeners_tls.html",
       "num": "08",
-      "navLabel": "Listener／TLS",
-      "title": "Listeners 與 TLS",
-      "pagerTitle": "08 · Listener／TLS",
-      "card": "1883／8083／8084／8883、新增修改 Listener、TLS 憑證與 mTLS，處理連接埠衝突。",
-      "description": "EMQX Listeners 與 TLS：1883／8083／8084／8883 各埠用途、新增與修改 Listener、TLS 憑證與 mTLS 概念，以及連接埠衝突的處理。",
-      "part": "核心：連線與存取控制"
+      "navLabel": "Listeners/TLS",
+      "title": "Listeners and TLS",
+      "pagerTitle": "08 · Listeners/TLS",
+      "card": "1883/8083/8084/8883, adding and editing listeners, TLS certificates and mTLS, and handling port conflicts.",
+      "description": "EMQX Listeners and TLS: what 1883/8083/8084/8883 are each for, adding and editing listeners, TLS certificates and mTLS, and handling port conflicts.",
+      "part": "Core: connecting and access control"
     },
     {
       "file": "ch9_rule_engine.html",
       "num": "09",
-      "navLabel": "規則引擎",
-      "title": "Rule Engine 規則引擎",
-      "pagerTitle": "09 · 規則引擎",
-      "card": "SQL 的 SELECT／FROM／WHERE、事件與 topic 作為 source、內建函數，寫出第一條規則。",
-      "description": "EMQX Rule Engine：以 SQL（SELECT／FROM／WHERE）描述規則、事件與 topic 作為資料來源、內建欄位與函數、觸發測試，寫出第一條規則。",
-      "part": "進階：規則、整合與資料橋接"
+      "navLabel": "Rule Engine",
+      "title": "Rule Engine",
+      "pagerTitle": "09 · Rule Engine",
+      "card": "SQL SELECT/FROM/WHERE, events and topics as the source, and built-in functions — write your first rule.",
+      "description": "EMQX Rule Engine: describe a rule in SQL (SELECT/FROM/WHERE), use events and topics as the data source, built-in fields and functions, and test the trigger.",
+      "part": "Advanced: rules, integrations and data bridging"
     },
     {
       "file": "ch10_rule_actions.html",
       "num": "10",
-      "navLabel": "內建動作",
-      "title": "內建動作與訊息轉發",
-      "pagerTitle": "10 · 內建動作",
-      "card": "console output、republish、重寫 topic，把規則命中轉成實際動作。",
-      "description": "EMQX 規則內建動作：console output、republish、重寫 topic 與監控動作，把規則命中轉成實際訊息轉發行為。",
-      "part": "進階：規則、整合與資料橋接"
+      "navLabel": "Built-in actions",
+      "title": "Built-in actions and message republishing",
+      "pagerTitle": "10 · Built-in actions",
+      "card": "Console Output, Republish and rewriting the topic turn a rule match into a real action.",
+      "description": "EMQX built-in rule actions: Console Output, Republish, rewriting the topic and watching the action, so a rule match turns into real message republishing.",
+      "part": "Advanced: rules, integrations and data bridging"
     },
     {
       "file": "ch11_connectors_sinks.html",
       "num": "11",
-      "navLabel": "Connector",
-      "title": "Connectors 與 Sinks",
-      "pagerTitle": "11 · Connector",
-      "card": "Webhook、HTTP、Kafka、PostgreSQL／MySQL 的 Connector 與 Sink，以 Webhook／HTTP 實作。",
-      "description": "EMQX Connectors 與 Sinks：Webhook、HTTP、Kafka、PostgreSQL／MySQL 等目標的概念，以 Webhook／HTTP 為主實作資料外送。",
-      "part": "進階：規則、整合與資料橋接"
+      "navLabel": "Connectors",
+      "title": "Connectors and Sinks",
+      "pagerTitle": "11 · Connectors",
+      "card": "Connectors and Sinks for Webhook, HTTP, Kafka and PostgreSQL/MySQL, built hands-on over Webhook/HTTP.",
+      "description": "EMQX Connectors and Sinks: the concepts behind Webhook, HTTP, Kafka and PostgreSQL/MySQL targets, then sending data out mainly over Webhook/HTTP.",
+      "part": "Advanced: rules, integrations and data bridging"
     },
     {
       "file": "ch12_sources_bridge.html",
       "num": "12",
-      "navLabel": "Source",
-      "title": "Sources 與資料匯入",
-      "pagerTitle": "12 · Source",
-      "card": "MQTT 事件 source、跨 broker 橋接概念、訊息回寫 EMQX。",
-      "description": "EMQX Sources 與資料匯入：以 MQTT 事件作為資料來源、跨 broker 橋接的概念、把外部訊息回寫 EMQX 的流程。",
-      "part": "進階：規則、整合與資料橋接"
+      "navLabel": "Sources",
+      "title": "Sources and data import",
+      "pagerTitle": "12 · Sources",
+      "card": "MQTT event sources, bridging across brokers, and writing messages back into EMQX.",
+      "description": "EMQX Sources and data import: MQTT events as a data source, how bridging across brokers works, and the flow that writes external messages back into EMQX.",
+      "part": "Advanced: rules, integrations and data bridging"
     },
     {
       "file": "ch13_home_assistant.html",
       "num": "13",
-      "navLabel": "HA 整合",
-      "title": "與 Home Assistant 整合",
-      "pagerTitle": "13 · HA 整合",
-      "card": "HA MQTT 整合、discovery、birth／will、狀態主題、Zigbee2MQTT 與 Mosquitto 遷移。",
-      "description": "把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。",
-      "part": "進階：規則、整合與資料橋接"
+      "navLabel": "HA integration",
+      "title": "Home Assistant integration",
+      "pagerTitle": "13 · HA integration",
+      "card": "The HA MQTT integration, discovery, birth/will, state topics, Zigbee2MQTT, and migrating from Mosquitto.",
+      "description": "Connect EMQX to Home Assistant: the MQTT integration, discovery, birth/will and state topics, wiring up Zigbee2MQTT, and migrating from Mosquitto to EMQX.",
+      "part": "Advanced: rules, integrations and data bridging"
     },
     {
       "file": "ch14_client_management.html",
       "num": "14",
-      "navLabel": "客戶端管理",
-      "title": "客戶端與訂閱管理",
-      "pagerTitle": "14 · 客戶端管理",
-      "card": "Clients 清單、踢除、統計、Subscriptions、慢訂閱與主題監控。",
-      "description": "EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Client management",
+      "title": "Client and subscription management",
+      "pagerTitle": "14 · Client management",
+      "card": "The Clients list, kicking clients out, statistics, Subscriptions, Slow Subscriptions and topic monitoring.",
+      "description": "EMQX client and subscription management: the Clients list, kicking clients out, statistics, Subscriptions detail, Slow Subscriptions and topic monitoring.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch15_monitoring.html",
       "num": "15",
-      "navLabel": "監控",
-      "title": "監控與 Metrics",
-      "pagerTitle": "15 · 監控",
-      "card": "Dashboard 統計、節點狀態、系統資源、Prometheus 與速率指標。",
-      "description": "EMQX 監控與 Metrics：Dashboard 統計、節點狀態、系統資源、Prometheus 整合概念與訊息速率指標。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Monitoring",
+      "title": "Monitoring and Metrics",
+      "pagerTitle": "15 · Monitoring",
+      "card": "Dashboard statistics, node status, system resources, Prometheus and message rate metrics.",
+      "description": "EMQX monitoring and Metrics: Dashboard statistics, node status, system resources, integrating with Prometheus, and message rate metrics.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch16_message_management.html",
       "num": "16",
-      "navLabel": "訊息管理",
-      "title": "訊息與主題管理",
-      "pagerTitle": "16 · 訊息管理",
-      "card": "Message publish、retained 管理、主題樹、Topic Metrics 與延遲發布。",
-      "description": "EMQX 訊息與主題管理：Message publish、retained 訊息管理、主題樹、Topic Metrics 與延遲發布（Delayed Publish）。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Message management",
+      "title": "Message and topic management",
+      "pagerTitle": "16 · Message management",
+      "card": "Message publish, managing retained messages, the topic tree, Topic Metrics and Delayed Publish.",
+      "description": "EMQX message and topic management: Message publish, managing retained messages, the topic tree, Topic Metrics and Delayed Publish.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch17_configuration.html",
       "num": "17",
-      "navLabel": "設定",
-      "title": "設定與組態",
-      "pagerTitle": "17 · 設定",
-      "card": "Dashboard 設定、EMQX_ 環境變數、設定檔與 Secret 管理。",
-      "description": "EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Configuration",
+      "title": "Configuration",
+      "pagerTitle": "17 · Configuration",
+      "card": "Dashboard settings, EMQX_ environment variables, config files and managing secrets.",
+      "description": "EMQX configuration: what you can change in the Dashboard, EMQX_ environment variables, config files, managing secrets, and the add-on's env_vars.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch18_logs_api_diagnose.html",
       "num": "18",
-      "navLabel": "Log／API",
-      "title": "Log、API 與診斷",
-      "pagerTitle": "18 · Log／API",
-      "card": "Log & Trace、診斷工具、REST API 概念與 Health Check。",
-      "description": "EMQX Log、API 與診斷：Log & Trace、內建診斷工具、REST API 概念與 Health Check。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Logs/API",
+      "title": "Logs, API and diagnosis",
+      "pagerTitle": "18 · Logs/API",
+      "card": "Log & Trace, the diagnose tools, REST API concepts and Health Check.",
+      "description": "EMQX logs, API and diagnosis: Log & Trace, the built-in diagnose tools, REST API concepts and Health Check.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch19_ngrok.html",
       "num": "19",
       "navLabel": "ngrok",
-      "title": "ngrok TCP 通道",
+      "title": "ngrok TCP tunnel",
       "pagerTitle": "19 · ngrok",
-      "card": "add-on 專屬的 ngrok TCP 1883 通道、authtoken、固定位址與安全風險。",
-      "description": "Woow EMQX add-on 專屬的 ngrok TCP 通道：ngrok_enabled、authtoken、固定 TCP 位址、公開 1883 的風險，以及用 Cloudflare Tunnel 的替代。",
-      "part": "維運：監控、管理與復原"
+      "card": "The add-on's own ngrok TCP 1883 tunnel, the authtoken, a reserved address and the security risks.",
+      "description": "The ngrok TCP tunnel built into the Woow EMQX add-on: ngrok_enabled, the authtoken, a reserved TCP address, the risks of exposing 1883, and Cloudflare Tunnel.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch20_backup_recovery.html",
       "num": "20",
-      "navLabel": "備份",
-      "title": "備份、還原與更新",
-      "pagerTitle": "20 · 備份",
-      "card": "資料範圍、驗證／ACL／橋接備份、還原、更新與 Mosquitto 遷移。",
-      "description": "EMQX 備份、還原與更新：/data/emqx 資料範圍、驗證／ACL／資料整合設定備份、還原流程、add-on 更新，以及 Mosquitto 遷移。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Backup",
+      "title": "Backup, restore and updates",
+      "pagerTitle": "20 · Backup",
+      "card": "What the backup covers, authentication/ACL/bridge settings, restoring, updating and migrating from Mosquitto.",
+      "description": "EMQX backup, restore and updates: what /data/emqx holds, backing up authentication, ACL and integrations, the restore flow, updates and Mosquitto migration.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch21_security.html",
       "num": "21",
-      "navLabel": "安全部署",
-      "title": "安全部署",
-      "pagerTitle": "21 · 安全部署",
-      "card": "host_network 風險、對外暴露、Rate Limit、TLS 要求與最小權限。",
-      "description": "EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Secure deployment",
+      "title": "Secure deployment",
+      "pagerTitle": "21 · Secure deployment",
+      "card": "host_network risks, external exposure, Rate Limit, TLS requirements and least privilege.",
+      "description": "EMQX secure deployment: the risks of host_network, external exposure, Rate Limit, TLS requirements, protecting the admin surface, and least privilege.",
+      "part": "Operations: monitoring, management and recovery"
     },
     {
       "file": "ch22_troubleshooting.html",
       "num": "22",
-      "navLabel": "排錯",
-      "title": "完整疑難排解",
-      "pagerTitle": "22 · 排錯",
-      "card": "無法啟動、無法連線、Dashboard 進不去、連接埠衝突、資源不足、驗證失效的診斷與修復。",
-      "description": "EMQX 完整疑難排解：無法啟動、無法連線、Dashboard 進不去、連接埠衝突、資源不足、驗證失效的症狀、檢查與安全修復。",
-      "part": "維運：監控、管理與復原"
+      "navLabel": "Troubleshooting",
+      "title": "Complete troubleshooting",
+      "pagerTitle": "22 · Troubleshooting",
+      "card": "Diagnose and fix a broker that will not start or connect, a locked-out Dashboard, port conflicts, resource limits and authentication failures.",
+      "description": "Complete EMQX troubleshooting: symptom, check and safe fix for a broker that will not start or connect, a locked-out Dashboard, and port conflicts.",
+      "part": "Operations: monitoring, management and recovery"
     }
   ],
   "appendices": [],
