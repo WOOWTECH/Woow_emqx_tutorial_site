@@ -92,7 +92,7 @@
 
     <section id="why" data-nav="Why this matters">
       <h2 data-icon="why">Why this matters</h2>
-      <p>The <strong>Mosquitto</strong> built into Home Assistant is many people's first MQTT broker, but all it gives you is a bare-bones config file and scattered connection records. Once you have pushed dozens of sensors, switches and telemetry feeds through it, you start to want an admin interface that shows you at a glance who is online, who is subscribed, and whether messages are actually going out — and that is where <strong>EMQX</strong> earns its place.</p>
+      <p>The <strong>Mosquitto</strong> built into Home Assistant is many people's first MQTT broker, but all it gives you is a bare-bones config file and scattered connection records. Once you have pushed dozens of sensors, switches and telemetry feeds through it, you start to need an admin interface that shows you at a glance who is online, who is subscribed, and whether messages are actually going out — and that is where <strong>EMQX</strong> earns its place.</p>
       <p>This chapter starts with the MQTT broker model: why a <strong>publisher</strong>, a <strong>subscriber</strong> and a <strong>topic</strong> never need to know about one another, what part the broker plays between them, and what EMQX adds on top of those roles that a modern broker is expected to have. Chapters 2, 3 and 4 then take you through the install, the Dashboard, and building a mental model of MQTT.</p>
     </section>
 
@@ -100,7 +100,7 @@
       <h2 data-icon="concept">Core concepts</h2>
       <p>MQTT (Message Queuing Telemetry Transport) is the lightweight messaging protocol most used in the Internet of Things. Instead of a client asking a server for data directly, it uses the <strong>publish/subscribe</strong> model: a publisher sends messages out sorted by <strong>topic</strong>, and a subscriber subscribes only to the topics it cares about; the server acting as the broker routes and filters every incoming message, then delivers it to every subscriber interested in that topic.</p>
       <p>The relationship between the three is the point: publishers and subscribers are fully decoupled, neither needs to know the other exists, and the only thing they share is a topic agreed in advance. Add a sensor and you add a publisher; add a screen and you add a subscriber; no other endpoint has to change. EMQX supports MQTT 3.1, 3.1.1 and 5.0, and lets a web browser publish MQTT messages directly over WebSocket, which Mosquitto does not do by default.</p>
-      <p>EMQX is designed for high concurrency and high availability. It is built on the Erlang/OTP platform, uses a fully asynchronous architecture, and layers connections, sessions, routing and clustering separately, keeping message delivery apart from the Dashboard. That is why a single node can carry connections in the millions, and why several nodes can be joined into a cluster to scale out.</p>
+      <p>EMQX is designed for high concurrency and high availability. It is built on the Erlang/OTP platform, uses a fully asynchronous architecture, and layers connections, sessions, routing and clustering separately, and it keeps sending and receiving messages separate from the Dashboard. That is why a single node can carry connections in the millions, and why several nodes can be joined into a cluster to scale out.</p>
     </section>
 
     <section id="what" data-nav="Terms">
@@ -116,7 +116,7 @@
             <tr><td>Subscriber</td><td>the receiver</td><td>An endpoint that declares which topics it wants messages from</td></tr>
             <tr><td>Topic</td><td>message label</td><td>The hierarchical name a message is filed under, for example <code>客廳/溫度</code></td></tr>
             <tr><td>Cluster</td><td>a group of nodes</td><td>Several nodes working together to provide one broker service</td></tr>
-            <tr><td>Dashboard</td><td>web admin interface</td><td>The web admin interface built into EMQX</td></tr>
+            <tr><td>Dashboard</td><td>web admin interface</td><td>The Web UI built into EMQX</td></tr>
           </tbody>
         </table>
       </div>
@@ -143,7 +143,7 @@
           <tbody>
             <tr><td>Graphical admin interface</td><td>None, config file only</td><td>Dashboard (Web UI)</td></tr>
             <tr><td>Client management</td><td>None</td><td>Real-time monitoring</td></tr>
-            <tr><td>Rule engine</td><td>None</td><td>Data Integration</td></tr>
+            <tr><td>Rule Engine</td><td>None</td><td>Data Integration</td></tr>
             <tr><td>WebSocket support</td><td>Needs extra configuration</td><td>Built in</td></tr>
             <tr><td>ACL management</td><td>Set in a file</td><td>Managed in the Web UI</td></tr>
             <tr><td>Clustering</td><td>None</td><td>Supported</td></tr>
@@ -165,10 +165,10 @@
     <section id="troubleshoot" data-nav="Troubleshooting">
       <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>Still not sure what a broker does?</strong>: Think of the broker as a post office or a router. The publisher writes the envelope (the topic) and drops the letter in, and the broker delivers it only to the recipients who subscribed to that envelope. Subscribers do not know the senders, and senders do not know the subscribers.</li>
-        <li><strong>Cannot find EMQX?</strong>: First check that the add-on is installed and started. If you want to open the Dashboard on its own, Chapters 2 and 3 walk you through port 18083 and Ingress.</li>
-        <li><strong>Can Mosquitto and EMQX run side by side?</strong>: Both use port 1883, so they cannot both be started. Chapters 2 and 8 cover how to handle that in their port conflict sections.</li>
-        <li><strong>Dashboard will not open?</strong>: Check the add-on log for errors first, then make sure nothing else is holding port 18083. Tunnel and Ingress settings are covered in later chapters.</li>
+        <li><strong>Still not sure what a broker does?</strong> Think of the broker as a post office or a router. The publisher writes the envelope (the topic) and drops the letter in, and the broker delivers it only to the recipients who subscribed to that envelope. Subscribers do not know the senders, and senders do not know the subscribers.</li>
+        <li><strong>Cannot find EMQX?</strong> First check that the add-on is installed and started. If you want to open the Dashboard on its own, Chapters 2 and 3 walk you through port 18083 and Ingress.</li>
+        <li><strong>Can Mosquitto and EMQX run side by side?</strong> Both use port 1883, so they cannot both be started. Chapters 2 and 8 cover how to handle that in their port conflict sections.</li>
+        <li><strong>Dashboard will not open?</strong> Check the add-on log for errors first, then make sure nothing else is holding port 18083. Tunnel and Ingress settings are covered in later chapters.</li>
       </ul>
     </section>
 
@@ -176,7 +176,7 @@
       <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
         <summary>Is EMQX free?</summary>
-        <div class="body"><p>EMQX Open Source is the open source and free edition, and you can build and host it yourself. EMQX Enterprise is paid software that you also deploy yourself (self-hosted in the same way, but with advanced data integration and advanced security features). EMQX Cloud is a separate cloud service that EMQX hosts for you, its own cloud product and a different distribution channel from Enterprise. This guide covers Open Source 5.8.9.</p></div>
+        <div class="body"><p>EMQX Open Source is the open source and free edition, and you can build and host it yourself. EMQX Enterprise is paid software that you also deploy yourself (self-hosted in the same way, but with advanced Data Integration and advanced security features). EMQX Cloud is a separate cloud service that EMQX hosts for you, its own cloud product and a different distribution channel from Enterprise. This guide covers Open Source 5.8.9.</p></div>
       </details>
       <details class="faq">
         <summary>Why not just use Home Assistant's Mosquitto?</summary>
