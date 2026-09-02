@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>EMQX 5.8.9 Sales and Adoption Guide · WoowTech</title>
-<meta name="description" content="EMQX 5.8.9 adoption assessment: compare it with the Mosquitto built into Home Assistant, judge sizing, plan the rollout phases, weigh risks and security, and work through the acceptance checklist." />
+<meta name="description" content="EMQX 5.8.9 Adoption Guide: compare it with the Mosquitto built into Home Assistant, judge sizing, plan the rollout phases, weigh risks and security, and work through the acceptance checklist." />
 <meta name="author" content="WoowTech" />
 <meta name="theme-color" content="#6183FC" />
 <link rel="canonical" href="https://emqx-guide.woowtech.io/en/sales.html" />
@@ -14,7 +14,7 @@
 <meta property="og:locale" content="en_US" />
 <!-- i18n:oglocale --><meta property="og:locale:alternate" content="zh_TW" /><!-- /i18n:oglocale -->
 <meta property="og:title" content="EMQX 5.8.9 Adoption Guide" />
-<meta property="og:description" content="EMQX 5.8.9 adoption assessment: compare it with the Mosquitto built into Home Assistant, plus sizing, rollout phases, risks, security and the acceptance checklist." />
+<meta property="og:description" content="EMQX 5.8.9 Adoption Guide: compare it with the Mosquitto built into Home Assistant, plus sizing, rollout phases, risks, security and the acceptance checklist." />
 <meta property="og:url" content="https://emqx-guide.woowtech.io/en/sales.html" />
 <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
 <meta property="og:image:type" content="image/png" />
@@ -22,7 +22,7 @@
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="EMQX 5.8.9 Adoption Guide" />
-<meta name="twitter:description" content="EMQX 5.8.9 adoption assessment: compare it with Mosquitto, plus sizing, rollout phases, risks, security and the acceptance checklist." />
+<meta name="twitter:description" content="EMQX 5.8.9 Adoption Guide: compare it with Mosquitto, plus sizing, rollout phases, risks, security and the acceptance checklist." />
 <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -50,7 +50,7 @@
 <span class="script-accent" aria-hidden="true">scale with care</span>
 <p class="eyebrow">WoowTech · EMQX 5.8.9</p>
 <h1>Compare features and scale before you talk adoption</h1>
-<p class="lead">This handbook helps you run the discovery call, take stock of requirements, compare EMQX with the Mosquitto built into Home Assistant, and plan a phased rollout and acceptance. EMQX 5.8.9 is an open source MQTT broker, not a platform that does everything; this page makes no inflated performance promises, and lists only the differences you can verify and the next step you can take.</p>
+<p class="lead">This handbook helps you run the discovery call, take stock of requirements, compare EMQX with the Mosquitto built into Home Assistant, and plan a phased rollout and acceptance. EMQX 5.8.9 is an open source MQTT broker, not a platform that does everything; this page makes no inflated performance promises, and lists only the gaps you can verify and the next step you can take.</p>
 </div>
 
 <section class="resource-section">
@@ -67,23 +67,23 @@
 <ul>
 <li>Are you on the Mosquitto built into Home Assistant today? How long a downtime window does the migration get?</li>
 <li>Who maintains EMQX, backs up /data/emqx and rotates the certificates?</li>
-<li>Are Zigbee2MQTT, ESPhome or other clients already connected to some broker?</li>
-<li>Will the Dashboard be opened from the local HA, or does it need a URL of its own?</li>
+<li>Are Zigbee2MQTT, ESPHome or other clients already connected to some broker?</li>
+<li>Will the admin Dashboard be opened from the local HA, or does it need a URL of its own?</li>
 </ul></article>
 </div>
 </section>
 
 <section class="resource-section">
 <h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-scale-balance" aria-hidden="true"></i></span>Where EMQX and Mosquitto each fit</h2>
-<p>The Mosquitto built into Home Assistant is an entry-level broker that is good enough for the basics; EMQX 5.8.9 is a message backbone you can grow, manage and integrate. Both speak MQTT. The difference is in the management surface and in how far each one can be extended.</p>
+<p>The Mosquitto built into Home Assistant is an entry-level broker that is good enough for the basics; EMQX 5.8.9 is a message backbone you can grow, manage and integrate. Both speak MQTT. The difference is in the admin surface and in how far each one can be extended.</p>
 <div class="table-scroll"><table class="data-table"><thead><tr><th>Aspect</th><th>Mosquitto (built into HA)</th><th>EMQX 5.8.9</th></tr></thead><tbody>
 <tr><td>Interface</td><td>Options on the HA integration screen, plus entries written into the HA config file</td><td>A full Dashboard: users, ACL, Listeners, rules and monitoring on one screen</td></tr>
-<tr><td>Authentication and authorization</td><td>Mostly whatever the general-purpose settings give you</td><td>Password-based Built-in Database, JWT, HTTP/LDAP authentication concepts, plus ACL topic rules</td></tr>
-<tr><td>Rules and data integration</td><td>You write your own code outside the broker</td><td>A built-in SQL Rule Engine, Actions (republish/console), Connector/Sink/Source</td></tr>
+<tr><td>Authentication and authorization</td><td>Mostly whatever the general-purpose settings give you</td><td>Password-Based Built-in Database, JWT, HTTP/LDAP authentication concepts, plus ACL topic rules</td></tr>
+<tr><td>Rules and Data Integration</td><td>You write your own code outside the broker</td><td>A built-in SQL Rule Engine, Actions (republish/console), Connector/Sink/Source</td></tr>
 <tr><td>Monitoring and operations</td><td>Basic status only, leaning on the HA side</td><td>Overview, Metrics, the client list, Log &amp; Trace, RBAC (Enterprise only), Health Check</td></tr>
 <tr><td>Best for</td><td>Getting started, with a fixed set of standard subscriptions</td><td>Many clients, where you need rules, monitoring and room to grow</td></tr>
 </tbody></table></div>
-<div class="notice"><strong>How to say it:</strong> say that EMQX adds these capabilities on the management, rules and monitoring side. Do not say that Mosquitto is bad, or that EMQX is bound to be faster. Performance and scale come down to acceptance testing under your real load.</div>
+<div class="notice"><strong>How to say it:</strong> say "EMQX adds these capabilities on the admin, rules and monitoring side." Do not say "Mosquitto is bad" or "EMQX is bound to be faster." Performance and scale come down to acceptance testing under your real load.</div>
 </section>
 
 <section class="resource-section">
@@ -93,7 +93,7 @@
 <tr><td>Clients and subscriptions</td><td>Sets the load from sessions, keepalive and ACL rules.</td></tr>
 <tr><td>Message rate</td><td>Tells you whether the gateway is falling behind, or the Rule Engine is the busy part.</td></tr>
 <tr><td>Retained messages</td><td>A large number of retained topics costs memory and weighs on the topic tree.</td></tr>
-<tr><td>Rules and connectors</td><td>The throughput and latency of SQL rules and an HTTP Sink are a separate layer.</td></tr>
+<tr><td>Rules and Connectors</td><td>The throughput and latency of SQL rules and an HTTP Sink are a separate layer.</td></tr>
 <tr><td>Persistence layer</td><td>Memory, disk and network on the HA host are the bottleneck everything shares.</td></tr>
 </tbody></table></div></section>
 
