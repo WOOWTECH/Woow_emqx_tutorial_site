@@ -30,7 +30,7 @@ for (const [code, loc] of Object.entries(i18n.loadLocales(REPO_ROOT))) {
   roots.push({ code, dir: loc.dir || code, cfgPath: path.join(REPO_ROOT, loc.dir || code, 'chapters.json') });
 }
 
-const SCRIPT_WORD = 'your network, your home';
+const SCRIPT_WORD_DEFAULT = 'your network, your home'; // 各站可用 chapters.json site.ogScript 換成自己的暖色詞
 
 const cards = [];
 for (const r of roots) {
@@ -47,6 +47,7 @@ for (const r of roots) {
     sub: `${s.subtitle} · ${(cfg.chapters || []).length}${r.code === null ? ' 章教學' : '-chapter tutorial'}`,
     tag: s.baseUrl.replace(/^https?:\/\//, '').replace(/\/$/, ''),
     lang: s.lang,
+    script: s.ogScript || SCRIPT_WORD_DEFAULT,
     titleSize: r.code === null ? '56px' : '60px',
   });
 }
@@ -79,7 +80,7 @@ h1{font:700 ${c.titleSize}/1.1 Poppins,"Noto Sans TC",sans-serif;letter-spacing:
 .wm span{color:#6183FC}
 </style></head><body><div class="card">
 <div class="kicker">${c.kicker}</div>
-<div class="script">${SCRIPT_WORD}</div>
+<div class="script">${c.script}</div>
 <h1>${c.title}</h1>
 <div class="sub">${c.sub}</div>
 <div class="tile"><svg viewBox="0 0 24 24"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.1 14.8,9.5V11C15.4,11 16,11.6 16,12.3V15.8C16,16.4 15.4,17 14.7,17H9.2C8.6,17 8,16.4 8,15.7V12.2C8,11.6 8.6,11 9.2,11V9.5C9.2,8.1 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z"/></svg></div>

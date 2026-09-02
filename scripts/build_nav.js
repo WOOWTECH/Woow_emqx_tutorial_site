@@ -41,7 +41,7 @@ const { site } = cfg;
 const S = { ...i18n.loadStrings(REPO_ROOT, site.lang), ...(site.strings || {}), lang: (site.strings && site.strings.lang) || i18n.loadStrings(REPO_ROOT, site.lang).lang };
 // 版面旋鈕（預設值 = headscale 的現行輸出；其他站在 chapters.json 的 site.chrome 裡調）
 const CHROME = {
-  hideEmptyAppendices: false, // true：沒有附錄時，側欄與目錄頁都不輸出「附錄」空區塊；'blank'：同上但側欄留一個空行（舊 generator 的習慣）
+  hideEmptyAppendices: false, // 沒有附錄時：true = 側欄與目錄頁都不輸出「附錄」空區塊；'blank' = 同上但側欄留一個空行；'catalog' = 只有目錄頁不輸出（側欄照舊）
   catalogGroupClass: null,    // 例 "spaced"：目錄頁第二組以後用 class 而非 inline style
   firstPrevDisabled: true,    // 第一章的「上一章」：true = class="prev disabled"
   manage404: 'auto',          // auto：404.html 的 <head> 沒有 <title> 才接管；true/false 強制
@@ -245,7 +245,7 @@ function buildSidebar(page, html) {
   });
   const switchHtml = sw ? `\n    ${sw}` : '';
   const appendixBlock =
-    CHROME.hideEmptyAppendices && !appendices.length
+    CHROME.hideEmptyAppendices && CHROME.hideEmptyAppendices !== 'catalog' && !appendices.length
       ? CHROME.hideEmptyAppendices === 'blank' ? '\n' : ''
       : `
     <div class="toc-in-chapter">

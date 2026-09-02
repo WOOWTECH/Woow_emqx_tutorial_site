@@ -75,10 +75,18 @@ if (!fs.existsSync(cfgPath) || FORCE) {
 }
 
 /* 2. pages */
+// assets/ 一律改指上一層；此外手冊頁偶爾會連到 repo 根目錄的非頁面檔（STYLE.md、LICENSE…），
+// 那些檔不會鏡像進 en/，所以也改指上一層。頁面本身（chapters.json 列的、hub 頁、index/404）留在 en/ 內互連。
+const mirroredPages = new Set(files);
 const rewriteAssets = (html) =>
   html
     .replace(/(href|src)="assets\//g, '$1="../assets/')
-    .replace(/url\((['"]?)assets\//g, 'url($1../assets/');
+    .replace(/url\((['"]?)assets\//g, 'url($1../assets/')
+    .replace(/href="([^"#?:\/][^"#?:]*)"/g, (m, target) => {
+      if (mirroredPages.has(target) || target.startsWith('../')) return m;
+      if (/\.html$/.test(target)) return m; // 頁面：交給 check_links 判斷
+      return fs.existsSync(path.join(REPO_ROOT, target)) ? `href="../${target}"` : m;
+    });
 
 let copied = 0;
 for (const f of files) {
