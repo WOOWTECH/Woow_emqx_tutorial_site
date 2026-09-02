@@ -70,17 +70,17 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#logs">Log 層級</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#logs">Log levels</a>
       <a href="#trace">Log Trace</a>
-      <a href="#diag">診斷工具</a>
+      <a href="#diag">Diagnose tools</a>
       <a href="#api">REST API</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -88,141 +88,141 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch18_logs_api_diagnose.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 18</div>
-      <h1>Log、API 與診斷</h1>
-      <p class="lead">EMQX Log、API 與診斷：Log & Trace、內建診斷工具、REST API 概念與 Health Check。</p>
+      <h1>Logs, API and diagnosis</h1>
+      <p class="lead">EMQX logs, API and diagnosis: Log & Trace, the built-in diagnostic tools, REST API concepts and the Health Check endpoint.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>EMQX 的 Dashboard 把 broker 的狀態可視化，但真正細到「某個 client 為什麼被拒絕」「這條規則為什麼沒命中」的時候，還是要靠 Log 與 Trace。加上 EMQX 對外用 REST API，很多事情你不用開網頁就能自動化。</p>
-      <p>這章的目標，是讓你知道「出問題時去哪看」：先會讀 Log 層級與 Log Trace，再用 Diagnose 模組裡的工具縮小範圍，最後認識 REST API 的概念與 Health Check 端點。實務上你就是拿這四樣去排下一次的怪。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>The EMQX Dashboard makes the state of the broker visible, but once the question gets specific — why was this client rejected, why did this rule never match — you still have to go to the log and to Trace. EMQX also exposes a REST API, so plenty of this you can automate without opening a browser at all.</p>
+      <p>This chapter is about knowing where to look when something breaks. Start by reading log levels and Log Trace, then narrow the problem down with the tools in the Diagnose module, and finish with the concepts behind the REST API and its health check endpoint. In practice those four are what you reach for the next time something goes wrong.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>EMQX 的 Log 有兩種輸出流：<strong>Console Log</strong>（輸出到 console）與 <strong>File Log</strong>（寫進檔案）。預設層級是 warning。Dashboard 的 <strong>Management → Logging</strong> 頁可以調整。</p>
-      <p><strong>Log Trace</strong> 是只「挑出」特定 client ID、IP、主題（可含萬用字元）或規則 ID 的即時除錯 Log，適合在正式環境不想被大量 Log 淹沒時使用。</p>
-      <p><strong>REST API</strong>（/api/v5/...）是 EMQX 的 HTTP 管理面，用 API key 做 Basic 驗證。把它與 Dashboard 想成同一套引擎的兩種操作方式。</p>
-      <p>Diagnose（診斷）模組把 WebSocket Client、Log Trace、Slow Subscriptions、Topic Metrics 等工具放在一起，方便你快速測試與定位。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>EMQX writes its log to two output streams: <strong>Console Log</strong> (out to the console) and <strong>File Log</strong> (into a file). The default level is warning. You adjust both on the Dashboard's <strong>Management → Logging</strong> page.</p>
+      <p><strong>Log Trace</strong> is live debug logging that picks out one specific client ID, IP address, topic (wildcards allowed) or rule ID and nothing else. It is what you want in production, when you do not want to be buried in log lines.</p>
+      <p>The <strong>REST API</strong> (/api/v5/...) is the HTTP admin surface of EMQX, authenticated with an API key over HTTP Basic. Think of it and the Dashboard as two ways of driving the same engine.</p>
+      <p>The Diagnose module gathers tools such as WebSocket Client, Log Trace, Slow Subscriptions and Topic Metrics in one place, so you can test and pin down a problem quickly.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Log</td><td>記錄檔</td><td>EMQX 的分類等級運作紀錄</td></tr>
-            <tr><td>Log Level</td><td>日誌等級</td><td>debug 到 critical 的層級</td></tr>
-            <tr><td>Log Trace</td><td>日誌追蹤</td><td>只收集特定對象的 debug 日誌</td></tr>
-            <tr><td>Diagnose</td><td>診斷</td><td>Dashboard 中除錯工具的資料夾</td></tr>
-            <tr><td>REST API</td><td>REST API</td><td>EMQX 的 HTTP 管理介面</td></tr>
-            <tr><td>API Key</td><td>API 金鑰</td><td>用於 REST API 的驗證憑證</td></tr>
+            <tr><td>Log</td><td>the log file</td><td>EMQX's running record, graded by level</td></tr>
+            <tr><td>Log Level</td><td>how much detail is kept</td><td>The levels from debug up to critical</td></tr>
+            <tr><td>Log Trace</td><td>targeted logging</td><td>Collects debug logs for one chosen target only</td></tr>
+            <tr><td>Diagnose</td><td>the debugging tools</td><td>The folder that holds the Dashboard's debugging tools</td></tr>
+            <tr><td>REST API</td><td>the HTTP interface</td><td>EMQX's management interface over HTTP</td></tr>
+            <tr><td>API Key</td><td>API key</td><td>The credentials a REST API call authenticates with</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>看目前 Log 設定</h3><p>左側 <strong>Management → Logging</strong>，切 Console Log 或 File Log 分頁改等級（預設 warning）。變更立即生效。</p></li>
-        <li><h3>用 WebSocket Client 測試一筆</h3><p>左側 <strong>Diagnose → WebSocket Client</strong>，建立一個連線，用 subscribe／publish 快速確認某主題的行為。</p></li>
-        <li><h3>建一個 Log Trace</h3><p>左側 <strong>Diagnose → Log Trace</strong> → Create，選擇要追蹤的 client ID、IP 或主題，即可開始蒐集。</p></li>
-        <li><h3>呼叫 REST API 檢查</h3><p>把 API Key 存起來，用 curl 對 <code>/api/v5/nodes</code> 做 GET，驗證你的 API 能回 JSON。</p></li>
+        <li><h3>Look at the current log settings</h3><p>In the sidebar, <strong>Management → Logging</strong>. Switch between the Console Log and File Log tabs to change the level (warning by default). The change takes effect immediately.</p></li>
+        <li><h3>Send one test message with WebSocket Client</h3><p>In the sidebar, <strong>Diagnose → WebSocket Client</strong>. Open a connection, then use subscribe/publish to check quickly how a topic behaves.</p></li>
+        <li><h3>Create a Log Trace</h3><p>In the sidebar, <strong>Diagnose → Log Trace</strong> → Create. Choose the client ID, IP address or topic you want to trace, and collection starts.</p></li>
+        <li><h3>Call the REST API to check</h3><p>Save the API key somewhere, then GET <code>/api/v5/nodes</code> with curl to verify that your API answers with JSON.</p></li>
       </ol>
     </section>
 
-    <section id="logs" data-nav="Log 層級">
-      <h2 data-icon="plan">Log 層級與 Logging 設定</h2>
-      <p>EMQX 支援 6 個層級（RFC 5424 的 8 層中取用 6 層），預設是 warning，由弱到強是：<code>debug &lt; info &lt; notice &lt; warning &lt; error &lt; critical</code>。</p>
+    <section id="logs" data-nav="Log levels">
+      <h2 data-icon="plan">Log levels and logging settings</h2>
+      <p>EMQX supports 6 levels (6 of the 8 in RFC 5424). The default is warning, and from weakest to strongest they are <code>debug &lt; info &lt; notice &lt; warning &lt; error &lt; critical</code>.</p>
       <ul>
-        <li><strong>debug</strong>：細部的變數、函式等除錯資料。</li>
-        <li><strong>info</strong>：授權拒絕等輕微異常、設定變更成功的結果。</li>
-        <li><strong>warning</strong>：斷線、連線逾時、驗證失敗等可能需注意。</li>
-        <li><strong>error</strong>：連不上外部資料庫、訂閱不存在的錯誤等。</li>
-        <li><strong>critical</strong>：設定錯誤導致元件無法啟動等。</li>
+        <li><strong>debug</strong>: fine-grained debugging data such as variables and functions.</li>
+        <li><strong>info</strong>: minor anomalies such as an authorization denial, and the result of a configuration change that succeeded.</li>
+        <li><strong>warning</strong>: things that may need a look — a dropped connection, a connection timeout, an authentication failure.</li>
+        <li><strong>error</strong>: cannot reach an external database, a subscription that does not exist, and similar errors.</li>
+        <li><strong>critical</strong>: a configuration error that stops a component from starting, for example.</li>
       </ul>
-      <p>Console 與 File handler 都可在 Logging 頁面調整；檔案型可設定檔案名（預設 log/emqx.log）、最多輪替數（預設 10）、輪替大小（預設啟用）等。</p>
-      <p>還有 <strong>Log Throttling</strong>（日誌節流）：在時間窗內把重複事件只記第一筆、其餘記數，可防止日誌爆量。預設啟用，時間窗預設 1 分鐘。</p>
+      <p>Both the Console and File handlers can be adjusted on the Logging page. For the file handler you can set the file name (log/emqx.log by default), the maximum number of rotated files (10 by default), the rotation size (enabled by default) and so on.</p>
+      <p>There is also <strong>Log Throttling</strong>: within a time window it records only the first of a repeated event and counts the rest, which keeps the log from exploding. It is on by default, with a window of 1 minute.</p>
     </section>
 
     <section id="trace" data-nav="Log Trace">
-      <h2 data-icon="tips">Log Trace 追蹤特定對象</h2>
-      <p>Log Trace 是「針對特定對象」的即時 debug 層級記錄，比開 debug 全量 Log 更適合正式環境。它在 <strong>Diagnose → Log Trace</strong>。</p>
-      <p>建立方式：</p>
+      <h2 data-icon="tips">Using Log Trace on one client or topic</h2>
+      <p>Log Trace is live debug-level logging aimed at one specific target, which suits production far better than turning the whole log up to debug. You will find it under <strong>Diagnose → Log Trace</strong>.</p>
+      <p>To create one:</p>
       <ol>
-        <li>按 <strong>Create</strong>，在 Type 選擇 <strong>Client ID</strong>、<strong>Topic</strong>（可含萬用字元）、<strong>IP Address</strong> 或 <strong>Rule ID</strong>。</li>
-        <li>Client ID 與 IP 需完整輸入；Topic 可用萬用字元。</li>
-        <li>選取 start／end 時間，按 <strong>Create</strong> 開始蒐集。</li>
+        <li>Click <strong>Create</strong>, and under Type choose <strong>Client ID</strong>, <strong>Topic</strong> (wildcards allowed), <strong>IP Address</strong> or <strong>Rule ID</strong>.</li>
+        <li>Client ID and IP have to be entered in full; only Topic takes wildcards.</li>
+        <li>Pick the start/end times and click <strong>Create</strong> to start collecting.</li>
       </ol>
-      <p>清單可看或下載該 trace 的日誌。整個系統最多可以同時跑 30 個 trace；每個節點的 trace 日誌上限 512MB，滿了就停止追加並在主 Log 提出警示。另外，trace 日誌也能在伺服器端 /data/trace 目錄找到。</p>
-      <p class="note">規則測試（Test Rule）會自動建立並於結束時刪除 trace，所以除錯規則時也能反向抓 Log。</p>
+      <p>From the list you can view or download that trace's log. The system runs at most 30 traces at a time; each node caps its trace logs at 512MB, and once that is full it stops appending and raises a warning in the main log. The trace logs are also on the server itself, in the /data/trace directory.</p>
+      <p class="note">Test Rule creates a trace automatically and deletes it when the test ends, so debugging a rule gets you the log from the other direction too.</p>
     </section>
 
-    <section id="diag" data-nav="診斷工具">
-      <h2 data-icon="app">Diagnose 模組一覽</h2>
-      <p>Dashboard 的 <strong>Diagnose</strong> 模組是除錯工具的落點，包含：</p>
+    <section id="diag" data-nav="Diagnose tools">
+      <h2 data-icon="app">The Diagnose modules at a glance</h2>
+      <p>The Dashboard's <strong>Diagnose</strong> module is where the debugging tools land. It holds:</p>
       <ul>
-        <li><strong>WebSocket Client</strong>：內建 MQTT 測試工具，可建立連線、subscribe、publish，快速驗證 client 的行為，省去另外搭建工具。</li>
-        <li><strong>Topic Metrics</strong>（Enterprise）：對特定主題統計接收／送出／捨棄的訊息量與速率。</li>
-        <li><strong>Slow Subscriptions</strong>（Enterprise）：找出投遞時間超過門檻的訂閱。</li>
-        <li><strong>Log Trace</strong>：上面講過的針對性日誌追蹤。</li>
-        <li><strong>Alerts</strong>（Enterprise）：目前與歷史的系統警報。</li>
+        <li><strong>WebSocket Client</strong>: a built-in MQTT test client. Open a connection, subscribe, publish, and check quickly how a client behaves, without standing up a separate tool.</li>
+        <li><strong>Topic Metrics</strong> (Enterprise): counts and rates of messages received, sent and dropped for a specific topic.</li>
+        <li><strong>Slow Subscriptions</strong> (Enterprise): finds subscriptions whose delivery time is over a threshold.</li>
+        <li><strong>Log Trace</strong>: the targeted log tracing described above.</li>
+        <li><strong>Alerts</strong> (Enterprise): current and historical system alerts.</li>
       </ul>
     </section>
 
     <section id="api" data-nav="REST API">
-      <h2 data-icon="network">REST API 概念與 Health Check</h2>
-      <p>EMQX 的 REST API 依 OpenAPI 3.0 規範，所有路徑開頭是 <code>/api/v5</code>。你可以開啟 http://<主機>:18083/api-docs/ 用 Swagger UI 直接試用。</p>
-      <p>REST API 的驗證用 <strong>API Key</strong>（Dashboard：<strong>System → API Key</strong> 建立）。Basic 認證把 API Key 當 username、Secret Key 當 password。Dashboard 使用者帳號無法直接呼叫 API。</p>
+      <h2 data-icon="network">REST API concepts and health checks</h2>
+      <p>The EMQX REST API follows the OpenAPI 3.0 specification, and every path starts with <code>/api/v5</code>. You can open http://&lt;host&gt;:18083/api-docs/ and try it straight from Swagger UI.</p>
+      <p>The REST API authenticates with an <strong>API Key</strong> (create one in the Dashboard under <strong>System → API Key</strong>). HTTP Basic takes the API Key as the username and the Secret Key as the password. A Dashboard user account cannot call the API directly.</p>
       <pre><code>curl -X GET http://localhost:18083/api/v5/nodes \
   -u &lt;你的API金鑰&gt;:&lt;你的API密鑰&gt; \
   -H "Content-Type: application/json"</code></pre>
-      <p>如果要接負載平衡，EMQX 提供了健康檢查端點 <code>GET /api/v5/load_rebalance/availability_check</code>：正常節點回 200，已退出（evacuation）的節點回 503。</p>
-      <p>記得把 API key、secret、token 這類全都用佔位符，不要寫進本機教學或 log。</p>
+      <p>If you are putting a load balancer in front, EMQX offers a health check endpoint, <code>GET /api/v5/load_rebalance/availability_check</code>: a healthy node answers 200, a node that has been evacuated answers 503.</p>
+      <p>Remember to write API keys, secrets and tokens as placeholders, every one of them. Never put the real value into your own notes or into a log.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>想看的 Log 一直被截斷</strong>：Log Throttling 預設會把重複事件只記第一筆。若要噴細節，可把 log level 設成 debug，此時節流會停用。</li>
-        <li><strong>Log Trace 找不到對象</strong>：確認輸入的 client ID / IP 是精確值。Topic 才支援萬用字元。trace 結束後可去 /data/trace 找檔案。</li>
-        <li><strong>REST API 回 401</strong>：多半是用 Dashboard 使用者的帳號去呼叫。改用 System → API Key 建立的一組 API Key/Secret。</li>
-        <li><strong>Slow Subscriptions / Topic Metrics / Alerts 在左欄消失</strong>：這三項都屬 EMQX Enterprise 版，Open Source 5.8.9 的 Diagnose 左欄無法看到。</li>
+        <li><strong>The log you want keeps getting cut short</strong>: by default Log Throttling records only the first of a repeated event. To get the full detail, set the log level to debug — throttling is disabled at that level.</li>
+        <li><strong>Log Trace does not find its target</strong>: check that the client ID / IP you entered is the exact value. Only Topic supports wildcards. Once a trace has ended you can find the file in /data/trace.</li>
+        <li><strong>The REST API returns 401</strong>: usually you called it with a Dashboard user account. Use an API Key/Secret pair created under System → API Key instead.</li>
+        <li><strong>Slow Subscriptions / Topic Metrics / Alerts have disappeared from the sidebar</strong>: all three belong to EMQX Enterprise, so they are not visible under Diagnose in the sidebar in Open Source 5.8.9.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>日誌等級該怎麼選</summary>
-        <div class="body"><p>日常維持 warning 或更高。要逼出細節（例如特定 client 的驗證失敗），用 Log Trace 調低層級更好，它能針對對象抓 debug，不必把全節點 Log 開到 debug。</p></div>
+        <summary>Which log level should I pick?</summary>
+        <div class="body"><p>Stay at warning or higher day to day. When you need to force out the detail — an authentication failure on one particular client, say — dropping the level with Log Trace is the better move: it collects debug for that one target, so you do not have to turn the whole node's log up to debug.</p></div>
       </details>
       <details class="faq">
-        <summary>REST API 與 Dashboard 為什麼權限不同</summary>
-        <div class="body"><p>EMQX 5.0 起，REST API 不接受 Dashboard 使用者的登入；必須建立 API Key（Basic 認證）。API Key 有獨立的 Key / Secret 搭配。</p></div>
+        <summary>Why do the REST API and the Dashboard have different permissions?</summary>
+        <div class="body"><p>From EMQX 5.0 on, the REST API does not accept a Dashboard user login; you have to create an API Key and use HTTP Basic. An API Key comes as its own Key / Secret pair.</p></div>
       </details>
       <details class="faq">
-        <summary>Health Check 端點在哪</summary>
-        <div class="body"><p>健康檢查端點是 <code>GET /api/v5/load_rebalance/availability_check</code>，200＝可收連線，503＝該節點正在 evacuation 或已退出叢集。適合接 HAProxy／nginx 這類負載均衡器。</p></div>
+        <summary>Where is the Health Check endpoint?</summary>
+        <div class="body"><p>The health check endpoint is <code>GET /api/v5/load_rebalance/availability_check</code>. 200 = the node can take connections, 503 = the node is being evacuated or has already left the cluster. It is a good fit for a load balancer such as HAProxy or nginx.</p></div>
       </details>
       <details class="faq">
-        <summary>trace 檔案會一直長大嗎</summary>
-        <div class="body"><p>每個節點 trace 上限 512 MB，滿了會停止追加並在主 log 提警示。追蹤也建議限定 start/end 時間，結束就停。</p></div>
+        <summary>Do trace files grow forever?</summary>
+        <div class="body"><p>Each node caps traces at 512 MB; once that is full it stops appending and raises a warning in the main log. It is also worth bounding a trace with start/end times so it stops when the window closes.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/log.md">EMQX 5.8 Log 層級與設定（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/tracer.md">EMQX 5.8 Log Trace（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/diagnose.md">EMQX 5.8 Diagnose 模組（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/api.md">EMQX 5.8 REST API（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/log.md">EMQX 5.8 log levels and settings (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/tracer.md">EMQX 5.8 Log Trace (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/diagnose.md">EMQX 5.8 Diagnose module (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/api.md">EMQX 5.8 REST API (pinned docs branch)</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (pinned commit)</a></li>
       </ul>
     </section>
 

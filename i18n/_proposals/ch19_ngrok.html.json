@@ -1,0 +1,20 @@
+{
+  "file": "ch19_ngrok.html",
+  "entries": [
+    {
+      "unit": "#what",
+      "zh": "<code>&lt;你的 ngrok authtoken&gt;</code>",
+      "en": "<code>&lt;your-ngrok-authtoken&gt;</code>"
+    },
+    {
+      "unit": "#steps",
+      "zh": "<code>&lt;你的 ngrok authtoken&gt;</code>",
+      "en": "<code>&lt;your-ngrok-authtoken&gt;</code>"
+    },
+    {
+      "unit": "#options",
+      "zh": "<code>ngrok tcp 1883 --remote-addr=&lt;位址&gt;</code>",
+      "en": "<code>ngrok tcp 1883 --remote-addr=&lt;address&gt;</code>"
+    }
+  ]
+}

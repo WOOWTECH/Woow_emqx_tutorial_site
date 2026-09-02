@@ -104,7 +104,7 @@
         <li><strong>Static configuration, <code>etc</code></strong>: usually read-only, and it lives in the main config file (<code>emqx.conf</code>, for example). You mostly change it at deployment or upgrade time.</li>
         <li><strong>Dynamic configuration, <code>data/configs</code></strong>: writable. Changes you make from the Dashboard, the REST API or the CLI are saved into <code>cluster.hocon</code>.</li>
       </ul>
-      <p>Precedence, lowest to highest, is <code>base.hocon</code> (only there from 5.8.4 on) &lt; <code>cluster.hocon</code> &lt; <code>emqx.conf</code> &lt; environment variables. In other words, the further down that list, the higher it wins.</p>
+      <p>Precedence, lowest to highest, is <code>base.hocon</code> (only there from 5.8.4 on) &lt; <code>cluster.hocon</code> &lt; <code>emqx.conf</code> &lt; environment variables. In other words, the further along that chain, the higher it wins.</p>
       <p>The Dashboard's <strong>Management</strong> module is the way in to dynamic changes: Cluster Settings, MQTT Settings, Logging and Monitoring can all be applied while EMQX is running, with no restart.</p>
     </section>
 

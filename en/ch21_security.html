@@ -70,16 +70,16 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#what">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#hostnet">對外暴露</a>
-      <a href="#limits">Rate Limit</a>
-      <a href="#tls">TLS 與管理面</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#what">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#hostnet">External exposure</a>
+      <a href="#limits">Rate limits</a>
+      <a href="#tls">TLS and admin</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -87,140 +87,140 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch21_security.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 21</div>
-      <h1>安全部署</h1>
-      <p class="lead">EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。</p>
+      <h1>Secure deployment</h1>
+      <p class="lead">Secure EMQX deployment: the risks of host_network, external exposure, rate limits, TLS requirements, protecting the admin surface, and the principle of least privilege.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>你的 EMQX 負責整個家的 MQTT 訊息，而它同時也是攻擊者最想碰的入口之一：只要有人能連線、能做驗證或訂閱，就可能竊取感測資料或操控裝置。Woow EMQX 用 host_network 模式直接把連接埠開在主機上，安全界線比「容器只在模擬網路」更薄，更需要你手工守住。</p>
-      <p>讀完這章，你會把 EMQX 的防護想成一層一層：驗證擋住誰能連，ACL 擋住誰能發布與訂閱，Rate Limit 擋住風暴，TLS 擋住竊聽，以及管理面（Dashboard）不要被別人直連。最後落在一句原則——最小權限（least privilege）。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>Your EMQX carries the MQTT messages for the whole house, which also makes it one of the doors an attacker most wants to try: anyone who can connect, get past authentication or subscribe could read your sensor data or drive your devices. Woow EMQX runs in host_network mode, which opens its ports straight on the host, so the security boundary is thinner than a container confined to a virtual network — you have to hold that line by hand.</p>
+      <p>By the end of this chapter you will think of EMQX's defenses as layers: authentication decides who may connect, the ACL decides who may publish and subscribe, rate limits absorb a flood, TLS stops eavesdropping, and nobody else should be able to reach the admin surface (the Dashboard) directly. It all comes back to one principle — least privilege.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>EMQX 的安全涵蓋四段通道：<strong>Client → Listener</strong>（有沒有 TLS、驗證）、<strong>Authentication → Authorization</strong>（誰能連、誰能做什麼）、<strong>資源保護</strong>（Limit、Blacklist、Flapping Detect），以及 <strong>管理面</strong>（Dashboard 與 API 的存取）。</p>
-      <p>Woow add-on 因為 host_network，五個連接埠（1883、8083、8084、8883、18083）都直接開在主機上。若 Home Assistant 主機只在可信的內網，風險尚可；但一旦經由路由器開埠、DMZ 或對外部提供任何服務，這些監聽埠就可能被公網掃描。安全部署的核心，是「只暴露你需要的監聽器」。</p>
-      <p>官方 security checklist 也提醒一個容易被忽略的事實：EMQX 若還沒設定 Authentication，預設會允許所有 client 連線。所以「先設驗證」不是加分題，是啟動前就必須完成的事。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>EMQX security covers four stretches of the path: <strong>Client → Listener</strong> (is there TLS, is there authentication), <strong>Authentication → Authorization</strong> (who may connect, and what they may do), <strong>resource protection</strong> (Limit, Blacklist, Flapping Detect), and the <strong>admin surface</strong> (access to the Dashboard and the API).</p>
+      <p>Because the Woow add-on uses host_network, all five ports (1883, 8083, 8084, 8883, 18083) are open straight on the host. If the Home Assistant host stays on a trusted local network the risk is manageable; but as soon as you forward a port on the router, put the host in a DMZ, or serve anything to the outside, those listener ports can be scanned from the public internet. Secure deployment comes down to one thing: expose only the listeners you need.</p>
+      <p>The official security checklist points out a fact that is easy to miss: until you configure Authentication, EMQX allows every client to connect. So setting up authentication first is not extra credit, it is something you finish before you start EMQX up.</p>
     </section>
 
-    <section id="what" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="what" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>Host Network</td><td>主機網路模式</td><td>add-on 直接使用主機的連接埠</td></tr>
-            <tr><td>Exposure</td><td>暴露面</td><td>可被外部觸及的監聽端口範圍</td></tr>
-            <tr><td>Rate Limit</td><td>速率限制</td><td>限制連線與發布速度，防資源耗盡</td></tr>
-            <tr><td>TLS</td><td>傳輸加密</td><td>加密 client 與 broker 之間的流量</td></tr>
-            <tr><td>Least Privilege</td><td>最小權限</td><td>只給帳號做它該做的事的權限</td></tr>
-            <tr><td>API Key</td><td>介面金鑰</td><td>REST API 用的驗證憑證，非 Dashboard 密碼</td></tr>
+            <tr><td>Host Network</td><td>host network mode</td><td>The add-on uses the host's ports directly</td></tr>
+            <tr><td>Exposure</td><td>attack surface</td><td>The range of listener ports that can be reached from outside</td></tr>
+            <tr><td>Rate Limit</td><td>rate limit</td><td>Caps the connection and publish rate so resources are not exhausted</td></tr>
+            <tr><td>TLS</td><td>transport encryption</td><td>Encrypts the traffic between a client and the broker</td></tr>
+            <tr><td>Least Privilege</td><td>least privilege</td><td>Give an account only the rights it needs to do its job</td></tr>
+            <tr><td>API Key</td><td>API key</td><td>The credential the REST API authenticates with, not the Dashboard password</td></tr>
           </tbody>
         </table>
       </div>
-      <p>安全首步是「把預設值換掉」：Dashboard 的 <code>admin/public</code> 公開值誰都查得到，啟用後第一件改變它；API key 與 MQTT client 憑證也一律用佔位符（如 <code>&lt;你的密碼&gt;</code>、<code>YOUR_TOKEN</code>）表示，不印內網資訊。</p>
+      <p>The first security step is to replace the defaults: the Dashboard's <code>admin/public</code> is public knowledge, so change it the moment you enable the add-on. Write API keys and MQTT client credentials as placeholders too (<code>&lt;你的密碼&gt;</code>, <code>YOUR_TOKEN</code>) and never print details of your local network.</p>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>改掉預設管理密碼</h3><p>第一次登入 Dashboard 時若系統要求，就把 <code>public</code> 換成自己的強密碼。即使沒被要求，也去 Dashboard 的使用者設定手動改，避免任何人用公開預設值登入。</p></li>
-        <li><h3>設定 Authentication</h3><p>到 Access Control → Authentication，建立一組驗證（建議 Password-Based → Built-in Database），建立正式使用者取代預設匿名連線。公開監聽之前，至少要有「匿名不得連」。</p></li>
-        <li><h3>用 Authorization 限縮 ACL</h3><p>到 Access Control → Authorization，為每個使用者的 Allow 規則依最小權限撰寫：Home Assistant 需發布與訂閱哪些主題、Z2M 需要哪些，一一列出具體主題，不要放 <code>#</code> 全放行。</p></li>
-        <li><h3>加上 Rate Limit 與檢視 Listener</h3><p>到 Management → Listeners 頁，為對外監聽設 Rate Limit（如 max connections per second）；並確認 18083（Dashboard）沒有直接暴露，最好只留在內網或加認證。</p></li>
+        <li><h3>Change the default admin password</h3><p>If the Dashboard asks you to at first login, replace <code>public</code> with a strong password of your own. If it does not ask, change it by hand in the Dashboard's user settings anyway, so nobody can log in with the published default.</p></li>
+        <li><h3>Set up Authentication</h3><p>Go to Access Control → Authentication and create an authenticator (we recommend Password-Based → Built-in Database), then create real users in place of the default anonymous connection. Before you expose a listener you need at least this much: no anonymous connections.</p></li>
+        <li><h3>Narrow the ACL with Authorization</h3><p>Go to Access Control → Authorization and write each user's Allow rules to least privilege: which topics Home Assistant needs to publish and subscribe to, which ones Z2M needs. List the specific topics one by one, and do not open everything with <code>#</code>.</p></li>
+        <li><h3>Add rate limits and review the listeners</h3><p>On the Management → Listeners page, set a Rate Limit on every listener that faces outward (max connections per second, for example). Also confirm that 18083 (the Dashboard) is not directly exposed — keep it on the local network, or put authentication in front of it.</p></li>
       </ol>
-      <p>以上不涵蓋 TLS 設定：若你的流量會跨不可信網段，還需要再為 8883（MQTTS）與 8084（WSS）配置憑證。詳細做法留在第 8 章的 Listener／TLS。</p>
+      <p>None of that covers TLS configuration: if your traffic crosses an untrusted network segment, you also have to configure certificates for 8883 (MQTTS) and 8084 (WSS). Chapter 8, Listeners/TLS, has the details.</p>
     </section>
 
-    <section id="hostnet" data-nav="對外暴露">
-      <h2 data-icon="network">host_network 與對外暴露</h2>
-      <p>Woow add-on 的 host_network 代表它直接用 Home Assistant 主機的連接埠：<strong>1883</strong>（MQTT）、<strong>8083</strong>（MQTT over WebSocket）、<strong>8084</strong>（WSS，MQTT over secure WebSocket）、<strong>8883</strong>（MQTTS）、<strong>18083</strong>（Dashboard）。沒有容器層的私網隔離。</p>
-      <p>風險來自「誰能觸及這些埠」。若主機固定在可信內網，威脅較低；但若你在路由器開啟對外連線，或把主機放到 DMZ、或使用 ngrok 公開 1883，那就把 broker 推向公網。此時：</p>
+    <section id="hostnet" data-nav="External exposure">
+      <h2 data-icon="network">host_network and external exposure</h2>
+      <p>host_network in the Woow add-on means it uses the Home Assistant host's ports directly: <strong>1883</strong> (MQTT), <strong>8083</strong> (MQTT over WebSocket), <strong>8084</strong> (WSS, MQTT over secure WebSocket), <strong>8883</strong> (MQTTS), <strong>18083</strong> (the Dashboard). There is no container-level private network to isolate them.</p>
+      <p>The risk comes down to who can reach those ports. If the host stays on a trusted local network the threat is low; but if you open an inbound connection on the router, put the host in a DMZ, or expose 1883 through ngrok, you have pushed the broker onto the public internet. In that case:</p>
       <ul>
-        <li>只開放必要的 Listener，不要一次把五個埠都曝光。</li>
-        <li>明文 1883 盡量留置內網或過渡用途；對外請優先使用加密的 8883／8084。</li>
-        <li>Dashboard（18083）只限可信網路，最好用 HTTPS 且只允許你需要的帳號。</li>
+        <li>Open only the listeners you need; do not expose all five ports at once.</li>
+        <li>Keep plaintext 1883 on the local network or use it only as a stopgap; for anything facing outward, prefer the encrypted 8883/8084.</li>
+        <li>Restrict the Dashboard (18083) to a trusted network, use HTTPS, and allow only the accounts you need.</li>
       </ul>
-      <p>EMQX 文件的 security checklist 也建議：Proxy Protocol 或 WebSocket 監聽若沒有受信 proxy 覆寫來源 IP，要關閉轉發位址標頭，以免 IP-based 授權被偽造。</p>
+      <p>The security checklist in the EMQX docs adds one more: if a Proxy Protocol or WebSocket listener has no trusted proxy rewriting the source IP, turn off the forwarded-address headers, so IP-based authorization cannot be spoofed.</p>
     </section>
 
-    <section id="limits" data-nav="Rate Limit">
-      <h2 data-icon="security">Rate Limit 與資源防護</h2>
-      <p>Rate Limit（limiter）是 EMQX 5.0+ 的機制，在入口限速，避免單一 client 或監聽被狂灌。Dashboard 的 <strong>Management → Listeners</strong> 頁可對每個監聽設值；也能用 <code>emqx.conf</code> 設定。</p>
+    <section id="limits" data-nav="Rate limits">
+      <h2 data-icon="security">Rate limits and resource protection</h2>
+      <p>Rate Limit (the limiter) is an EMQX 5.0+ mechanism that caps the rate at the entry point, so a single client or listener cannot be flooded. The Dashboard's <strong>Management → Listeners</strong> page sets a value per listener; you can also set it in <code>emqx.conf</code>.</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>類型</th><th>UI 名稱</th><th>作用</th><th>超過後的預設行為</th></tr>
+            <tr><th>Type</th><th>UI label</th><th>What it does</th><th>Default behavior when exceeded</th></tr>
           </thead>
           <tbody>
-            <tr><td>bytes_rate</td><td>Data Publish Rate</td><td>每個 client 每秒發布的 Bytes</td><td>暫停收取該 client 訊息</td></tr>
-            <tr><td>messages_rate</td><td>Messages Publish Rate</td><td>每個 client 每秒發布的訊息數</td><td>暫停收取該 client 訊息</td></tr>
-            <tr><td>max_conn_rate</td><td>Maximum Connection Rate</td><td>每次該 listener 每秒可接受的連線數</td><td>暫停接收新連線</td></tr>
+            <tr><td>bytes_rate</td><td>Data Publish Rate</td><td>Bytes published per client per second</td><td>Stops taking messages from that client</td></tr>
+            <tr><td>messages_rate</td><td>Messages Publish Rate</td><td>Messages published per client per second</td><td>Stops taking messages from that client</td></tr>
+            <tr><td>max_conn_rate</td><td>Maximum Connection Rate</td><td>Connections that listener accepts per second</td><td>Stops taking new connections</td></tr>
           </tbody>
         </table>
       </div>
-      <p>例如 emqx.conf 可這樣對預設 TCP listener 設限（時間單位 s/m/h/d，大小 KB/MB/GB）：</p>
+      <p>For example, emqx.conf can limit the default TCP listener like this (time units s/m/h/d, sizes KB/MB/GB):</p>
       <pre>listeners.tcp.default {
   bind = "0.0.0.0:1883"
   max_conn_rate = "1000/s"
   messages_rate = "1000/s"
   bytes_rate = "1MB/s"
 }</pre>
-      <p>對外暴露時，用 Rate Limit 搭配 Blacklist 與 Flapping Detect，能擋住單一 client 灌爆或反覆重連的濫用。記得把 Flapping 門檻設在正常重連不會誤觸的程度，避免誤鎖正常裝置。</p>
+      <p>When a listener is exposed, Rate Limit together with Blacklist and Flapping Detect will stop one client from flooding the broker or abusing reconnects. Set the Flapping threshold high enough that a normal reconnect does not trip it, so healthy devices are not locked out by mistake.</p>
     </section>
 
-    <section id="tls" data-nav="TLS 與管理面">
-      <h2 data-icon="warning">TLS 需求與管理面防護</h2>
-      <p>傳輸跨不可信網時，務必用 TLS：EMQX 的 8883（MQTTS）與 8084（WSS）就是加密監聽。憑證要由受信 CA 或自己的內部 PKI 發行，並在過期前輪替；若要用裝置憑證確認身份，還可搭配 X.509 認證與 mTLS（verify_peer）。</p>
-      <p>管理面另有幾條硬規則：</p>
+    <section id="tls" data-nav="TLS and admin">
+      <h2 data-icon="warning">TLS requirements and protecting the admin surface</h2>
+      <p>When traffic crosses an untrusted network, use TLS: EMQX's 8883 (MQTTS) and 8084 (WSS) are the encrypted listeners. Certificates should be issued by a trusted CA or by your own internal PKI, and rotated before they expire; to identify a device by its certificate, add X.509 authentication and mTLS (verify_peer).</p>
+      <p>The admin surface has a few hard rules of its own:</p>
       <ul>
-        <li>Dashboard 只用預設密碼是警訊——第一次登入就改，並確認只有需要的人才用得到。</li>
-        <li>REST API 應使用 API Key（system → API Key），並只授與最小角色；EMQX Open Source「不使用 RBAC」，所有 Dashboard 使用者都是管理員。</li>
-        <li>盡量把 Dashboard 綁在可信介面：localhost、內網，或專用管理網段。</li>
+        <li>Leaving the Dashboard on its default password is a warning sign — change it at first login, and make sure only the people who need it can reach it.</li>
+        <li>The REST API should use an API Key (system → API Key) and be granted the smallest role possible; EMQX Open Source does not use RBAC, so every Dashboard user is an administrator.</li>
+        <li>Bind the Dashboard to a trusted interface where you can: localhost, the local network, or a dedicated management segment.</li>
       </ul>
-      <p>最小權限原則用在每個層面：每個裝置用自己的一組憑證，ACL 只允許需要的主題，不要用萬用字元全放行。防護越細，單一洩漏造成的破口越小。</p>
+      <p>Least privilege applies at every layer: give each device its own credentials, let the ACL allow only the topics that are needed, and do not open everything with a wildcard. The finer the controls, the smaller the hole a single leak opens.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>外部掃到 1883 就有人嘗試連</strong>：先把監聽關掉或限到內網，再確認「驗證 + ACL」兩個都就位後才考慮公開。</li>
-        <li><strong>Rate Limit 設定後正常 client 被斷</strong>：檢查限值的時間單位與數值；並把 Flapping 門檻調到正常重連不會誤觸的程度，避免正常裝置被誤鎖。</li>
-        <li><strong>TLS 連線失敗</strong>：檢查憑證鏈、私鍵對應與 CA；如果自簽憑證，需在 client 端把該 CA 加入信任。</li>
-        <li><strong>Dashboard 被公網直接存取</strong>：18083 是 HTTP 管理埠，最忌暴露。把它限制在內網或可信連接，並改用 HTTPS 與強密碼。</li>
+        <li><strong>1883 is scanned from outside and people start trying to connect</strong>: turn the listener off or restrict it to the local network first, and only consider exposing it once both authentication and the ACL are in place.</li>
+        <li><strong>Normal clients are dropped after you set a rate limit</strong>: check the time unit and the number in the limit, and raise the Flapping threshold to a level a normal reconnect will not trip, so healthy devices are not locked out by mistake.</li>
+        <li><strong>The TLS connection fails</strong>: check the certificate chain, that the private key matches, and the CA; with a self-signed certificate you also have to add that CA to the client's trust store.</li>
+        <li><strong>The Dashboard is reachable straight from the public internet</strong>: 18083 is the HTTP admin port and is the last thing you want exposed. Restrict it to the local network or a trusted connection, and switch to HTTPS with a strong password.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>一定要為 MQTT 設 TLS 嗎</summary>
-        <div class="body"><p>視你流量是否跨不可信網。若只是 Home Assistant 與裝置在同一內網互連，內網可信度高，仍記得要用強密碼與 ACL；一旦有對外或跨網需求，就該用 8883／8084 加密。</p></div>
+        <summary>Do I have to set up TLS for MQTT?</summary>
+        <div class="body"><p>It depends on whether your traffic crosses an untrusted network. If Home Assistant and the devices only talk to each other on the same local network, that network is trustworthy enough — but still use strong passwords and an ACL. As soon as you need to reach outside or cross networks, encrypt with 8883/8084.</p></div>
       </details>
       <details class="faq">
-        <summary>Rate Limit 會不會拖慢正常使用</summary>
-        <div class="body"><p>若只設在對外監聽、並把限值設得高於正常用量，幾乎無感。它擋的是單一 client 灌爆；正常家庭的訊息量遠低於預設限額，所以不會有感；真的被限速時，再試著調高限值。</p></div>
+        <summary>Will a rate limit slow down normal use?</summary>
+        <div class="body"><p>Set it only on the listeners that face outward, keep the limit above your normal traffic, and you will barely notice it. What it blocks is one client flooding the broker; a normal household sends far less than the default limits, so it never bites. If something really is being throttled, try raising the limit.</p></div>
       </details>
       <details class="faq">
-        <summary>Dashboard 密碼改了以後，MQTT 也用同一組嗎</summary>
-        <div class="body"><p>不必。Dashboard 密碼保護管理介面；MQTT client 用的是 Access Control → Authentication 的帳號憑證。兩者是獨立的一套，但都要設強密碼。</p></div>
+        <summary>After I change the Dashboard password, does MQTT use the same one?</summary>
+        <div class="body"><p>No. The Dashboard password protects the admin interface; an MQTT client uses the account credentials from Access Control → Authentication. They are two separate sets, and both need a strong password.</p></div>
       </details>
       <details class="faq">
-        <summary>Open Source 的 EMQX 有 RBAC 嗎</summary>
-        <div class="body"><p>沒有。EMQX 5.8 Open Source 的 Dashboard 使用者一律是管理員，RBAC（Administrator／Viewer）是 Enterprise 功能。所以在 Open Source 上，管理帳號越少越好，REST API 盡量用最低角色的 API key。</p></div>
+        <summary>Does EMQX Open Source have RBAC?</summary>
+        <div class="body"><p>No. In EMQX 5.8 Open Source every Dashboard user is an administrator; RBAC (Administrator/Viewer) is an Enterprise feature. So on Open Source, keep the number of admin accounts as low as you can, and give the REST API an API key with the lowest role that works.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/security-checklist.md">EMQX 5.8 Security Checklist（pinned docs）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/rate-limit.md">EMQX 5.8 Rate Limit（pinned docs）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/overview.md">EMQX 5.8 Network and TLS（pinned docs）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard-security.md">EMQX 5.8 Dashboard Security（pinned docs）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/security-checklist.md">EMQX 5.8 Security Checklist (pinned docs)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/rate-limit.md">EMQX 5.8 Rate Limit (pinned docs)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/overview.md">EMQX 5.8 Network and TLS (pinned docs)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard-security.md">EMQX 5.8 Dashboard Security (pinned docs)</a></li>
       </ul>
     </section>
 
