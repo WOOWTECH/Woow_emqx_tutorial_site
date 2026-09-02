@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 13 · 與 Home Assistant 整合 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch13_home_assistant.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 13 · 與 Home Assistant 整合 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch13_home_assistant.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 13 · 與 Home Assistant 整合 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="把 EMQX 接進 Home Assistant：HA MQTT 整合、discovery 探索、birth／will 與狀態主題、Zigbee2MQTT 串接，以及從 Mosquitto 遷移到 EMQX。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch13_home_assistant.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch13_home_assistant.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html" class="active">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#words">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#integration_topic">MQTT 整合</a>
+      <a href="#z2m">Zigbee2MQTT 與遷移</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch13_home_assistant.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 13</div>
+      <h1>與 Home Assistant 整合</h1>
+      <p class="lead">把 Woow EMQX add-on（EMQX 5.8.9）當成 HA 的 MQTT broker：接上 MQTT 整合、讓 discovery 自動探索裝置，也順勢把 Zigbee2MQTT 與 Mosquitto 遷移到 EMQX。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>Home Assistant 內鍵的 MQTT 整合是「broker 位址＋帳密」最小設定，但你的 Home Assistant 主機不一定想永遠用 Mosquitto。換成 Woow EMQX 的<strong>最大理由</strong>是把 MQTT 生命週期接管：Dashboard、ACL、規則、監控——前提是 HA 要「能連到」你的 EMQX。</p>
+      <p>這章把 EMQX 接成 HA 的 broker、讓 discovery 自動把 MQTT 裝置搬進 HA，也把 Zigbee2MQTT 與舊的 Mosquitto 一起收進同一套整合。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>HA 的 <strong>MQTT 整合（MQTT integration）</strong>是 Home Assistant 內建的整合，用來連一個 MQTT broker。Woow EMQX add-on 提供的就是這個 broker：add-on 使用 <strong>host_network</strong>，直接開放主機上的 1883（MQTT）埠，HA 設定時 Broker 填 <code>homeassistant</code> 或 <code>localhost</code> 即可。</p>
+      <p>連線時需要一組在 EMQX 的「使用者帳號」：因為 Woow EMQX 預設要求先設定 Authentication（驗證），沒有帳密就無法連。因此順序是：先在 EMQX 的 Access Control → Authentication 建立使用者 → 在 HA 建立 MQTT 整合填入這組帳密。</p>
+    </section>
+
+    <section id="words" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MQTT Integration</td><td>MQTT 整合</td><td>HA 連接 MQTT broker（EMQX）的整合</td></tr>
+            <tr><td>Discovery</td><td>探索</td><td>HA 自動新增「會說話」的 MQTT 裝置</td></tr>
+            <tr><td>Birth Message</td><td>通知訊息</td><td>整合上線時發布的「我在」訊息</td></tr>
+            <tr><td>Status Topic</td><td>狀態主題</td><td>表達整合是 online／offline 的主題</td></tr>
+            <tr><td>Will</td><td>遺囑</td><td>異常/異常離線時 broker 代送的通知</td></tr>
+            <tr><td>State Topic</td><td>狀態主題</td><td>裝置更新狀態的主題</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>在 EMQX 建立 MQTT 使用者</h3><p>先到 EMQX Dashboard：Access Control → Authentication，選擇 Password-Based → Built-in Database，建立一個使用者與密碼（用於 HA 連線）。</p></li>
+        <li><h3>開啟 Home Assistant 的 MQTT 整合</h3><p>HA 面板：設定 → 裝置與服務 → 新增整合 → 搜尋 MQTT。若還沒安裝，會提示建立。</p></li>
+        <li><h3>填寫 broker 連線資訊</h3><p>Broker 填 <code>homeassistant</code>（或 <code>localhost</code>），連接埠 1883，Username 填剛才建立的帳號，Password 填對應密碼。</p></li>
+        <li><h3>儲存並確認</h3><p>儲存後 HA 應顯示連線成功。回到 EMQX Dashboard 的 Clients 頁，你會看到 HA 的這個 MQTT client 已上線。</p></li>
+        <li><h3>檢查 discovery</h3><p>若已在<code>homeassistant/</code> 主題有一組 discovery 訊息，HA 應自動探索出裝置；否則手動新增「新增裝置」即可。</p></li>
+      </ol>
+    </section>
+
+    <section id="integration_topic" data-nav="MQTT 整合">
+      <h2 data-icon="integration">MQTT 整合、discovery 與 birth／will</h2>
+      <p><strong>Discovery</strong> 是 HA MQTT 整合的便利點：整合訂閱 discovery 前綴（預設 <code>homeassistant/</code> 主題），當裝置發布符合格式的 discovery 訊息時，HA 自動建立對應的 entity，不必手動加入。</p>
+      <p>MQTT 整合也用 <strong>Birth Message（通知）</strong>與 <strong>Will（遺囑）</strong>協調自己和 broker 的狀態：</p>
+      <ul>
+        <li><strong>Birth Message</strong>：整合一上線就發布一則「我在」訊息，讓其他訂閱者知道 HA 已連接。</li>
+        <li><strong>Will</strong>：整合會設定一組 will；若 HA 與 broker 異常斷線，broker 代 HA 送出一則「離線」通知。</li>
+        <li><strong>Status</strong>：這些訊息會落在 HA 的狀態主題（例如 <code>homeassistant/status</code>），別人（與 EMQX 規則）可據此判斷 HA 是在線或離線。</li>
+      </ul>
+      <p>實務上「列出 HA 是否在線」常靠這個狀態主題。若要讓 EMQX 派一個規則處理 HA 離線通知，規則的 <code>FROM</code> 指向該事件源即可。</p>
+    </section>
+
+    <section id="z2m" data-nav="Zigbee2MQTT 與遷移">
+      <h2 data-icon="zigbee">Zigbee2MQTT 與 Mosquitto 遷移</h2>
+      <p><strong>Zigbee2MQTT</strong>（Z2M）是把 Zigbee 裝置橋接成 MQTT 的常用整合。Woow EMQX add-on 是 host_network，Z2M 要連的 broker 位址通常是 <code>homeassistant</code> 或這台 add-on 的 slug（例如 <code>a0d7b954-emqx</code>），連接埠 1883，帳密用你在 EMQX 建立的帳號。</p>
+      <p><strong>從 Mosquitto 遷移</strong>需先注意：<code>Mosquitto</code> 與 EMQX <strong>無法同時運行</strong>（都會占用 1883）。做法概要：</p>
+      <ol class="steps2">
+        <li>停用你原本的 Mosquitto add-on，空出 1883。</li>
+        <li>將原 device／整合的 broker 指向 EMQX（<code>homeassistant</code>、1883、EMQX 帳號）。</li>
+        <li>在 EMQX 建立同樣的 MQTT 使用者，並把保留訊息（retained）與 ACL 的設定也同步到 EMQX 端。</li>
+        <li>啟動 EMQX，確認 HA、Z2M 與外部裝置都連上。</li>
+      </ol>
+      <p>Mosquitto 沒有圖形化介面、用戶端清單、規則引擎、WebSocket 內建；EMQX（Dashboard）這些都能提供，這些正是 EMQX 相對於 Mosquitto 的額外價值。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>HA MQTT 整合無法連線</strong>：確認 EMQX 已啟動、Address 是 <code>homeassistant</code> 或主機位址正確、連接埠 1883、並已在 EMQX 建立帳號（來源驗證）。</li>
+        <li><strong>discovery 沒有帶出裝置</strong>：檢查 discovery 前綴（homeassistant/）與 <code>birth/will</code> 是否正常、裝置有無發布 discovery 訊息、HA 有沒有 Upgrade。</li>
+        <li><strong>與 Mosquitto 同時運行失敗</strong>：兩個 broker 搶同一 1883。先停掉 Mosquitto（或把 EMQX 的 listener 改到別埠），再啟動另一邊。</li>
+        <li><strong>Z2M 無法連 EMQX</strong>：Z2M 的 broker host 要能用（<code>homeassistant</code> 或 add-on slug），也確認 z2m 用的是你在 EMQX 建的帳號，而非 Mosquitto 舊帳號。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>HA 一定要先有 MQTT broker 嗎</summary>
+        <div class="body"><p>不。把 broker 改成 EMQX 後，HA 的 MQTT 整合只需指到 EMQX（homeassistant、1883、帳號密碼）。EMQX 就是新的 broker。</p></div>
+      </details>
+      <details class="faq">
+        <summary>現在用 Mosquitto，遷移到 EMQX 很費時嗎</summary>
+        <div class="body"><p>主要是「停 Mosquitto → EMQX 占 1883 → 把整合與 Z2M 指到 EMQX → 同步使用者與 ACL」。長期使用的 ACL／規則較繁瑣，可先小型遷移一種裝置。</p></div>
+      </details>
+      <details class="faq">
+        <summary>discovery 前綴或狀態主題在哪設定</summary>
+        <div class="body"><p>在 HA MQTT 進階設定中調整 discovery prefix 與 broker 狀態（birth/will）參數。預設 discovery 前綴是 <code>homeassistant/</code>，birth 與 will 主題可自行命名。</p></div>
+      </details>
+      <details class="faq">
+        <summary>EMQX 與 Mosquitto 能並存嗎</summary>
+        <div class="body"><p>不能同時用 1883（兩者都預設占 1883）。Woow EMQX 官方文件明列「無法與 Mosquitto 同時運行」；要換就換，或把其中一邊的 listener 換埠。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/DOCS.md">Woow EMQX add-on DOCS.md（pinned commit）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-concepts.md">EMQX 5.8 MQTT 概念（pinned docs 分支）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch12_sources_bridge.html">
+        <span class="label">← Previous</span>
+        <span class="title">12 · Source</span>
+      </a>
+      <a class="next" href="ch14_client_management.html">
+        <span class="label">Next →</span>
+        <span class="title">14 · 客戶端管理</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

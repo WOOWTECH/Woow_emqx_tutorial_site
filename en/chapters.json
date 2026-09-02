@@ -1,12 +1,12 @@
 {
-  "_readme": "側欄、上下章導覽、目錄卡片、章節編號、<title>／SEO meta、sitemap.xml 全部由這個檔案產生。改完請跑 `node scripts/build_nav.js`。章內錨點標題放在各 HTML 的 <section data-nav=\"...\">。part 欄位決定目錄頁與側欄的分組標題。",
+  "_readme": "Single source for the en/ site root (nav, SEO, catalog, sitemap). Human-readable fields are translation units tracked in i18n/ledger.json. Rebuild with: SITE_ROOT=en node scripts/build_nav.js",
   "site": {
     "title": "WoowTech EMQX 完整指南",
     "brand": "EMQX 指南",
     "subtitle": "EMQX 5.8.9 完整功能",
-    "baseUrl": "https://emqx-guide.woowtech.io",
+    "baseUrl": "https://emqx-guide.woowtech.io/en",
     "repoUrl": "https://github.com/WOOWTECH/Woow_emqx_tutorial_site",
-    "locale": "zh_TW",
+    "locale": "en_US",
     "description": "22 章繁體中文 EMQX 教學：從安裝 Woow EMQX add-on、MQTT 心智模型、驗證與 ACL、TLS，一路到 Rule Engine、Connector/Sink、Home Assistant 整合、監控、備份與安全，把 EMQX 5.8.9 變成可靠的 IoT 訊息骨幹。",
     "footerMeta": "介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。",
     "footerLinks": [
@@ -31,10 +31,10 @@
         "href": "repo"
       }
     ],
-    "ogImage": "assets/og/emqx-guide.png",
+    "ogImage": "assets/og/emqx-guide.en.png",
     "license": {
       "name": "CC BY 4.0",
-      "url": "https://creativecommons.org/licenses/by/4.0/deed.zh-hant",
+      "url": "https://creativecommons.org/licenses/by/4.0/deed.en",
       "holder": "WoowTech"
     },
     "ogImageMeta": {
@@ -48,7 +48,15 @@
     "chrome": {
       "hideEmptyAppendices": true,
       "catalogGroupClass": "spaced"
-    }
+    },
+    "assetBaseUrl": "https://emqx-guide.woowtech.io",
+    "assetBase": "../",
+    "lang": "en",
+    "localeCode": "en",
+    "localeAlternate": [
+      "zh_TW"
+    ],
+    "fontsUrl": "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap"
   },
   "hub": {
     "_readme": "index.html 是四類資源總覽(hub),由人手維護、build_nav 不碰。教學目錄頁由 build_nav 產生到 catalog 指定的檔案。pages 是 hub 底下的獨立單檔手冊(自帶 head 與樣式),納入 sitemap 與 check_links 白名單。",

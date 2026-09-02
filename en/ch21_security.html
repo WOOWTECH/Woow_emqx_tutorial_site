@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 21 · 安全部署 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch21_security.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 21 · 安全部署 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch21_security.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 21 · 安全部署 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch21_security.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch21_security.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html" class="active">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#what">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#hostnet">對外暴露</a>
+      <a href="#limits">Rate Limit</a>
+      <a href="#tls">TLS 與管理面</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch21_security.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 21</div>
+      <h1>安全部署</h1>
+      <p class="lead">EMQX 安全部署：host_network 的風險、對外暴露、Rate Limit、TLS 要求、管理面防護與最小權限原則。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>你的 EMQX 負責整個家的 MQTT 訊息，而它同時也是攻擊者最想碰的入口之一：只要有人能連線、能做驗證或訂閱，就可能竊取感測資料或操控裝置。Woow EMQX 用 host_network 模式直接把連接埠開在主機上，安全界線比「容器只在模擬網路」更薄，更需要你手工守住。</p>
+      <p>讀完這章，你會把 EMQX 的防護想成一層一層：驗證擋住誰能連，ACL 擋住誰能發布與訂閱，Rate Limit 擋住風暴，TLS 擋住竊聽，以及管理面（Dashboard）不要被別人直連。最後落在一句原則——最小權限（least privilege）。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>EMQX 的安全涵蓋四段通道：<strong>Client → Listener</strong>（有沒有 TLS、驗證）、<strong>Authentication → Authorization</strong>（誰能連、誰能做什麼）、<strong>資源保護</strong>（Limit、Blacklist、Flapping Detect），以及 <strong>管理面</strong>（Dashboard 與 API 的存取）。</p>
+      <p>Woow add-on 因為 host_network，五個連接埠（1883、8083、8084、8883、18083）都直接開在主機上。若 Home Assistant 主機只在可信的內網，風險尚可；但一旦經由路由器開埠、DMZ 或對外部提供任何服務，這些監聽埠就可能被公網掃描。安全部署的核心，是「只暴露你需要的監聽器」。</p>
+      <p>官方 security checklist 也提醒一個容易被忽略的事實：EMQX 若還沒設定 Authentication，預設會允許所有 client 連線。所以「先設驗證」不是加分題，是啟動前就必須完成的事。</p>
+    </section>
+
+    <section id="what" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Host Network</td><td>主機網路模式</td><td>add-on 直接使用主機的連接埠</td></tr>
+            <tr><td>Exposure</td><td>暴露面</td><td>可被外部觸及的監聽端口範圍</td></tr>
+            <tr><td>Rate Limit</td><td>速率限制</td><td>限制連線與發布速度，防資源耗盡</td></tr>
+            <tr><td>TLS</td><td>傳輸加密</td><td>加密 client 與 broker 之間的流量</td></tr>
+            <tr><td>Least Privilege</td><td>最小權限</td><td>只給帳號做它該做的事的權限</td></tr>
+            <tr><td>API Key</td><td>介面金鑰</td><td>REST API 用的驗證憑證，非 Dashboard 密碼</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>安全首步是「把預設值換掉」：Dashboard 的 <code>admin/public</code> 公開值誰都查得到，啟用後第一件改變它；API key 與 MQTT client 憑證也一律用佔位符（如 <code>&lt;你的密碼&gt;</code>、<code>YOUR_TOKEN</code>）表示，不印內網資訊。</p>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>改掉預設管理密碼</h3><p>第一次登入 Dashboard 時若系統要求，就把 <code>public</code> 換成自己的強密碼。即使沒被要求，也去 Dashboard 的使用者設定手動改，避免任何人用公開預設值登入。</p></li>
+        <li><h3>設定 Authentication</h3><p>到 Access Control → Authentication，建立一組驗證（建議 Password-Based → Built-in Database），建立正式使用者取代預設匿名連線。公開監聽之前，至少要有「匿名不得連」。</p></li>
+        <li><h3>用 Authorization 限縮 ACL</h3><p>到 Access Control → Authorization，為每個使用者的 Allow 規則依最小權限撰寫：Home Assistant 需發布與訂閱哪些主題、Z2M 需要哪些，一一列出具體主題，不要放 <code>#</code> 全放行。</p></li>
+        <li><h3>加上 Rate Limit 與檢視 Listener</h3><p>到 Management → Listeners 頁，為對外監聽設 Rate Limit（如 max connections per second）；並確認 18083（Dashboard）沒有直接暴露，最好只留在內網或加認證。</p></li>
+      </ol>
+      <p>以上不涵蓋 TLS 設定：若你的流量會跨不可信網段，還需要再為 8883（MQTTS）與 8084（WSS）配置憑證。詳細做法留在第 8 章的 Listener／TLS。</p>
+    </section>
+
+    <section id="hostnet" data-nav="對外暴露">
+      <h2 data-icon="network">host_network 與對外暴露</h2>
+      <p>Woow add-on 的 host_network 代表它直接用 Home Assistant 主機的連接埠：<strong>1883</strong>（MQTT）、<strong>8083</strong>（MQTT over WebSocket）、<strong>8084</strong>（WSS，MQTT over secure WebSocket）、<strong>8883</strong>（MQTTS）、<strong>18083</strong>（Dashboard）。沒有容器層的私網隔離。</p>
+      <p>風險來自「誰能觸及這些埠」。若主機固定在可信內網，威脅較低；但若你在路由器開啟對外連線，或把主機放到 DMZ、或使用 ngrok 公開 1883，那就把 broker 推向公網。此時：</p>
+      <ul>
+        <li>只開放必要的 Listener，不要一次把五個埠都曝光。</li>
+        <li>明文 1883 盡量留置內網或過渡用途；對外請優先使用加密的 8883／8084。</li>
+        <li>Dashboard（18083）只限可信網路，最好用 HTTPS 且只允許你需要的帳號。</li>
+      </ul>
+      <p>EMQX 文件的 security checklist 也建議：Proxy Protocol 或 WebSocket 監聽若沒有受信 proxy 覆寫來源 IP，要關閉轉發位址標頭，以免 IP-based 授權被偽造。</p>
+    </section>
+
+    <section id="limits" data-nav="Rate Limit">
+      <h2 data-icon="security">Rate Limit 與資源防護</h2>
+      <p>Rate Limit（limiter）是 EMQX 5.0+ 的機制，在入口限速，避免單一 client 或監聽被狂灌。Dashboard 的 <strong>Management → Listeners</strong> 頁可對每個監聽設值；也能用 <code>emqx.conf</code> 設定。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>類型</th><th>UI 名稱</th><th>作用</th><th>超過後的預設行為</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>bytes_rate</td><td>Data Publish Rate</td><td>每個 client 每秒發布的 Bytes</td><td>暫停收取該 client 訊息</td></tr>
+            <tr><td>messages_rate</td><td>Messages Publish Rate</td><td>每個 client 每秒發布的訊息數</td><td>暫停收取該 client 訊息</td></tr>
+            <tr><td>max_conn_rate</td><td>Maximum Connection Rate</td><td>每次該 listener 每秒可接受的連線數</td><td>暫停接收新連線</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>例如 emqx.conf 可這樣對預設 TCP listener 設限（時間單位 s/m/h/d，大小 KB/MB/GB）：</p>
+      <pre>listeners.tcp.default {
+  bind = "0.0.0.0:1883"
+  max_conn_rate = "1000/s"
+  messages_rate = "1000/s"
+  bytes_rate = "1MB/s"
+}</pre>
+      <p>對外暴露時，用 Rate Limit 搭配 Blacklist 與 Flapping Detect，能擋住單一 client 灌爆或反覆重連的濫用。記得把 Flapping 門檻設在正常重連不會誤觸的程度，避免誤鎖正常裝置。</p>
+    </section>
+
+    <section id="tls" data-nav="TLS 與管理面">
+      <h2 data-icon="warning">TLS 需求與管理面防護</h2>
+      <p>傳輸跨不可信網時，務必用 TLS：EMQX 的 8883（MQTTS）與 8084（WSS）就是加密監聽。憑證要由受信 CA 或自己的內部 PKI 發行，並在過期前輪替；若要用裝置憑證確認身份，還可搭配 X.509 認證與 mTLS（verify_peer）。</p>
+      <p>管理面另有幾條硬規則：</p>
+      <ul>
+        <li>Dashboard 只用預設密碼是警訊——第一次登入就改，並確認只有需要的人才用得到。</li>
+        <li>REST API 應使用 API Key（system → API Key），並只授與最小角色；EMQX Open Source「不使用 RBAC」，所有 Dashboard 使用者都是管理員。</li>
+        <li>盡量把 Dashboard 綁在可信介面：localhost、內網，或專用管理網段。</li>
+      </ul>
+      <p>最小權限原則用在每個層面：每個裝置用自己的一組憑證，ACL 只允許需要的主題，不要用萬用字元全放行。防護越細，單一洩漏造成的破口越小。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>外部掃到 1883 就有人嘗試連</strong>：先把監聽關掉或限到內網，再確認「驗證 + ACL」兩個都就位後才考慮公開。</li>
+        <li><strong>Rate Limit 設定後正常 client 被斷</strong>：檢查限值的時間單位與數值；並把 Flapping 門檻調到正常重連不會誤觸的程度，避免正常裝置被誤鎖。</li>
+        <li><strong>TLS 連線失敗</strong>：檢查憑證鏈、私鍵對應與 CA；如果自簽憑證，需在 client 端把該 CA 加入信任。</li>
+        <li><strong>Dashboard 被公網直接存取</strong>：18083 是 HTTP 管理埠，最忌暴露。把它限制在內網或可信連接，並改用 HTTPS 與強密碼。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>一定要為 MQTT 設 TLS 嗎</summary>
+        <div class="body"><p>視你流量是否跨不可信網。若只是 Home Assistant 與裝置在同一內網互連，內網可信度高，仍記得要用強密碼與 ACL；一旦有對外或跨網需求，就該用 8883／8084 加密。</p></div>
+      </details>
+      <details class="faq">
+        <summary>Rate Limit 會不會拖慢正常使用</summary>
+        <div class="body"><p>若只設在對外監聽、並把限值設得高於正常用量，幾乎無感。它擋的是單一 client 灌爆；正常家庭的訊息量遠低於預設限額，所以不會有感；真的被限速時，再試著調高限值。</p></div>
+      </details>
+      <details class="faq">
+        <summary>Dashboard 密碼改了以後，MQTT 也用同一組嗎</summary>
+        <div class="body"><p>不必。Dashboard 密碼保護管理介面；MQTT client 用的是 Access Control → Authentication 的帳號憑證。兩者是獨立的一套，但都要設強密碼。</p></div>
+      </details>
+      <details class="faq">
+        <summary>Open Source 的 EMQX 有 RBAC 嗎</summary>
+        <div class="body"><p>沒有。EMQX 5.8 Open Source 的 Dashboard 使用者一律是管理員，RBAC（Administrator／Viewer）是 Enterprise 功能。所以在 Open Source 上，管理帳號越少越好，REST API 盡量用最低角色的 API key。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/access-control/security-checklist.md">EMQX 5.8 Security Checklist（pinned docs）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/rate-limit.md">EMQX 5.8 Rate Limit（pinned docs）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/overview.md">EMQX 5.8 Network and TLS（pinned docs）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard-security.md">EMQX 5.8 Dashboard Security（pinned docs）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch20_backup_recovery.html">
+        <span class="label">← Previous</span>
+        <span class="title">20 · 備份</span>
+      </a>
+      <a class="next" href="ch22_troubleshooting.html">
+        <span class="label">Next →</span>
+        <span class="title">22 · 排錯</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

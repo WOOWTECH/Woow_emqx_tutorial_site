@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 14 · 客戶端與訂閱管理 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch14_client_management.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 14 · 客戶端與訂閱管理 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch14_client_management.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 14 · 客戶端與訂閱管理 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch14_client_management.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch14_client_management.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html" class="active">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#words">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#clients">Clients 清單</a>
+      <a href="#subscriptions">Subscriptions</a>
+      <a href="#diagnose">慢訂閱與監控</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch14_client_management.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 14</div>
+      <h1>客戶端與訂閱管理</h1>
+      <p class="lead">EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>智慧家庭裡最常見的狀況，是某台裝置「明明設定好了，卻收不到訊息」。退一步想，要把問題找出來，你得先能回答幾件事：哪個 client 正在連線、它到底訂了哪些主題、訊息有沒有真的送出去。EMQX 的 <strong>Clients</strong> 與 <strong>Subscriptions</strong> 頁，就是把這些「連線的事實」講清楚的地方。</p>
+      <p>這章帶你建立一套停線診斷流程：先到 Clients 清單確認誰在線上、哪一台有 session，再看 Subscriptions 掌握訂閱細節，最後認識慢訂閱與主題監控工具（以及它們的授權）。讀完之後，遇到「收不到訊息」這類問題，你就不必瞎猜，能先在 Dashboard 上把範圍縮小。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>EMQX 的 <strong>Clients</strong> 頁顯示「目前連線的 client」以及「尚未過期的 session」。連線（connection）是一條活的 MQTT 通道；而 session 是 EMQX 替該 client 保留的狀態，在連線斷掉後如果設為持久（persistent）並給定了 session 過期時間，它仍會存在數秒。 所以 Clients 清單裡看到的，不只是「這一秒在線」的裝置。</p>
+      <p><strong>Subscriptions</strong> 頁以「client ID × topic」為單位列出所有訂閱，並補上 QoS 與 MQTT 5.0 的新訂閱選項；<strong>Topics</strong> 分頁則以「主題名稱」去重，把同一台節點的相同訂閱只列一次。</p>
+      <p>先講一個界線：<strong>Slow Subscriptions</strong>（慢訂閱統計）與 <strong>Topic Metrics</strong>（主題度量）是 EMQX Enterprise 版功能，Open Source 5.8.9 的 Diagnose 左欄看不到它們。知道這條界線，你就不會在自架 Open Source 版時找不到工具而白費時間。</p>
+    </section>
+
+    <section id="words" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Client</td><td>客戶端</td><td>連上 EMQX 的 MQTT 裝置或程式</td></tr>
+            <tr><td>Connection</td><td>連線</td><td>client 與 EMQX 之間的活通道</td></tr>
+            <tr><td>Session</td><td>會話</td><td>EMQX 替 client 保留的訂閱與訊息狀態</td></tr>
+            <tr><td>Subscription</td><td>訂閱</td><td>client 對某主題表達接收訊息的意願</td></tr>
+            <tr><td>QoS</td><td>服務品質</td><td>0／1／2 三級投遞保證</td></tr>
+            <tr><td>Kick Out</td><td>踢除</td><td>強制中斷某 client 的連線</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>開啟 Clients 清單</h3><p>左側選 <strong>Monitoring → Clients</strong>。預設顯示目前連線的 client，欄位含 client ID、username、連線狀態、IP、heartbeat、session 資訊與連線完成時間。</p></li>
+        <li><h3>用過濾條件找一台裝置</h3><p>頂端搜尋列可用 client ID 或 username 做模糊搜尋；展開右側箭頭後，可有連線狀態、時間範圍、目標 IP 等過濾欄。</p></li>
+        <li><h3>看某台 client 的明細</h3><p>在清單點 client ID，進入連線明細頁。右上可手動重新整理、也可手動清除 session；下方能看到該連線目前的訂閱主題。</p></li>
+        <li><h3>踢除一台 client</h3><p>回到清單，勾選一台 client，按 <strong>Kick Out</strong> 中斷連線。若該 client 是持久 session、有 session 到期，重連後還是會對回同一 session。</p></li>
+      </ol>
+    </section>
+
+    <section id="clients" data-nav="Clients 清單">
+      <h2 data-icon="plan">Clients 清單與明細細節</h2>
+      <p>清單最上，<strong>Select Column</strong> 讓你可選擇顯示哪些欄位；<strong>Refresh</strong> 會重置所有過濾條件並重新載入。IP 位址欄是把 client 的來源 IP 與所用連接埠併起來顯示。</p>
+      <p>點入明細頁後，除了清單上已有的基本資訊，還多了幾項：連線使用的協定版本（例如 MQTT 3.1.1 或 5.0）、session 是否要在離線後清理、以及（如果已離線）上次離線的時間。</p>
+      <p>明細的最上方與資訊分成兩區：<strong>Connection Information</strong>（連線資訊）與右側 <strong>Session Information</strong>（會話資訊）。session 欄位包括 session 過期時間、建立時間、訂閱數量、訊息佇列長度、傳輸視窗長度、QoS2 接收佇列長度。</p>
+      <p>再往下是流量、訊息與封包的統計指標，方便你只看一台 client 的進出量。整頁底部就是它目前訂閱的主題：可以按 <strong>Add Subscription</strong> 補一個簡單訂閱，或在清單按 <strong>Unsubscribe</strong> 取消。</p>
+    </section>
+
+    <section id="subscriptions" data-nav="Subscriptions">
+      <h2 data-icon="tabs">Subscriptions 與 Topics</h2>
+      <p><strong>Subscriptions</strong> 頁把每個連線的訂閱，以「client ID ＋ topic」建欄列出，包含 QoS 與 MQTT 5.0 的新訂閱選項：</p>
+      <ul>
+        <li><strong>No Local</strong>：設為 1 時，server 不會把自己的訊息轉回給你。</li>
+        <li><strong>Retain As Published</strong>：指定轉發訊息時要不要保留 RETAIN 旗標（這與 retained 訊息本身的 RETAIN 旗標無關）。</li>
+        <li><strong>Retain Handling</strong>：訂閱時 server 何時送 retained 訊息。0＝訂閱成功就送；1＝只有當舊訂閱不存在才送；2＝無論如何不送。</li>
+      </ul>
+      <p>搜尋列預設有 Node、Client ID、Topic 三個過濾欄；展開箭頭後還可填 QoS 與共享訂閱名（Shared Name）。</p>
+      <p><strong>Topics</strong> 頁則把所有節點上、目前被訂閱的主題去重整成一份清單，可模糊搜尋。某列的 <strong>Create Monitor</strong> 會帶你到 <strong>Diagnose → Topic Metrics</strong> 建立這主題的監控。</p>
+      <p class="callout note">提醒：Subscriptions 是「以 client 為單位」，Topics 是「以主題為單位」；同一主題可能同時被不同 client 訂閱，兩欄才都很重要。</p>
+    </section>
+
+    <section id="diagnose" data-nav="慢訂閱與監控">
+      <h2 data-icon="tips">慢訂閱與主題監控（Enterprise）</h2>
+      <p>若一台裝置明明在線、卻收訊息很慢，EMQX 的 <strong>Slow Subscriptions</strong> 能統計「從訊息抵達 EMQX、到送出完成」的延遲。在 <strong>Diagnose → Slow Subscriptions</strong> 啟用後，可以設統計門檻（Stats Threshold，最小 100ms）、紀錄筆數上限（最多 1000 筆）、紀錄淘汰時間（預設 300 秒），以及計算方式（whole／internal／response）。</p>
+      <p>清單以延遲時間由大到小排序，欄位有 Client ID、Topic、Duration、Node、Updated；點 Client ID 可以開此 client 的明細，深入調查。</p>
+      <p><strong>Topic Metrics</strong> 則專門統計特定主題：在 <strong>Diagnose → Topic Metrics</strong>（或 Topics 頁的 Create Monitor）新增一筆監控，指定一個主題名稱。要注意這個功能「不能用萬用字元」，<code>+</code> 或 <code>#</code> 目前都不支援；只能用完整主題名。</p>
+      <p class="note">兩種都僅限 EMQX Enterprise 版。如果你是 Open Source 5.8.9，其實你所在的 Diagnose 左欄就不會有它們。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>在 Clients 找不到某台裝置</strong>：先用 client ID 或 username 模糊搜尋；也確認它真的連線了。若它已離線，可能是 session 還留著，看起來像上線。</li>
+        <li><strong>Kick Out 之後，同一台 client 又回連</strong>：如果該 client 用持久 session，中斷後會在 session 過期時間內重新連回同一 session。要「防它再回」，應改用 Authentication／ACL 或 Blacklist，而不是每次手動踢。</li>
+        <li><strong>訂了某主題卻收不到</strong>：在 Subscriptions 頁承認該訂閱的 QoS、No Local 有沒有被設錯。再用 <strong>Diagnose → WebSocket Client</strong> 的訂閱工具對同一主題抓一遍，確認 broker 有沒有在發。</li>
+        <li><strong>找不到 Slow Subscriptions 或 Topic Metrics</strong>：兩者是 Enterprise 版功能。若你是 Open Source 5.8.9，請改用 Clients ／Subscriptions 的統計欄做簡易判斷。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>Clients 與 Sessions 有什麼差別</summary>
+        <div class="body"><p>Clients 頁同時呈現「連線」與「會話」。連線斷的瞬間，session 未必跟著消失；如果該 client 是持久 session 並設定過期，session 會在到期前繼續存在。明細右上區的 Session Information 就是 session 的細項。</p></div>
+      </details>
+      <details class="faq">
+        <summary>為什麼用 Kick Out 踢一台，它又自動連回</summary>
+        <div class="body"><p>Kick Out 只是中斷連線，不是禁止重連。若 device 設定自動重連，就會在允許的 session 過期時間內回去。要多次拒絕某個 client，改考量 Blacklist 或 ACL 層面的阻擋。</p></div>
+      </details>
+      <details class="faq">
+        <summary>Topics 清單與 Subscriptions 清單是不是一樣</summary>
+        <div class="body"><p>不完全一樣。Subscriptions 以「client＋topic」為一筆；Topics 是「全節去重」的主題名稱。同一主題若被兩台裝置訂了，Topics 只列一行，Subscriptions 卻會有兩筆。</p></div>
+      </details>
+      <details class="faq">
+        <summary>慢訂閱統計與主題監控為什麼找不到</summary>
+        <div class="body"><p>Slow Subscriptions 與 Topic Metrics 在 EMQX Enterprise 版才提供，Open Source 5.8.9 的 Diagnose 左欄不會顯示它們。若你的版是 Open Source，先以 Clients 的統計資訊做手動判斷。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/connections.md">EMQX 5.8 Clients 清單與明細（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/subscription-management.md">EMQX 5.8 Subscription Management（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/slow-subscribers-statistics.md">EMQX 5.8 Slow Subscriptions 統計（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch13_home_assistant.html">
+        <span class="label">← Previous</span>
+        <span class="title">13 · HA 整合</span>
+      </a>
+      <a class="next" href="ch15_monitoring.html">
+        <span class="label">Next →</span>
+        <span class="title">15 · 監控</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

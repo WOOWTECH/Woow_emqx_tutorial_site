@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 1 · 認識 EMQX 與 MQTT Broker · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch1_overview.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 1 · 認識 EMQX 與 MQTT Broker · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch1_overview.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 1 · 認識 EMQX 與 MQTT Broker · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch1_overview.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch1_overview.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html" class="active">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#what">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#topic1">EMQX 對照 Mosquitto</a>
+      <a href="#topic2">5.x 架構與叢集</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch1_overview.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 1</div>
+      <h1>認識 EMQX 與 MQTT Broker</h1>
+      <p class="lead">認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>Home Assistant 內建的 <strong>Mosquitto</strong> 是不少人的第一個 MQTT broker，但它只有陽春的設定檔與零散的連線紀錄。把數十個感應器、開關、遙測全部塞進去之後，你會開始需要一個能一眼看出「誰在線上、誰在訂閱、訊息有沒有送出去」的管理介面——這就是 <strong>EMQX</strong> 的用武之地。</p>
+      <p>這章先幫你把 MQTT 的 broker 模型講清楚：<strong>publisher（發布者）</strong>、<strong>subscriber（訂閱者）</strong>與 <strong>topic（主題）</strong>之間為什麼不需要互相認識，broker 在其中扮演什麼角色，以及 EMQX 在這些角色之外多給了哪些現代 broker 該有的東西。之後第 2、3、4 章分別帶你安裝、認識 Dashboard、建立 MQTT 心智模型。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>MQTT（Message Queuing Telemetry Transport）是物聯網最常用的輕量訊息協定。它不走「客戶端直接找伺服器求資料」的路線，而是用<strong>發布／訂閱（publish/subscribe）</strong>模式：發布者把訊息依<strong>topic（主題）</strong>分類送出，訂閱者只訂閱我有興趣的主題；扮演 broker 的伺服器負責路由與過濾所有進來的訊息，再送給所有對該主題有興趣的訂閱者。</p>
+      <p>這三者的關係是關鍵：發布者與訂閱者完全脫鉤（decoupled），彼此不需要知道對方存在，唯一的共同依據是大家事前約定好的 topic。想新增一個感測器就多一個發布者，想多螢幕就多訂閱者，都不需要改動其他端點。EMQX 支援 MQTT 3.1、3.1.1 與 5.0，能讓 web 瀏覽器直接用 WebSocket 發 MQTT 訊息，這是 Mosquitto 預設沒有的能力。</p>
+      <p>EMQX 的設計目標就是高並發與高可用。它以 Erlang/OTP 平台為基礎、用全非同步架構、把連線、session、路由與叢集分層設計，並把「訊息收送」與「管理面板」分開，所以單一節點可撐起數百萬等級的連線，也能以多節點組成叢集向外擴展。</p>
+    </section>
+
+    <section id="what" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MQTT Broker</td><td>MQTT 代理伺服器</td><td>路由你與裝置之間所有訊息的伺服器</td></tr>
+            <tr><td>Publisher</td><td>發布者</td><td>把訊息發到某個 topic 的端點</td></tr>
+            <tr><td>Subscriber</td><td>訂閱者</td><td>宣告想收到哪些 topic 訊息的端點</td></tr>
+            <tr><td>Topic</td><td>主題</td><td>訊息被分類的階層名稱，例如 <code>客廳/溫度</code></td></tr>
+            <tr><td>Cluster</td><td>叢集</td><td>多個節點協同提供單一 broker 服務</td></tr>
+            <tr><td>Dashboard</td><td>管理面板</td><td>EMQX 內建的網頁管理介面</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>先看 add-on 有沒有在線</h3><p>在 Home Assistant 左側按 <strong>設定 → 附加元件</strong>，找到 <strong>Woow EMQX</strong>；如果已經安裝，你會看到它運作中的狀態。</p></li>
+        <li><h3>開啟 Web UI</h3><p>點該 add-on 的 <strong>開啟 Web UI</strong>，讓瀏覽器開 EMQX Dashboard。若還沒進不去，先回到第 2 章完成安裝與啟動。</p></li>
+        <li><h3>用預設帳號看一遍</h3><p>首次登入用使用者名稱 <code>admin</code>、密碼 <code>public</code>。系統會要求你改成自己的密碼，改完後再看主介面。</p></li>
+        <li><h3>找到「版本」在哪</h3><p>在 Dashboard 找得到版本與授權資訊在哪個頁面，之後第 3 章會帶著你逐一走一遍側欄模組。</p></li>
+      </ol>
+    </section>
+
+    <section id="topic1" data-nav="EMQX 對照 Mosquitto">
+      <h2 data-icon="compare">EMQX 對照 Mosquitto</h2>
+      <p>如果你是從 Home Assistant 內建的 Mosquitto 換過來，直覺就會想知道「差在哪」。Woow EMQX add-on 的 README 就有一張現成的比較表，重點如下。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>能力</th><th>Mosquitto</th><th>EMQX</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>圖形化管理介面</td><td>無，靠設定檔</td><td>有 Dashboard（Web UI）</td></tr>
+            <tr><td>用戶端管理</td><td>無</td><td>即時監控</td></tr>
+            <tr><td>規則引擎</td><td>無</td><td>有資料整合（Data Integration）</td></tr>
+            <tr><td>WebSocket 支援</td><td>需額外設定</td><td>內建</td></tr>
+            <tr><td>ACL 管理</td><td>檔案設定</td><td>Web UI 管理</td></tr>
+            <tr><td>叢集支援</td><td>無</td><td>支援</td></tr>
+            <tr><td>資源使用</td><td>極低</td><td>中等</td></tr>
+            <tr><td>最大連線數</td><td>數千</td><td>數百萬</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>結論不是你必須立刻換掉 Mosquitto：若主機吃緊、只需要純 broker，Mosquitto 仍很輕。但如果你想要視覺化管理、訂閱診斷、WebSocket 測試工具、規則引擎與日後擴展，<strong>EMQX</strong> 的中等資源換來的是顯著更多好用的功能。</p>
+    </section>
+
+    <section id="topic2" data-nav="5.x 架構與叢集">
+      <h2 data-icon="network">EMQX 5.x 架構與叢集</h2>
+      <p>EMQX 5.x 把「控制面板（Dashboard）」與「訊息處理」分層：Dashboard 只是提供視覺化操作，即使不開 Dashboard，EMQX 照常收發訊息。真正處理訊息的引擎是由 Erlang/OTP 組成的框架，以連線、session、route 與 cluster 四個層次設計，格局清晰、也容易向外擴展。</p>
+      <p><strong>叢集（cluster）</strong>是 EMQX 實作高可用的主力：多個 EMQX 節點組成單一 broker 服務，其中的某個節點故障時，MQTT 服務不會中斷；節點數量提高，整體吞吐量也會跟著被拉高。你所在的 add-on 預設是一個節點就夠用，但理解叢集的目的，是為了佈局「未來裝置變多時要往哪邊擴張」的心智模型。</p>
+      <p>以你的實際設定而言，Woow EMQX add-on 內建的 <strong>EMQX 版本是 5.8.9（Open Source）</strong>，add-on 本身版本為 <code>5.9.0</code>——這個 5.9.0 只多了 ngrok 通道這項功能，底層 broker 仍是 5.8.9。接下來的教學都鎖定 5.8.9 的事實與選單路徑。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>還不清楚 broker 做什麼？</strong>：把 broker 想成「郵局／路由器」，publisher 寫好信封（topic）丟進去，broker 只把信送到有訂閱該信封的收件者。訂閱者不認識發信者，發信者也不認識訂閱者。</li>
+        <li><strong>找不到 EMQX 在哪？</strong>：先確認 add-on 有安裝且已啟動；若是要獨立開 Dashboard，第 2、3 章會帶你使用連接埠 18083 與 Ingress。</li>
+        <li><strong>Mosquitto 與 EMQX 能並存嗎？</strong>：兩者都用 1883 埠，不能同時啟動。詳細的處理方法在第 2、8 章的連接埠衝突段落。</li>
+        <li><strong>Dashboard 進不去？</strong>：先看 add-on Log 有無錯誤，再確認 18083 沒有被其他服務佔用；隧道與 Ingress 設定細節在後續章節。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>EMQX 是免費的嗎</summary>
+        <div class="body"><p>EMQX Open Source 是開源免費版本，可自建自託管。EMQX Enterprise 是付費的自行客戶/自行部署軟體（一樣自建，但含進階資料整合與進階安全功能）；EMQX Cloud 則是 EMQX 另提供的、由官方代管的雲端服務，是自己的雲端 product，與 Enterprise 是不同的分銷管道。本書講的是 Open Source 的 5.8.9。</p></div>
+      </details>
+      <details class="faq">
+        <summary>為什麼不直接用 Home Assistant 的 Mosquitto 就好</summary>
+        <div class="body"><p>Mosquitto 輕量、貼著 Home Assistant 開箱。但長期要管理多裝置、看連線、寫規則、除錯時，EMQX 的 Dashboard、WebSocket、訂閱診斷與資料整合會省下你大量時間。資源允許的話，EMQX 是更進階的選擇。</p></div>
+      </details>
+      <details class="faq">
+        <summary>add-on 版本 5.9.0 跟 EMQX 5.8.9 是什麼關係</summary>
+        <div class="body"><p>add-on 的 5.9.0 是 Woow 修的套件版本，只有在裡面加 ngrok TCP 通道；你真正在跑的 MQTT broker 仍是 EMQX 5.8.9。本書的內容、選單與預設值都對齊 5.8.9。</p></div>
+      </details>
+      <details class="faq">
+        <summary>「叢集」要不要現在就裝二台</summary>
+        <div class="body"><p>不需要。你只要先懂「叢集 = 多節點共享一個 broker、單點故障不中斷」這個概念就好。家用單節點完全足夠；叢集可以等裝置多了，真的有吞吐量或備援需求再規劃。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit，含與 Mosquitto 比較）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/concept.md">EMQX 5.8 Concept FAQ（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/feature.md">EMQX 5.8 Feature FAQ</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/feature-comparison.md">EMQX 5.8 Feature Comparison（含叢集規格）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev disabled" href="tutorial.html">
+        <span class="label">← Previous</span>
+        <span class="title">Contents</span>
+      </a>
+      <a class="next" href="ch2_install.html">
+        <span class="label">Next →</span>
+        <span class="title">02 · 安裝</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

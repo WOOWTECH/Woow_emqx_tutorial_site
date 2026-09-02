@@ -1,0 +1,38 @@
+name: site-checks
+
+# 本站自己的檢查（內容結構、敏感資料、EMQX 功能清單、Docker 打包合約、regression tests）。
+# 導覽漂移／連結／i18n 閘門在共用的 checks.yml（13 站 byte-identical，請勿改）；
+# 本站額外房規在 scripts/check_site_rules.js，checks.yml 會自動帶到。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site-checks:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Content, secrets, feature manifest, Docker contract, regression tests
+        run: |
+          node scripts/check_content.js
+          node scripts/check_sensitive.js
+          node scripts/check_feature_manifest.js
+          node scripts/check_dockerfile.js
+          node scripts/test_checks.js
+          docker build -t emqx-guide:ci .

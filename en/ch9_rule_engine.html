@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 9 · Rule Engine 規則引擎 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="EMQX Rule Engine：以 SQL（SELECT／FROM／WHERE）描述規則、事件與 topic 作為資料來源、內建欄位與函數、觸發測試，寫出第一條規則。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch9_rule_engine.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 9 · Rule Engine 規則引擎 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="EMQX Rule Engine：以 SQL（SELECT／FROM／WHERE）描述規則、事件與 topic 作為資料來源、內建欄位與函數、觸發測試，寫出第一條規則。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch9_rule_engine.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 9 · Rule Engine 規則引擎 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="EMQX Rule Engine：以 SQL（SELECT／FROM／WHERE）描述規則、事件與 topic 作為資料來源、內建欄位與函數、觸發測試，寫出第一條規則。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch9_rule_engine.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch9_rule_engine.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html" class="active">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#power">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#sql">SQL 語法</a>
+      <a href="#fields">欄位與函數</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch9_rule_engine.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 9</div>
+      <h1>Rule Engine 規則引擎</h1>
+      <p class="lead">以 SQL（SELECT／FROM／WHERE）描述資料流：把 topic 或 EMQX 事件當成資料來源，挑出欄位、加上條件、套用內建函數，寫出第一條規則並用「Try It Out」驗證。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>Mosquitto 把每個主題的訊息原封不動轉給訂閱者，你永遠拿不到「挑過、改過的資料」。想在智慧家庭裡把感測器讀數過濾掉雜訊、轉成另一個主題、或當某個 client 掉線時即時發通知——你要的是 Broker 能<strong>自己處理資料</strong>的能力。</p>
+      <p>EMQX 的 <strong>Rule Engine（規則引擎）</strong>就是這項能力：用類似 SQL 的語法描述「資料從哪來、要怎麼挑、最後做什麼」，把 Broker 從純轉發器升級成資料管線的中樞。讀完這章，你會寫得出自己的第一條規則，並且知道怎麼用內建的測試工具驗證它。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>規則引擎的核心是「<strong>來源 → 加工 → 動作</strong>」三段式：</p>
+      <ul>
+        <li><strong>資料來源（data source）</strong>：規則從哪裡取得資料。可以是 MQTT 訊息（一個或多個 topic）、MQTT 事件（<code>$events/…</code>），或由 Data Integration 送回的資料。</li>
+        <li><strong>資料加工（transformation）</strong>：用規則 SQL 決定挑哪幾筆、挑哪幾個欄位、加什麼條件與函數。SQL 的 <code>FROM</code> 指定來源，<code>WHERE</code> 加條件，<code>SELECT</code> 決定輸出。</li>
+        <li><strong>動作（action）</strong>：規則命中後要做什麼。EMQX 5.8.9 提供 republish（轉發）、console（印到主控台或 log）與 Forwarding to Sinks（送到外部系統）。</li>
+      </ul>
+      <p>規則寫在哪一層？EMQX 5.x 把它歸在 <strong>Data Integration</strong>（資料整合）區域，Dashboard 側欄選 <strong>Integration → Rules</strong> 就能建立或編輯規則。規則引擎不只處理訊息，也能處理 client 上線／離線這類<strong>事件（event）</strong>。</p>
+    </section>
+
+    <section id="power" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Rule Engine</td><td>規則引擎</td><td>以 SQL 描述資料流處理能力的引擎</td></tr>
+            <tr><td>Data Source</td><td>資料來源</td><td>規則要讀取的 topic／事件／外部資料</td></tr>
+            <tr><td>SELECT / FROM / WHERE</td><td>選取／來源／條件</td><td>SQL 的三段主要子句</td></tr>
+            <tr><td>Action</td><td>動作</td><td>規則命中後執行的輸出行為</td></tr>
+            <tr><td>MQTT Event</td><td>MQTT 事件</td><td>上線、下線、訂閱這類連動事件，主題以 <code>$events/</code> 開頭</td></tr>
+            <tr><td>Data Integration</td><td>資料整合</td><td>EMQX 5.x 把規則、來源、連接器與輸出整合在一起的區塊</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <p>以 EMQX 官方教學的 <code>t/#</code → <code>a/1</code> 轉發規則為例，練習是最快的。</p>
+      <ol class="steps">
+        <li><h3>開啟規則頁面</h3><p>在 EMQX Dashboard 左側點 <strong>Integration → Rules</strong>，按右上 <strong>Create</strong> 進入「Create Rule」。</p></li>
+        <li><h3>填規則資訊並寫 SQL</h3><p>填規則名稱與備註，在 SQL Editor 輸入 <code>SELECT * FROM "t/#"</code>，讓規則選取所有 topic 符合 <code>t/#</code> 的訊息。</p></li>
+        <li><h3>用 Try It Out 測試 SQL</h3><p>開啟 Create Rule 頁的 <strong>Try It Out</strong> 開關，選對應的 Data Source，填入模擬資料（Client ID、Username、Topic、QoS、Payload 等），按 <strong>Run Test</strong>，應出現 <code>Test Passed</code>，右側 Output Result 會顯示 SQL 輸出。</p></li>
+        <li><h3>加上動作</h3><p>按右側 <strong>Add Action</strong>，選 <strong>Republish</strong>，設目標 topic、QoS、Payload（<code>${payload}</code>），按 <strong>Add</strong> 後回 Create Rule 頁。</p></li>
+        <li><h3>建立並觸發</h3><p>回到 Create Rule 頁，按底部 <strong>Create</strong> 完成。訂閱 <code>a/1</code>，再用 <code>t/1</code> 主題發布一則訊息，應能收到轉發後的 <code>a/1</code>。</p></li>
+      </ol>
+    </section>
+
+    <section id="sql" data-nav="SQL 語法">
+      <h2 data-icon="protocol">規則 SQL：SELECT／FROM／WHERE</h2>
+      <p>規則 SQL 的基本格式是：</p>
+      <pre><code>SELECT &lt;欄位與運算式&gt; FROM &lt;資料來源&gt; [WHERE &lt;條件&gt;]</code></pre>
+      <p><strong>FROM</strong> 指定資料來源，有兩種主要樣態：</p>
+      <ul>
+        <li><strong>topic</strong>：例如 <code>SELECT * FROM "t/#"</code>，處理 topic 符合 <code>t/#</code> 的所有訊息；多個 topic 用逗號分隔，如 <code>FROM "t/1", "t/2"</code>。topic 必須用雙引號或單引號括起。</li>
+        <li><strong>事件（event）</strong>：例如 <code>SELECT clientid FROM "$events/client_connected" WHERE clientid = 'c1'</code>，處理 client 成功連線的事件。事件主題以 <code>$events/</code> 開頭，無法用一般訂閱方式直接讀取。</li>
+      </ul>
+      <p><strong>WHERE</strong> 給出額外過濾條件。欄位可以是 metadata（如 <code>clientid</code>、<code>username</code>）或 payload 內欄位（用點號語法如 <code>payload.x.y</code>，前提是 payload 是 JSON／Map）；也能用 <code>and</code>／<code>or</code> 組成複合條件。</p>
+      <p><strong>SELECT</strong> 挑選輸出的欄位，還可重新命名：</p>
+      <pre><code>SELECT clientid, payload.clientid as myclientid FROM "t/#"</code></pre>
+      <p>輸出會是 JSON 物件。SQL 執行完的欄位，後續動作可以用 <code>${欄位名}</code> 引用。</p>
+      <p>運算式支援算術（<code>+</code>／<code>-</code>／<code>*</code>／<code>div</code>／<code>mod</code>）、比較（<code>=</code>、<code>&lt;&gt;</code>、<code>&lt;</code>、<code>&gt;</code>…）與邏輯（<code>and</code>／<code>or</code>），還有大量內建函數。另一種 <code>FOREACH</code> 語句可一次輸出多個結果（例如把 payload 的感測器陣列拆成一則一則訊息），進階用到再學習即可。</p>
+    </section>
+
+    <section id="fields" data-nav="欄位與函數">
+      <h2 data-icon="advanced">資料欄位與內建函數</h2>
+      <p>規則能引用的欄位依資料來源而異。處理 MQTT 訊息時，metadata 提供下列常見欄位：</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>欄位</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>topic</code></td><td>來源 topic</td></tr>
+            <tr><td><code>qos</code></td><td>訊息 QoS 等級</td></tr>
+            <tr><td><code>clientid</code></td><td>發布者 client ID</td></tr>
+            <tr><td><code>username</code></td><td>發布者 username</td></tr>
+            <tr><td><code>payload</code></td><td>訊息內容（JSON 時可用點號取內欄）</td></tr>
+            <tr><td><code>peerhost</code></td><td>發布者 IP</td></tr>
+            <tr><td><code>timestamp</code></td><td>事件觸發時間（毫秒）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>事件來源（如 <code>$events/client_connected</code>）則額外提供 <code>clientid</code>、<code>username</code>、<code>keepalive</code>、<code>is_bridge</code>、<code>connected_at</code> 等欄位；<code>$events/client_disconnected</code> 還有 <code>reason</code> 說明斷線原因。官方文件有完整事件清單與欄位對照。</p>
+      <p><strong>內建函數（built-in functions）</strong>可以在 <code>SELECT</code>／<code>WHERE</code> 內使用，常見分類：</p>
+      <ul>
+        <li>數學：<code>abs</code>、<code>floor</code>、<code>ceil</code>、<code>round</code>、<code>power</code>、<code>sqrt</code>…</li>
+        <li>型別：<code>is_array</code>、<code>is_bool</code>、<code>is_null</code>…</li>
+        <li>字串：<code>upper</code>、<code>lower</code>、<code>tokens</code>、<code>concat</code>…</li>
+        <li>其他：<code>now_timestamp</code>、<code>now_rfc3339</code>、<code>uuid_v4</code>、日期轉換、mapping/array 操作、以及高階 <code>jq</code> 程序。</li>
+      </ul>
+      <pre><code>SELECT upper(clientid) as cid FROM "t/#"</code></pre>
+      <p>如果 payload 不是 JSON，想用點號語法就得先轉型或改用函數；官方也提供 Schema Registry 教學處理非 JSON 格式。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>規則沒被觸發</strong>：檢查 <code>FROM</code> 的 topic pattern 是否與發布主題相符（萬用字元、大小寫），規則是否已啟用，事件名是否拼錯（例如 <code>$events/client_connected</code>）。</li>
+        <li><strong>SQL 輸出空白／欄位錯誤</strong>：查一下官方欄位對照，確認欄位名是否存在於該資料來源；metadata 與 payload 是兩層不同的欄位。</li>
+        <li><strong>payload 不是 JSON 卻想取內欄</strong>：點號語法只適用 JSON／Map；非 JSON 要用轉型函數或先經 Schema 處理。</li>
+        <li><strong>規則命中了但動作沒執行</strong>：用 Try It Out 的「Test the Rule」模擬對應事件或 publish，或直接發布測試訊息，再檢視該次執行記錄的 Action 錯誤。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>規則與動作的差別在哪</summary>
+        <div class="body"><p>規則由 SQL（資料來源＋加工）與動作（輸出行為）組成。SQL 決定「處理哪些資料、怎麼挑」，動作決定「處理完要發布到哪／印到哪／送給誰」。</p></div>
+      </details>
+      <details class="faq">
+        <summary>能直接訂閱 <code>$events/…</code> 事件主題嗎</summary>
+        <div class="body"><p>一般 client 無法直接訂閱 MQTT 事件主題；事件主題是給規則的 <code>FROM</code> 使用的（例如 <code>$events/client_connected</code>）。若想從外面收到事件資料，可用規則轉發，或訂閱 EMQX 的 system topics。</p></div>
+      </details>
+      <details class="faq">
+        <summary>SQL 在 <code>FROM</code> 用 <code>#</code> 大範圍會怎樣</summary>
+        <div class="body"><p>可以，但會讓所有送到 EMQX 的訊息都進規則比對，效能成本較高。官方建議盡量用較收斂的 topic pattern，而非一開頭就 <code>#</code>。</p></div>
+      </details>
+      <details class="faq">
+        <summary>「Data Integration」和舊版 4.x 用的名詞差在哪</summary>
+        <div class="body"><p>EMQX 5.x 以 <strong>Data Integration（Rules／Connectors／Actions／Sources／Sinks）</strong>與 <strong>Extensions</strong> 為主；命名與 4.x 舊版的 <strong>Modules／Data Bridge</strong> 不同。看到舊版文件用 4.x 名詞時，記得那是 legacy 位置。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-get-started.md">EMQX 5.8 Rule Get Started（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-sql-syntax.md">EMQX 5.8 Rule SQL Syntax（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-sql-events-and-fields.md">EMQX 5.8 Rule Events and Fields（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rules.md">EMQX 5.8 Rule Engine（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-sql-builtin-functions.md">EMQX 5.8 Built-in SQL Functions（pinned docs 分支）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch8_listeners_tls.html">
+        <span class="label">← Previous</span>
+        <span class="title">08 · Listener／TLS</span>
+      </a>
+      <a class="next" href="ch10_rule_actions.html">
+        <span class="label">Next →</span>
+        <span class="title">10 · 內建動作</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

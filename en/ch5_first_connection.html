@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 5 · 建立第一個 MQTT 連線 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="建立第一個 MQTT 連線：使用 EMQX 內建 WebSocket 測試工具與診斷頁 publish／subscribe，驗證 QoS，認識連線與訂閱的基本操作。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch5_first_connection.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 5 · 建立第一個 MQTT 連線 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="建立第一個 MQTT 連線：使用 EMQX 內建 WebSocket 測試工具與診斷頁 publish／subscribe，驗證 QoS，認識連線與訂閱的基本操作。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch5_first_connection.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 5 · 建立第一個 MQTT 連線 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="建立第一個 MQTT 連線：使用 EMQX 內建 WebSocket 測試工具與診斷頁 publish／subscribe，驗證 QoS，認識連線與訂閱的基本操作。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch5_first_connection.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch5_first_connection.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html" class="active">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼要學這個</a>
+      <a href="#concept">核心概念</a>
+      <a href="#what">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#topic1">WebSocket 測試工具</a>
+      <a href="#topic2">驗證 QoS</a>
+      <a href="#troubleshoot">故障排除</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch5_first_connection.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 5</div>
+      <h1>建立第一個 MQTT 連線</h1>
+      <p class="lead">建立第一個 MQTT 連線：使用 EMQX 內建 WebSocket 測試工具與診斷頁 publish／subscribe，驗證 QoS，認識連線與訂閱的基本操作。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼要學這個">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>你的 add-on 已經把 EMQX 5.8.9 跑起來，但你可能還沒「親眼」看過 MQTT 訊息真正走過 broker。第 4 章建立的都是紙上心智模型，這章就是填補「第一觸」的關鍵一步：用 EMQX 內建的 WebSocket 測試工具，在瀏覽器裡直接 publish 與 subscribe，發出訊息、再在同一個連線上收回來，也實際動手把它們在收到時分派的 QoS 差異看個清楚。</p>
+      <p>讀完之後，你手上會有一個「想確認 broker 到底通不通」的最快方法——不用安裝第三方程式、不用寫一行程式，就能驗證連線、主題、Payload與 QoS 的行為。後續每一章拿實機測試時，都會反覆回到這隻 WebSocket 工具。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>MQTT 是發布／訂閱（publish／subscribe）制：發布者把訊息依主題（topic）送出，訂閱者只訂閱自己有興趣的主題，所有訊息都由扮演伺服的 broker 路由。驗證這件事最直接的方式，就是開兩頭：一頭發布、一頭訂閱，看 broker 有沒有把訊息送到的「正確訂閱者」。</p>
+      <p>EMQX 提供多種工具可以做這件事：客戶端桌面的 <strong>MQTTX</strong>、命令列的 <strong>MQTTX CLI</strong>、瀏覽器版的 <strong>MQTTX Web</strong>，以及 EMQX Dashboard 內建的 <strong>WebSocket 客戶端</strong>。前幾種都要另外安裝或記工具，內建的那隻不用——它走「MQTT over WebSocket」、預設接連接埠 8083，直接在網頁裡完成 connect、subscribe、publish 三個動作，最適合作為你的「第一個」測試工具。</p>
+    </section>
+
+    <section id="what" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Publish</td><td>發布</td><td>把訊息送到某個主題（topic）</td></tr>
+            <tr><td>Subscribe</td><td>訂閱</td><td>宣告想收到哪些主題的訊息</td></tr>
+            <tr><td>Topic</td><td>主題</td><td>訊息分類用的階層名稱</td></tr>
+            <tr><td>Payload</td><td>訊息內容</td><td>發布時實際攜帶的資料</td></tr>
+            <tr><td>QoS</td><td>服務品質等級</td><td>訊息傳遞的保證程度（0／1／2）</td></tr>
+            <tr><td>Retained</td><td>保留訊息</td><td>broker 記住最後一則，新訂閱者立刻收到</td></tr>
+            <tr><td>WebSocket</td><td>網頁套件通道</td><td>讓瀏覽器跑 MQTT 的傳輸方式</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>進到 WebSocket 客戶端</h3><p>登入 EMQX Dashboard（帳號密碼第 2 章已改過就用你自己的）。左側選單點 <strong>Diagnose → WebSocket Client</strong>。</p></li>
+        <li><h3>建立第一筆連線</h3><p>在 Connection 區塊中 Host 維持 <code>localhost</code>（從別的裝置進來就改成你的 Home Assistant 位址），Port 維持 <code>8083</code>；還沒建立驗證時 Username／Password 留空。按 <strong>Connect</strong>，狀態變成 Connected 就是成功。</p></li>
+        <li><h3>訂閱並發布</h3><p>在 Subscription 區塊把 Topic 設成 <code>testtopic/#</code>，按 <strong>Subscribe</strong>。再到 Publish 區塊把 Topic 設 <code>testtopic/1</code>、Payload 填 <code>{"msg":"Hello"}</code>、QoS 先用 <code>0</code>，按 <strong>Publish</strong>。下方 Received 區會出現同一則訊息，因為你同時也是訂閱者。</p></li>
+        <li><h3>驗證 QoS</h3><p>把 Publish 的 QoS 改成 <code>1</code>（甚至 <code>2</code>）再送一筆，觀察訊息一樣抵達 Received。體會「QoS 0 盡力送、QoS 1 至少一次、QoS 2 恰一次」在真實投遞上的差別，到下面「驗證 QoS」主題看三者的適用情境。</p></li>
+      </ol>
+    </section>
+
+    <section id="topic1" data-nav="WebSocket 測試工具">
+      <h2 data-icon="test">WebSocket 測試工具導覽</h2>
+      <p><strong>Diagnose</strong> 選單裡有幾個除錯工具：Alarms（警示）、WebSocket Client、Topic Monitoring（主題監控）、Slow Subscriptions（慢訂閱）與 Log Trace（日誌追蹤）。<strong>其中 Alarms、Topic Monitoring、Slow Subscriptions 是 EMQX Enterprise 付費版才有</strong>，Open Source 的 5.8.9 你實際只會用到 WebSocket Client 與 Log Trace——不必花時間在 Open Source 介面上找 Enterprise 才有的項目。</p>
+      <p>WebSocket Client 提供 connect、subscribe、publish 三段操作，也會顯示你自己送出的（Published）與收到的（Received）資料。你可以按 <strong>+</strong> 同時開多筆 WebSocket 連線，各自獨立。有個要注意的行為：<strong>只要重整這頁，所有連線與收發資料都會被清空</strong>——它是快速測試工具，不是存放連線歷史的地方。</p>
+      <p>還有一個要留心的坑：<strong>Publish 區塊的 Topic 不能帶 <code>+</code> 或 <code>#</code> 萬用字元</strong>，只有 Subscription 的主題才能用萬用字元。</p>
+    </section>
+
+    <section id="topic2" data-nav="驗證 QoS">
+      <h2 data-icon="advanced">驗證 QoS</h2>
+      <p>QoS（Quality of Service，服務品質）是 MQTT 控制單則訊息「投遞保證程度」的機制。EMQX 兩頭都支援三種 QoS，在 WebSocket 工具的訂閱與發布都能選。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>QoS</th><th>名稱</th><th>保證</th><th>典型情境</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>最多一次</td><td>不保證送達或重複</td><td>週期性感應器，輕量丟掉無妨</td></tr>
+            <tr><td>1</td><td>至少一次</td><td>保證送達，但可能重複</td><td>可接受一兩次重複的狀態變更</td></tr>
+            <tr><td>2</td><td>且只有一次</td><td>保證送達，且不重複</td><td>開關、控制指示，重複不可</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>測試時最省的方式，就是發布到一個你自己訂閱的主題：Publisher 與 Subscriber 是同一端時，broker 一樣會把訊息跨接路由回來，於是你可以在 Received 資料列裡親眼確認「QoS 改變後，收到的是不是同一筆、有沒有重複」。想再驗證 Retained（保留訊息），只要發布時勾 <strong>Retain</strong>，新加入的訂閱者立刻就可以收該主題最後一筆——它與 QoS 是兩件事，心智模型在第 4 章已建立。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="故障排除">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>Connect 沒反應或一直失敗</strong>：先確認 8083 有沒有被其他服務（如 WebRTC）佔用，這與第 2 章的連接埠衝突同源；若你是從別的裝置進來的，Host 必須填 Home Assistant 主機位址，不是 <code>localhost</code>。</li>
+        <li><strong>訂閱了卻收不到訊息</strong>：檢查你的訂閱主題是否用萬用字元包住發布主題（如訂 <code>testtopic/#</code> 才貼得到 <code>testtopic/1</code>）。發布成功後 Received 區應該要有資料列，一條都沒看到就代表 broker 沒真的路由到。</li>
+        <li><strong>收到的訊息重複出現</strong>：如果你發布選 QoS 1，重複是「至少一次」的正常結果；想精確只有一次就要選 QoS 2，不要以為是 broker 出了問題。</li>
+        <li><strong>重整頁後連線資料全部消失</strong>：這是內建 WebSocket 工具的預設清除行為，不是 bug。若你要保存連線記錄、多組設定，改用桌面工具 MQTTX；它們適合作為持續測試的設備。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>內建 WebSocket 工具跟 MQTTX 差在哪</summary>
+        <div class="body"><p>內建工具在 EMQX Dashboard 裡，不用安裝、最適合快速看訊；MQTTX（桌面／CLI／Web）功能更豐富，可以保存多組連線、支援更細的 MQTT 5.0 設定，適合持續除錯與開發。兩者通訊能力相同，沒有硬性要用哪一款。</p></div>
+      </details>
+      <details class="faq">
+        <summary>為什麼測試用 8083，而不是 1883</summary>
+        <div class="body"><p>內建工具是「瀏覽器直接在網頁裡跑 MQTT over WebSocket」的通道，走的是 8083；1883 是純 TCP 的 MQTT，瀏覽器不能直接連，要連 1883 得用桌面 MQTTX 或 CLI 等工具。兩者都是 MQTT，只是傳輸層方式不同。</p></div>
+      </details>
+      <details class="faq">
+        <summary>QoS 0、1、2 我到底該選哪個</summary>
+        <div class="body"><p>可丟掉的資料選 0；必須送出但可接受重複的選 1；不能重複的關鍵控制（如開關）選 2。先在三種之間都發布一次，看你在同一個連線收到時的差異，再依實際情境挑選。</p></div>
+      </details>
+      <details class="faq">
+        <summary>工具能同時開多個連線嗎</summary>
+        <div class="body"><p>可以。按 <strong>+</strong> 可以同時開多支 WebSocket Client，各自有獨立的連線狀態與收發資料列。你若想模擬「publisher 與 subscriber 各一篇」，開兩支連線分別做訂閱與發布會更方便。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/publish-and-subscribe.md">EMQX 5.8 Publish and Subscribe（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/explore-mqtt.md">EMQX 5.8 Verify MQTT Features（QoS、Retained 概念）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/diagnose.md">EMQX 5.8 Diagnose（WebSocket Client 頁面工具）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（連接埠與 WebSocket 診斷）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch4_mqtt_basics.html">
+        <span class="label">← Previous</span>
+        <span class="title">04 · MQTT 基礎</span>
+      </a>
+      <a class="next" href="ch6_authentication.html">
+        <span class="label">Next →</span>
+        <span class="title">06 · Authentication</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

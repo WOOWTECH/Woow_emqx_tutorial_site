@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 20 · 備份、還原與更新 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="EMQX 備份、還原與更新：/data/emqx 資料範圍、驗證／ACL／資料整合設定備份、還原流程、add-on 更新，以及 Mosquitto 遷移。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch20_backup_recovery.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 20 · 備份、還原與更新 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="EMQX 備份、還原與更新：/data/emqx 資料範圍、驗證／ACL／資料整合設定備份、還原流程、add-on 更新，以及 Mosquitto 遷移。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch20_backup_recovery.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 20 · 備份、還原與更新 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="EMQX 備份、還原與更新：/data/emqx 資料範圍、驗證／ACL／資料整合設定備份、還原流程、add-on 更新，以及 Mosquitto 遷移。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch20_backup_recovery.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch20_backup_recovery.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html" class="active">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#what">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#scope">資料範圍</a>
+      <a href="#restore">還原方式</a>
+      <a href="#migrate">Mosquitto 遷移</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch20_backup_recovery.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 20</div>
+      <h1>備份、還原與更新</h1>
+      <p class="lead">EMQX 備份、還原與更新：/data/emqx 資料範圍、驗證／ACL／資料整合設定備份、還原流程、add-on 更新，以及 Mosquitto 遷移。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>EMQX 日積月累會累積兩種你不想丟掉的東西：設定與資料。設定是 Authentication、Authorization（ACL）、規則與 Connector／Sink 這些架構；資料則是 built-in database 裡的帳號、API key、黑名單與 retained 訊息。哪天你誤改一個 ACL 斷了全家的燈，或 Home Assistant 主機要換機，沒有備份就等於從零重建。</p>
+      <p>讀完這章，你會知道 add-on 的資料集中在哪、哪些檔要跟著備份、還原時回到那一步，也能安全地走完 add-on 更新，以及把 Mosquitto 換成 EMQX 時該搬哪些東西。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>EMQX 把運行資料集中在 <strong>資料目錄（data dir）</strong>，add-on 把它放在 <code>/data/emqx</code> 底下。拆開來看有三塊：<code>/data/emqx/data</code>（EMQX 資料、內建資料庫的持久化）、<code>/data/emqx/etc</code>（設定檔）、與 <code>/data/emqx/plugins</code>（外掛）。記錄檔則寫在 <code>/config/log</code>，不在上述備份範圍內。</p>
+      <p>Home Assistant 的備份（Backup）涵蓋 add-on 的 /data，是最省事的整包還原。想用檔案層級的方式帶走設定，也可用 EMQX 的 CLI：<code>emqx ctl data export</code> 把設定與內建 DB 打包成 <code>emqx-export-YYYY-MM-DD-HH-mm-ss.sss.tar.gz</code>，寫在資料目錄的 backup 子資料夾；<code>emqx ctl data import</code> 把它灌回。</p>
+      <p>另外要注意版本語意：add-on 5.9.0 只新增 ngrok TCP 通道，核心仍是 EMQX 5.8.9。看到 add-on 商店有新版，未必代表 broker 版本躍遷——以 CHANGELOG 為準。</p>
+    </section>
+
+    <section id="what" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Data Directory</td><td>資料目錄</td><td>EMQX 存放資料與設定的目錄</td></tr>
+            <tr><td>Backup</td><td>備份</td><td>把資料複製保存，以便之後還原</td></tr>
+            <tr><td>Restore</td><td>還原</td><td>把備份內容灌回 EMQX</td></tr>
+            <tr><td>Export</td><td>匯出</td><td>CLI／介面把設定打包成檔案</td></tr>
+            <tr><td>Mnesia</td><td>內建資料庫</td><td>EMQX 內建的 Erlang 資料庫，存帳戶與 ACL</td></tr>
+            <tr><td>Migration</td><td>遷移</td><td>把舊 broker（如 Mosquitto）配置轉成 EMQX</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>備份涉及密碼與 token 的人會更要注意安全：任何含帳密或 API key 的備份檔，都應存放在只有你能讀的地方，不要放進 repo 或公開位置。</p>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>用 Home Assistant 建立備份</h3><p>到 Home Assistant 的設定 → 系統 → 備份，按「立即備份」。完整備份會納入 add-on 的 <code>/data</code>，也就涵蓋 <code>/data/emqx</code>。把備份檔同步到安全位置。</p></li>
+        <li><h3>（可選）用 EMQX CLI 匯出設定包</h3><p>在 add-on 終端或容器內執行 <code>emqx ctl data export</code>，會產生 <code>emqx-export-*.tar.gz</code>，提供檔案層級的攜帶方式，適合想單獨存設定或搬到相同版本的 EMQX。</p></li>
+        <li><h3>還原的順序</h3><p>要還原整台主機就直接回復那個備份。若你只換 EMQX（重裝後），先停掉 add-on、把 <code>/data/emqx</code> 的內容放回對應位置，再啟動 EMQX；最後確認 Dashboard 裡的帳號與 ACL 都在。</p></li>
+        <li><h3>更新 add-on</h3><p>在附加元件頁按下方的「檢查更新」，出現新版（例如 5.9.0）才按更新，更新完依提示重新啟動。更新前先做一份備份；若只是新增 ngrok 而不動 EMQX 核心，回歸風險相對低。</p></li>
+      </ol>
+    </section>
+
+    <section id="scope" data-nav="資料範圍">
+      <h2 data-icon="disk">備份涵蓋哪些資料</h2>
+      <p>add-on README 把「備份包含 /data/emqx 下的所有資料」列為原則。具體範圍如下表。</p>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>路徑</th><th>保存內容</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>/data/emqx/data</td><td>EMQX 資料、內建資料庫（Mnesia）的持久化</td></tr>
+            <tr><td>/data/emqx/etc</td><td>EMQX 設定檔（含 listener、認證、整合等 rewrite）</td></tr>
+            <tr><td>/data/emqx/plugins</td><td>外掛檔案</td></tr>
+            <tr><td>/config/log</td><td>記錄檔（不在備份範圍內）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>對照 EMQX 文件，export tar 的內容通常涵蓋：認證與授權設定、資料整合（Rules／Connectors／Sinks／Sources）、Listeners 與 Gateway 設定、內建資料庫（Dashboard 使用者與 REST API key、用戶端 password-based 認證與 enhanced authentication、PSK、Authorization 規則、Blacklist）、以及 retained 訊息。放在資料目錄內的 TLS 憑證與 ACL 檔也會一起搬。</p>
+      <p>若你的憑證檔或 ACL 檔案放在資料目錄「外頭」，那兩者就不在包內，還原前要手動搬回。這正是很多人在還原後「明明打了備份卻少了 ACL」的常見原因。</p>
+    </section>
+
+    <section id="restore" data-nav="還原方式">
+      <h2 data-icon="restore">還原與 CLI 匯入</h2>
+      <p>若採用 CLI 匯入，帶回的檔可寫絕對路徑、相對路徑，或放在資料目錄的 backup 子資料夾後只給檔名。EMQX 5.8 的文件列了幾個硬性條件：</p>
+      <ul>
+        <li>匯入時 EMQX 節點必須在運行中。</li>
+        <li>若為 core＋replica 叢集，只在 core 節點做匯入。</li>
+        <li>Enterprise 版匯出的資料不能匯入 Open Source。</li>
+        <li>匯入的檔案不能改名。</li>
+      </ul>
+      <p>匯入的語意是「補進去、會更新」，不會刪除既有的其他資料。少數情況可能與既有資料不相容，例如認證方式（salt position、密碼儲存模式）不同，匯入後舊使用者憑證可能失效。所以先備份、再小心還原是正路。</p>
+      <p>如果你用的是 EMQX Enterprise，Dashboard 的 <strong>System → Backup & Restore</strong> 也能建立與還原備份檔；但 Woow 這個 add-on 內建的是 5.8.9 Open Source，較大機會以 CLI 或主機層級的備份為主。</p>
+    </section>
+
+    <section id="migrate" data-nav="Mosquitto 遷移">
+      <h2 data-icon="compare">Mosquitto 的遷移重點</h2>
+      <p>把 Home Assistant 從 Mosquitto 換到 EMQX 時，最重要的是「連接埠 1883 只有一個贏家」：Mosquitto 與 Woow EMQX <strong>無法同時運行</strong>，都綁 1883。</p>
+      <ol class="steps">
+        <li><h3>停掉 Mosquitto</h3><p>把 Mosquitto add-on 停止（或移除），空出 1883。</p></li>
+        <li><h3>把設定搬到 EMQX</h3><p>在 EMQX 重新建立相同的使用者（在此可以沿用之前設定的帳密），並把 ACL 規則重新實作——EMQX 用 Access Control 管理。</p></li>
+        <li><h3>指到 EMQX</h3><p>把 HA 的 MQTT 整合、Zigbee2MQTT 與各外部裝置的 broker 位址改成 EMQX（homeassistant、1883），帳號用 EMQX 的使用者。</p></li>
+        <li><h3>驗證與最後收尾</h3><p>確認 HA、Z2M 與所有裝置都連上，Clients 頁可見。若舊 Mosquitto 有長期累積的 ACL，逐一審查、轉成 EMQX 的 Authorization 更能避免誤放。</p></li>
+      </ol>
+      <p>備份這層原則在這裡同樣適用：遷移前先為舊 Mosquitto 的設定留一份現況，遷移失敗時還能退回。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>備份裡找不到 /data/emqx</strong>：請確認 Home Assistant 備份包含 add-on 資料（有的情況你會只備份系統或某些 add-on 資料）。若只換 EMQX、要用檔案層級還原既有設定，改用 CLI export 比較可控。</li>
+        <li><strong>還原後 Dashboard 進不去</strong>：檢查 1883／18083 是否被其他服務占用，先停衝突者；再看 Log，確認資料目錄放回的位置正確。</li>
+        <li><strong>CLI 匯入報「找不到檔案」</strong>：匯入檔不能改名；若放在 backup 子目錄，用 basename 即可。路徑若為相對路徑，需以 EMQX 根目錄為基準。</li>
+        <li><strong>更新後版本好像沒變</strong>：先看 CHANGELOG。add-on 5.9.0 只是多 ngrok TCP，EMQX 核心仍是 5.8.9。若你期待的是核心新功能,可能要再看版本。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>備份一定要用 Home Assistant 快照嗎</summary>
+        <div class="body"><p>不用太費心。先把「完整 Home Assistant 備份」養成習慣最實在；想帶著設定到另一台同版本 EMQX 時，再用 <code>emqx ctl data export/import</code> 這組 CLI。</p></div>
+      </details>
+      <details class="faq">
+        <summary>還原後我的 MQTT 帳號還在嗎</summary>
+        <div class="body"><p>只要備份含內建資料庫（emqx_authn_mnesia），password-based 的使用者就會還原。若之前用 file／HTTP 等外部認證,請確認設定與資料是否也在備份裡。</p></div>
+      </details>
+      <details class="faq">
+        <summary>add-on 更新會不會清空我的設定</summary>
+        <div class="body"><p>不會，前提是 /data 沒被替換。升級 add-on 不會刪除資料目錄；但每次升級前仍建議先做備份,以便萬一新版行為不如預期時可回退。</p></div>
+      </details>
+      <details class="faq">
+        <summary>從 Mosquitto 搬過來最常漏掉什麼</summary>
+        <div class="body"><p>通常是 ACL 與「把整合指向 EMQX」。Mosquitto 沒圖形介面,ACL 存在設定檔；搬到 EMQX 要在 Access Control → Authorization 重新建立。記得同時把 HA MQTT、Z2M 與外部裝置的 broker 位址都改掉。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit：資料存檔與備份章）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/backup-restore.md">EMQX 5.8 Backup and Restore（pinned docs）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/CHANGELOG.md">Woow EMQX CHANGELOG（版本事實）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch19_ngrok.html">
+        <span class="label">← Previous</span>
+        <span class="title">19 · ngrok</span>
+      </a>
+      <a class="next" href="ch21_security.html">
+        <span class="label">Next →</span>
+        <span class="title">21 · 安全部署</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

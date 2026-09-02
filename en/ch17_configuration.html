@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 17 · 設定與組態 · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch17_configuration.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 17 · 設定與組態 · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch17_configuration.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 17 · 設定與組態 · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch17_configuration.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch17_configuration.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html" class="active">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼</a>
+      <a href="#concept">核心概念</a>
+      <a href="#words">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#files">設定檔</a>
+      <a href="#envvars">EMQX_ 環境變數</a>
+      <a href="#secret">Secret 管理</a>
+      <a href="#troubleshoot">排錯</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch17_configuration.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 17</div>
+      <h1>設定與組態</h1>
+      <p class="lead">EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>EMQX 的參數散在幾個地方：可以直接在 Dashboard 動態調整的、藏在設定檔的、以及以環境變數覆蓋的。家用場景常會不小心把兩個設定寫到不同層，結果改不動卻又不確定誰贏。</p>
+      <p>這章把 EMQX 的設定體系講清楚：Dashboard 的 Management 模組先說明，再講設定檔（emqx.conf、HOCON）與 <code>EMQX_</code> 環境變數的優先權，最後帶到 Secret（敏感值）與 add-on 的 env_vars 用法。讀完，你改任何設定都不會再東猜西猜。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>EMQX 的設定分「靜態」與「動態」兩類目錄。</p>
+      <ul>
+        <li><strong>靜態設定 <code>etc</code></strong>：通常是唯讀，放在主設定檔（例如 <code>emqx.conf</code>）；主要在部署或升級時改。</li>
+        <li><strong>動態設定 <code>data/configs</code></strong>：可寫，把你從 Dashboard、REST API、CLI 做的變更儲存到 <code>cluster.hocon</code>。</li>
+      </ul>
+      <p>優先權從低到高是：<code>base.hocon</code>（5.8.4 起才有）＜ <code>cluster.hocon</code> ＜ <code>emqx.conf</code> ＜ 環境變數。也就是說，越後面越高。</p>
+      <p>Dashboard 的 <strong>Management</strong> 模組就是「動態調整」的入口：Cluster Settings、MQTT Settings、Logging、Monitoring 等都可以在執行中不重啟就套用。</p>
+    </section>
+
+    <section id="words" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Configuration</td><td>設定／組態</td><td>EMQX 的參數集合</td></tr>
+            <tr><td>HOCON</td><td>HOCON</td><td>EMQX 使用的可讀設定格式</td></tr>
+            <tr><td>emqx.conf</td><td>主設定檔</td><td>靜態設定，優先權高於 cluster.hocon</td></tr>
+            <tr><td>cluster.hocon</td><td>叢集設定檔</td><td>Dashboard 動態變更的落點</td></tr>
+            <tr><td>Environment Variable</td><td>環境變數</td><td>最高優先，以 <code>EMQX_</code> 開頭</td></tr>
+            <tr><td>Secret</td><td>秘密／敏感值</td><td>密碼、token 這類不應外洩的值</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>進 Cluster Settings 看動態設定</h3><p>左側 <strong>Management → Cluster Settings</strong>，這裡可調整 MQTT、Listener、Logging 等設定，儲存後立即生效。</p></li>
+        <li><h3>用 add-on 的 env_vars 追加環境變數</h3><p>Home Assistant → 左側 EMQX add-on → 組態（Configuration）。在 env_vars 填 <code>name</code> 與 <code>value</code>；add-on 只接受以 <code>EMQX_</code> 開頭的變數名，改完後記得重啟。</p></li>
+        <li><h3>用環境變數覆蓋一個預設值</h3><p>例如要改節點名，填 <code>EMQX_NODE__NAME</code>（雙底線代表設定層級）。存檔後重啟 add-on，再看 Dashboard 數值。</p></li>
+        <li><h3>若需要「靜態」設定檔</h3><p>進 add-on 的「資料」目錄可以看到 /data/emqx/etc/emqx.conf。除非必要，不手動改，因為 Dashboard 寫的都落在 <code>cluster.hocon</code>。</p></li>
+      </ol>
+    </section>
+
+    <section id="files" data-nav="設定檔">
+      <h2 data-icon="disk">設定檔：HOCON 與優先權</h2>
+      <p>從 EMQX 5.0 起用 <strong>HOCON</strong> 格式（是 JSON 的 superset，可用巢狀物件或扁平路徑寫）。</p>
+      <pre><code>node {
+  name = "emqx@127.0.0.1"
+  cookie = "&lt;你的cookie&gt;"
+}</code></pre>
+      <p>也可以寫成扁平：<code>node.name = "emqx@127.0.0.1"</code>。</p>
+      <p>實際的優先權如果沒特別記，很容易混亂。重點是「後出現優先」與「高層優先」：<code>base.hocon</code> 最弱、環境變數最強。若你在動態調整寫的是 <code>cluster.hocon</code>，但同一項目在 <code>emqx.conf</code> 或環境變數裡另有設定，重啟後可能被改回去。</p>
+      <p class="note">建議：不要在 emqx.conf 與 cluster.hocon 同時寫同一項目，以免重開後數值回到其中一端。</p>
+    </section>
+
+    <section id="envvars" data-nav="EMQX_ 環境變數">
+      <h2 data-icon="labels">EMQX_ 環境變數與 add-on env_vars</h2>
+      <p>環境變數與設定檔的轉換規則：</p>
+      <ul>
+        <li>設定檔用點（<code>.</code>）分隔層級，環境變數用雙底線（<code>__</code>）。</li>
+        <li>變數名稱一律以 <code>EMQX_</code> 開頭。</li>
+        <li>值會以 HOCON 解析，因此可傳入複雜型態。</li>
+      </ul>
+      <p>Woow EMQX add-on 在 <code>config.yaml</code> 定義了 <code>env_vars</code> 組態。範例：</p>
+      <pre><code>env_vars:
+  - name: EMQX_NODE__NAME
+    value: "something@else.local"
+  - name: EMQX_LISTENERS__TCP__DEFAULT__MAX_CONNECTIONS
+    value: "1000000"</code></pre>
+      <p>存檔後重啟 add-on 才會生效。</p>
+    </section>
+
+    <section id="secret" data-nav="Secret 管理">
+      <h2 data-icon="security">Secret 管理：別踩 HOCON 的註解坑</h2>
+      <p>EMQX 的設定有「Secret」型別，用來存密碼與 token 這類敏感值。在 add-on 或 Dashboard 的欄位輸入時，一律以佔位符（例如 <code>&lt;你的密碼&gt;</code>）代替實值，不寫實際秘密。</p>
+      <p>一個常見的坑：HOCON 裡 `#` 是註解開頭。若密碼含 <code>#</code>，例如 <code>MQtt#123</code>，沒有加引號，解析器會把它當成 <code>MQtt</code>，`#123` 會被當成註解丟掉。要用「HOCON 層級雙引號」把它包起來，才能保留整個字面值：</p>
+      <pre><code>export EMQX_DASHBOARD__DEFAULT_PASSWORD='"MQtt#123"'</code></pre>
+      <p>含 <code>:</code> 或 <code>=</code> 的值也要比照。URL 編碼（如 <code>%23</code>）不適用——EMQX 不會解開環境變數的 URL encoding。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="排錯">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>改了設定，重開後又被打回原形</strong>：多半是 emqx.conf 或環境變數的優先權較高。把要用的值改到高一層（例如環境變數），把它固定住。</li>
+        <li><strong>env_vars 不生效</strong>：先確認變數名以 <code>EMQX_</code> 開頭且用了雙底線（<code>__</code>）；存檔後要重啟 add-on。名字拼錯會在啟動 log 裡看到 warning。</li>
+        <li><strong>密碼含 # 卻被截斷</strong>：因為 HOCON 把 # 當註解。把它加上一層雙引號整體存進去（連引號），不要只貼原值。</li>
+        <li><strong>找不到要改的設定</strong>：先判斷它是 Dashboard 可動態調、還是在設定檔裡的靜態項目。前者用 Management；後者去 emqx.conf 或用環境變數。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>Dashboard 改的設定存在哪</summary>
+        <div class="body"><p>Dashboard、REST API、CLI 的動態調整會被寫進 <code>data/configs/cluster.hocon</code>（叢集級）。如果不希望它被改，就去寫更高層的 emqx.conf 或環境變數。</p></div>
+      </details>
+      <details class="faq">
+        <summary>emqx.conf 與 cluster.hocon 誰優先</summary>
+        <div class="body"><p><code>emqx.conf</code> 優先於 cluster.hocon。不過兩者都不要重疊同一個參數，以免重開後搞不清楚最終值。</p></div>
+      </details>
+      <details class="faq">
+        <summary>同一參數同時寫在環境變數與設定檔呢</summary>
+        <div class="body"><p>環境變數最高。環境變數會蓋過設定檔，但它的值會被當成 HOCON 解析；含特殊字元（#、:、=）時要包 HOCON 雙引號。</p></div>
+      </details>
+      <details class="faq">
+        <summary>add-on 的 env_vars 限哪些變數名</summary>
+        <div class="body"><p>add-on 的 config.yaml 用正表示 `^EMQX_([A-Z0-9_])+$` 校驗環境變數名，所以只能填入以 <code>EMQX_</code> 開頭的變數名。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/configuration.md">EMQX 5.8 設定檔與環境變數（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/configuration.md">EMQX 5.8 Management 動態設定（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml">Woow EMQX add-on config.yaml（env_vars）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch16_message_management.html">
+        <span class="label">← Previous</span>
+        <span class="title">16 · 訊息管理</span>
+      </a>
+      <a class="next" href="ch18_logs_api_diagnose.html">
+        <span class="label">Next →</span>
+        <span class="title">18 · Log／API</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>

@@ -144,11 +144,14 @@ const chapterOriginal = fs.readFileSync(chapterPath, 'utf8');
 try {
   fs.writeFileSync(chapterPath, chapterOriginal.replace('</main>', '<a href="missing-regression.html#none">bad</a></main>'));
   run('check_links integration rejects invalid file/fragment', ['scripts/check_links.js'], 1, ['missing-regression.html#none']);
-  run('build_nav shared resolver rejects invalid file/fragment', ['scripts/build_nav.js', '--check'], 1, ['missing-regression.html#none']);
+  run('build_nav rejects invalid file', ['scripts/build_nav.js', '--check'], 1, ['missing-regression.html']);
+  // 共用 resolver（跨頁 fragment）的房規改住在 check_site_rules.js（kit 的 build_nav.js 不改）
+  run('check_site_rules shared resolver rejects invalid file/fragment', ['scripts/check_site_rules.js'], 1, ['missing-regression.html#none']);
 } finally {
   fs.writeFileSync(chapterPath, chapterOriginal);
 }
 run('check_links returns to green after negative fixture restore', ['scripts/check_links.js'], 0);
+run('check_site_rules returns to green after negative fixture restore', ['scripts/check_site_rules.js'], 0);
 
 const chaptersPath = path.join(ROOT, 'chapters.json');
 const chapterStat = fs.statSync(chaptersPath);

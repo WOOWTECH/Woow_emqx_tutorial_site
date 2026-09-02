@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 7 · Authorization 與 ACL · WoowTech EMQX 完整指南</title>
+  <meta name="description" content="EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。" />
+  <meta name="author" content="WoowTech" />
+  <link rel="canonical" href="https://emqx-guide.woowtech.io/en/ch7_authorization.html" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:title" content="Chapter 7 · Authorization 與 ACL · WoowTech EMQX 完整指南" />
+  <meta property="og:description" content="EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。" />
+  <meta property="og:url" content="https://emqx-guide.woowtech.io/en/ch7_authorization.html" />
+  <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Chapter 7 · Authorization 與 ACL · WoowTech EMQX 完整指南" />
+  <meta name="twitter:description" content="EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。" />
+  <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
+  <meta name="theme-color" content="#6183FC" />
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.en" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Yellowtail&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/i18n.css" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="tutorial.html">EMQX 指南</a>
+    <div class="brand-sub">EMQX 5.8.9 完整功能</div>
+    <nav class="lang-switch" aria-label="Language"><a href="../ch7_authorization.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="ch7_authorization.html" lang="en" aria-current="page">EN</a></nav>
+    <a class="hub-link" href="index.html">◂ 資源總覽</a>
+    <h2>Chapters</h2>
+    <ol>
+      <li class="part-label">基礎：認識與安裝</li>
+      <li data-i18n="pending"><a href="ch1_overview.html">EMQX 是什麼</a></li>
+      <li data-i18n="pending"><a href="ch2_install.html">安裝</a></li>
+      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT 基礎</a></li>
+      <li class="part-label">核心：連線與存取控制</li>
+      <li data-i18n="pending"><a href="ch5_first_connection.html">第一個連線</a></li>
+      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
+      <li data-i18n="pending"><a href="ch7_authorization.html" class="active">Authorization</a></li>
+      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listener／TLS</a></li>
+      <li class="part-label">進階：規則、整合與資料橋接</li>
+      <li data-i18n="pending"><a href="ch9_rule_engine.html">規則引擎</a></li>
+      <li data-i18n="pending"><a href="ch10_rule_actions.html">內建動作</a></li>
+      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connector</a></li>
+      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Source</a></li>
+      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA 整合</a></li>
+      <li class="part-label">維運：監控、管理與復原</li>
+      <li data-i18n="pending"><a href="ch14_client_management.html">客戶端管理</a></li>
+      <li data-i18n="pending"><a href="ch15_monitoring.html">監控</a></li>
+      <li data-i18n="pending"><a href="ch16_message_management.html">訊息管理</a></li>
+      <li data-i18n="pending"><a href="ch17_configuration.html">設定</a></li>
+      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Log／API</a></li>
+      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
+      <li data-i18n="pending"><a href="ch20_backup_recovery.html">備份</a></li>
+      <li data-i18n="pending"><a href="ch21_security.html">安全部署</a></li>
+      <li data-i18n="pending"><a href="ch22_troubleshooting.html">排錯</a></li>
+    </ol>
+    <div class="toc-in-chapter">
+      <h2>This chapter</h2>
+      <a href="#why">為什麼要學這個</a>
+      <a href="#concept">核心概念</a>
+      <a href="#what">名詞對照</a>
+      <a href="#steps">動手做</a>
+      <a href="#topic1">授權順序與鏈</a>
+      <a href="#topic2">ACL 規則與 allow／deny</a>
+      <a href="#troubleshoot">故障排除</a>
+      <a href="#faq">常見問題</a>
+      <a href="#sources">官方來源</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch7_authorization.html" hreflang="zh-Hant">Open the Chinese version</a></div>
+    <div class="chapter-header">
+      <div class="kicker">Chapter 7</div>
+      <h1>Authorization 與 ACL</h1>
+      <p class="lead">EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。</p>
+    </div>
+
+    <section id="why" data-nav="為什麼要學這個">
+      <h2 data-icon="why">為什麼要學這個</h2>
+      <p>第 6 章的驗證擋得住「誰能連線」，但擋不住「連上去之後能對哪些主題做什麼」。同一個帳號，你可能希望它只能讀工作室的感應器、並控制自己的開關，而不是隨意讀別的主題、更不會去控制你不希望碰的裝置。這就是授權（Authorization）要處理的：在 EMQX 用內建資料庫放 ACL 規則，把 publish／subscribe 的權限按「人＋主題＋動作」配對，並學會「允許（allow）」與「拒絕（deny）」的執行順序。</p>
+      <p>讀完之後，你就能把 Home Assistant 與各裝置的權限收緊到「只碰自己該碰的主題」，完成「驗證＋授權」的最小權限閉環。</p>
+    </section>
+
+    <section id="concept" data-nav="核心概念">
+      <h2 data-icon="concept">核心概念</h2>
+      <p>授權是對 MQTT 的<strong>發布（publish）與訂閱（subscribe）操作</strong>做權限控制。EMQX 的後端類型有：<strong>ACL File（檔案規則）</strong>、<strong>內建資料庫（Built-in Database）</strong>、外部資料庫（MySQL／PostgreSQL／MongoDB／Redis），以及 <strong>HTTP Server</strong>。除錯的介面從 Dashboard 左側 <strong>Access Control → Authorization</strong> 進去。</p>
+      <p>接著聊「順序」的關鍵：client 每次要 publish／subscribe 時，EMQX 會依序檢查一連串的授權器（Authorizer）。每個授權器內有它的 Access Control List（ACL）規則，EMQX 從第一個授權器開始比對；找到第一筆<strong>命中該 client 的規則</strong>，就照那筆規則的 allow／deny 執行。沒有規則命中就跳到下一個授權器，全部都不命中時，再由 <strong>Global Settings</strong> 的全域預設值決定（allow 或 deny）。</p>
+      <p>所以「驗證你是誰」＋「授權你能做什麼」是互補的兩層：內建資料庫的 ACL 可以按 username 或 client ID 來區分誰該對哪些主題與動作有權限。</p>
+    </section>
+
+    <section id="what" data-nav="名詞對照">
+      <h2 data-icon="what">名詞對照</h2>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Authorization</td><td>授權</td><td>決定 publish／subscribe 的權限</td></tr>
+            <tr><td>ACL</td><td>存取控制清單</td><td>主題權限規則的集合</td></tr>
+            <tr><td>Authorizer</td><td>授權器</td><td>一套規則與後端的執行單位</td></tr>
+            <tr><td>Allow</td><td>允許</td><td>放行這個動作（＋主題）</td></tr>
+            <tr><td>Deny</td><td>拒絕</td><td>阻擋這個動作（＋主題）</td></tr>
+            <tr><td>Action</td><td>動作</td><td>publish 或 subscribe</td></tr>
+            <tr><td>Topic Filter</td><td>主題過濾</td><td>可含萬用字元的規則主題</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="steps" data-nav="動手做">
+      <h2 data-icon="steps">動手做</h2>
+      <ol class="steps">
+        <li><h3>進到 Authorization 授權頁</h3><p>登入 Dashboard，左側 <strong>Access Control → Authorization</strong>，按右上 <strong>Create</strong>。</p></li>
+        <li><h3>建立內建資料庫授權器</h3><p>後端選 <strong>Built-in Database</strong>（內建資料庫不需另外設參數），按 <strong>Create</strong> 完成。之後回到授權清單（Authorization List）。</p></li>
+        <li><h3>新增 ACL 規則</h3><p>在該筆授權器的 <strong>Actions → Permissions</strong> 進入規則編輯：選 <strong>客戶身分（client ID／username／所有使用者）</strong>，填入主題（可含 <code>+</code>、<code>#</code>），選擇動作 publish／subscribe，並設定 <strong>Allow 或 Deny</strong>。存下。</p></li>
+        <li><h3>設定全域與驗證</h3><p>回 Authorization 清單按 <strong>Settings</strong>（全域設定），決定「沒有規則命中時」要 allow 還是 deny，以及拒絕後是要 ignore（捨棄請求）還是 disconnect client。最後用你的測試帳號實際 publish／subscribe 走一遍，確認 allow／deny 真的照規則生效。</p></li>
+      </ol>
+    </section>
+
+    <section id="topic1" data-nav="授權順序與鏈">
+      <h2 data-icon="advanced">授權順序與鏈</h2>
+      <p>Authorization 支援同時建立多個授權器，client 在做 publish／subscribe 時逐個檢查，先命中的規則先決——所以<strong>順序很重要</strong>。在 Authorization List 你可以用滑鼠拖曳、或在 Actions 列調整順序；EMQX 從第一個開始，直到找到能命中某筆 ACL 為止。</p>
+      <p>「第一筆命中便定生死」正是順序的要點：假設你有一條很寬的 deny <code>device/#</code> 排在前，又有一條允許的 allow <code>device/+/state</code> 排在其後，前面那條太寬的 deny 會先命中，後面的 allow 便永遠輪不到內容。因此撰寫規則時要把「窄而精確」的思路想清楚，再依權重排序。</p>
+      <p><strong>Global Settings</strong> 決定最後的兜底：當所有授權器都找不到命中規則時，你可以要求 EMQX 一律 allow 或一律 deny；並選擇「拒絕後」是 ignore（靜默捨棄請求）還是 disconnect client。家用環境多數會把未命中設為 <strong>deny</strong>，走「不白名單就擋」的安全側。</p>
+    </section>
+
+    <section id="topic2" data-nav="ACL 規則與 allow／deny">
+      <h2 data-icon="security">ACL 規則配對與 allow／deny</h2>
+      <p>內建資料庫的 ACL 用「客戶＋主題＋動作」三個維度描述權限，靠「誰對哪個主題做哪個動作」一列一條規則。你可以選「所有使用者（all users）」設定基線，再針對特定 client ID 或 username 補上專屬規則。</p>
+      <p>配對時主題可以帶萬用字元：例如把家裡的開關主題集中成 <code>客廳/開關/+/state</code>，一條規則就能涵蓋到所有客廳開關。<strong>Allow</strong> 就是放行該（動作＋主題），<strong>Deny</strong> 就是擋掉。同一題目可同時含 allow 與 deny，配對的優先權由授權順序與全域設定共同決定。</p>
+      <p>家用最常見的建議是「最小權限」：先只 allow 每個帳號真正需要的 publish／subscribe 主題，不要先開「全部」再用 deny 補洞。這樣即使順序或全域設定有疏漏，風險範圍也最小。</p>
+    </section>
+
+    <section id="troubleshoot" data-nav="故障排除">
+      <h2 data-icon="troubleshoot">故障排除</h2>
+      <ul>
+        <li><strong>連得上卻不能往某個主題發布</strong>：多半是授權規則把該動作或主題擋掉。到 Authorization → Permissions 檢查該帳號／client 是否有一條「動作＋主題＋Allow」覆蓋到你要的主題，並注意 Global Settings 的未命中值是否是 deny。</li>
+        <li><strong>明明有 Allow 規則卻還是被擋</strong>：檢查規則順序，EMQX 以「第一筆命中」為準。如果前面有一條更寬的 <code>#</code> deny 先命中，後面的 Allow 就永遠輪不到；簡化規則或調整排序。</li>
+        <li><strong>想擋某個 client 卻一直沒效果</strong>：把針對它的那條規則改為 deny，或加一條「該主題＋subscribe／publish＋deny」放在較前順序；再於 Global Settings 確認未命中時不是隱性 allow。</li>
+        <li><strong>外部資料庫授權器顯示 Disconnected</strong>：外部資料庫位址、帳密或查詢語法不對，或該庫未就緒。設定照樣可存取，但執行時會失敗；修好外部狀態後回到 Overview 看健康度，並確認你選的真的是內建資料庫。</li>
+      </ul>
+    </section>
+
+    <section id="faq" data-nav="常見問題">
+      <h2 data-icon="faq">常見問題</h2>
+      <details class="faq">
+        <summary>授權與驗證到底怎麼分工</summary>
+        <div class="body"><p>驗證先確認「你是誰」，授權再決定「做不做得了」。驗證擋不掉「亂訂閱別人主題」的行為，唯有授權規則能在主題粒度上做 allow／deny。兩者都設定齊了，才談得上最小權限。</p></div>
+      </details>
+      <details class="faq">
+        <summary>內建資料庫 ACL 跟 ACL 檔案哪個好</summary>
+        <div class="body"><p>家用透過 Dashboard 設定、想每次改動都維持、直覺，選內建資料庫；ACL 檔案是文字檔規則、適合稍微工程師用版本管理，但編輯較不直覺。多數 add-on 使用者用內建資料庫就夠。</p></div>
+      </details>
+      <details class="faq">
+        <summary>deny 之後 client 會被切掉的連線嗎</summary>
+        <div class="body"><p>那要看你的 Global Settings。EMQX 允許「拒絕後捨棄請求（ignore the message）」或「直接斷開 client（disconnect）」。你要「悄悄擋 message」選 ignore，你要「直接切線」選 disconnect，沒有一個絕對；家用常選 ignore 以免整串重連。</p></div>
+      </details>
+      <details class="faq">
+        <summary>為什麼一再強調「最小權限」</summary>
+        <div class="body"><p>權限開得愈大，一個帳號被拖／被竊時，可被竄改感染的範圍就愈大。只開放每個帳號「此刻需要的」 publish／subscribe 主題、其餘都 deny，才能把單一裝置壞掉的影響降到最低——這是家用 IoT 重要的防縮。</p></div>
+      </details>
+    </section>
+
+    <section id="sources" data-nav="官方來源">
+      <h2 data-icon="url">官方來源</h2>
+      <ul>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authz.md">EMQX 5.8 Dashboard Authorization（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/acloverview.md">EMQX 5.8 Access Control 總覽（ACL 概念）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（Access Control 授權／ACL）</a></li>
+      </ul>
+    </section>
+
+    <div class="pager">
+      <a class="prev" href="ch6_authentication.html">
+        <span class="label">← Previous</span>
+        <span class="title">06 · Authentication</span>
+      </a>
+      <a class="next" href="ch8_listeners_tls.html">
+        <span class="label">Next →</span>
+        <span class="title">08 · Listener／TLS</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>WoowTech EMQX 完整指南 is produced by <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">WoowTech</a> and released under <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a> — share and adapt freely, with attribution.</p>
+      <div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div>
+      <p class="footer-meta">介面畫面與操作路徑以 EMQX 5.8.9（Open Source）Dashboard 為基準撰寫；EMQX 為 EMQ Technologies 的開源軟體。 · <a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Source &amp; errata</a></p>
+    </footer>
+  </main>
+</div>
+<script id="ui-strings" type="application/json">{"tocToggle":"Contents","tocExpand":"Expand chapter navigation","tocCollapse":"Collapse chapter navigation"}</script>
+<script src="../assets/js/toc.js"></script>
+</body>
+</html>
