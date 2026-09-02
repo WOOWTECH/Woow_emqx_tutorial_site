@@ -1,0 +1,10 @@
+{
+  "file": "skills.html",
+  "entries": [
+    {
+      "unit": "#main",
+      "zh": "<pre class=\"code-block\"><code>feature_id: [穩定識別]\nversion: 5.8.9\nchannel: [正式 | 實驗性 | 僅概念]\ndashboard_module: [是 | 否]\nsecurity: [需在 UI 設定 | 屬概念]\nevidence:\n  - [官方文件 URL]\nlimitations: [限制]\nredact: [需要遮蔽的欄位]</code></pre>",
+      "en": "<pre class=\"code-block\"><code>feature_id: [stable-id]\nversion: 5.8.9\nchannel: [ga | experimental | concept-only]\ndashboard_module: [yes | no]\nsecurity: [configure in the UI | conceptual]\nevidence:\n  - [official docs URL]\nlimitations: [limitations]\nredact: [fields to redact]</code></pre>"
+    }
+  ]
+}

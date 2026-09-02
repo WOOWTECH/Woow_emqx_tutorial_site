@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>EMQX 5.8.9 Agent Skill 手冊 · WoowTech</title>
-<meta name="description" content="研究與撰寫 EMQX 5.8.9 教材的 AI agent 獨立工作手冊：來源優先序、功能清單、安全截圖與遮蔽、審查、驗證與部署。" />
+<title>EMQX 5.8.9 Agent Skill Handbook · WoowTech</title>
+<meta name="description" content="A standalone working handbook for the AI agents that research and write the EMQX 5.8.9 teaching material: source precedence, the feature list, safe screenshots and redaction, review, verification and deployment." />
 <meta name="author" content="WoowTech" />
 <meta name="theme-color" content="#6183FC" />
 <link rel="canonical" href="https://emqx-guide.woowtech.io/en/skills.html" />
   <meta name="robots" content="noindex, follow" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="WoowTech EMQX 完整指南" />
+<meta property="og:site_name" content="The WoowTech EMQX Complete Guide" />
 <meta property="og:locale" content="en_US" />
 <!-- i18n:oglocale --><meta property="og:locale:alternate" content="zh_TW" /><!-- /i18n:oglocale -->
-<meta property="og:title" content="EMQX 5.8.9 Agent Skill 手冊" />
-<meta property="og:description" content="研究與撰寫 EMQX 5.8.9 教材的 AI agent 獨立工作手冊：來源、功能清單、22 章、遮蔽、審查、驗證與部署。" />
+<meta property="og:title" content="EMQX 5.8.9 Agent Skill Handbook" />
+<meta property="og:description" content="A standalone working handbook for the AI agents that research and write the EMQX 5.8.9 teaching material: sources, the feature list, the 22 chapters, redaction, review, verification and deployment." />
 <meta property="og:url" content="https://emqx-guide.woowtech.io/en/skills.html" />
 <meta property="og:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="EMQX 5.8.9 Agent Skill 手冊" />
-<meta name="twitter:description" content="研究與撰寫 EMQX 5.8.9 教材的 AI agent 獨立工作手冊。" />
+<meta name="twitter:title" content="EMQX 5.8.9 Agent Skill Handbook" />
+<meta name="twitter:description" content="A standalone working handbook for the AI agents that research and write the EMQX 5.8.9 teaching material." />
 <meta name="twitter:image" content="https://emqx-guide.woowtech.io/assets/og/emqx-guide.en.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,13 +34,13 @@
 <body>
 <main class="resource-page">
 <header class="topbar">
-<a class="site-name" href="./">EMQX 指南</a>
-<nav class="topnav" aria-label="主要導覽">
-<a class="nav-link" href="index.html">資源總覽</a>
-<a class="nav-link" href="tutorial.html">教學</a>
-<a class="nav-link" href="sales.html">導入評估</a>
-<a class="nav-link" href="prompts.html">提示詞</a>
-<a class="nav-link" aria-current="page" href="skills.html">Skill 手冊</a>
+<a class="site-name" href="./">EMQX Guide</a>
+<nav class="topnav" aria-label="Main navigation">
+<a class="nav-link" href="index.html">Resource Hub</a>
+<a class="nav-link" href="tutorial.html">Tutorial</a>
+<a class="nav-link" href="sales.html">Adoption Guide</a>
+<a class="nav-link" href="prompts.html">Prompts</a>
+<a class="nav-link" aria-current="page" href="skills.html">Skill Handbook</a>
 </nav>
 </header>
 <div class="resource-hero">
@@ -48,45 +48,45 @@
       <nav class="lang-switch" aria-label="Language"><a href="../skills.html" lang="zh-Hant" hreflang="zh-Hant">中文</a><a class="active" href="skills.html" lang="en" aria-current="page">EN</a></nav>
       <!-- /i18n:switch -->
 <span class="script-accent" aria-hidden="true">research safely</span>
-<p class="eyebrow">獨立 Agent Handbook · EMQX 5.8.9</p>
-<h1>研究、撰寫與交付 EMQX 22 章指南的作業規格</h1>
-<p class="lead">這份手冊可直接交給研究或寫作 agent。工作事實邊界固定為 EMQX 5.8.9、官方文件 <code>docs.emqx.com/en/emqx/v5.8</code>，add-on 以 <code>WOOWTECH/Woow_ha_emqx</code> 的 <code>emqx/</code> 為準。</p>
+<p class="eyebrow">Standalone Agent Handbook · EMQX 5.8.9</p>
+<h1>The working spec for researching, writing and shipping the 22-chapter EMQX guide</h1>
+<p class="lead">Hand this handbook straight to a research or writing agent. The factual boundary is fixed: EMQX 5.8.9, the official docs at <code>docs.emqx.com/en/emqx/v5.8</code>, and for the add-on, <code>WOOWTECH/Woow_ha_emqx</code> and its <code>emqx/</code> directory.</p>
 </div>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-target" aria-hidden="true"></i></span>角色、讀者與不可跨越的界線</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-target" aria-hidden="true"></i></span>Role, audience and hard limits</h2>
 <div class="resource-grid">
-<article class="info-card"><h3>你的任務</h3>
+<article class="info-card"><h3>Your job</h3>
 <ul>
-<li>只寫可由官方 v5.8 文件、Woow_ha_emqx 原始碼，或實機唯讀觀察支持的主張。</li>
-<li>使用台灣繁體中文，稱讀者為「你」，先解釋名詞，再給家庭情境，最後才寫步驟。</li>
-<li>把系統描述為「MQTT broker」，不是「無所不能的平台」；叢集只做概念與監控。</li>
-<li>明確標示每個功能的選單路徑、預設值與成熟度。</li>
+<li>Write only the claims you can back with the official v5.8 docs, the Woow_ha_emqx source, or read-only observation on a live instance.</li>
+<li>Write in US English and address the reader as you. Explain the term first, then give a home scenario, and write the steps last.</li>
+<li>Describe the system as an "MQTT broker", not as a "platform that does everything"; keep clustering to concepts and monitoring.</li>
+<li>State the menu path, the default and the maturity of every feature.</li>
 </ul></article>
-<article class="info-card"><h3>禁止事項</h3>
+<article class="info-card"><h3>What you must not do</h3>
 <ul>
-<li>不得把 EMQX 4.x 的「Modules」「Data Bridge」寫成 5.x 建議寫法。</li>
-<li>不得把 add-on 5.9.0 當成 EMQX 版本（5.9.0 只加 ngrok TCP 通道）。</li>
-<li>不得為截圖執行 Create、Delete、Save、Kick、Disconnect 等變更操作。</li>
-<li>不得公開 MQTT 密碼、client ID、API key、ngrok authtoken、TLS 私鑰、連線字串。</li>
+<li>Do not present the "Modules" and "Data Bridge" of EMQX 4.x as the recommended 5.x wording.</li>
+<li>Do not treat add-on 5.9.0 as an EMQX version (5.9.0 only adds an ngrok TCP tunnel).</li>
+<li>Do not run Create, Delete, Save, Kick, Disconnect or any other state-changing action to get a screenshot.</li>
+<li>Do not publish MQTT passwords, client IDs, API keys, ngrok authtokens, TLS private keys or connection strings.</li>
 </ul></article>
 </div>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-source-branch" aria-hidden="true"></i></span>來源優先序與衝突處理</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-source-branch" aria-hidden="true"></i></span>Source precedence and handling conflicts</h2>
 <ol class="phase-list">
-<li><strong>Woow_ha_emqx 原始碼／README：</strong>最高優先，用於 add-on 安裝、env_vars、host_network 與連接埠事實。</li>
-<li><strong>EMQX v5.8 官方文件：</strong>Dashboard 模組、預設值、Authentication／ACL／Listener／Rule／Connector 等使用者操作事實。</li>
-<li><strong>實機唯讀觀察：</strong>只證明「這個環境看見什麼」，不能單獨證明普遍支援，也不得在線上建立／刪除任何設定。</li>
-<li><strong>同版本釋出說明：</strong>用於版本行為與限制；與文件不一致時以可到達的官方來源為準並註記。</li>
+<li><strong>Woow_ha_emqx source / README:</strong> highest precedence, for add-on install, env_vars, host_network and port facts.</li>
+<li><strong>EMQX v5.8 official docs:</strong> Dashboard modules, defaults, and the user-facing facts about Authentication, ACL, Listener, Rule and Connector.</li>
+<li><strong>Read-only observation on a live instance:</strong> it proves only what this one environment shows. On its own it cannot prove that something is generally supported, and you must never create or delete a setting on a live system.</li>
+<li><strong>Release notes for the same version:</strong> use them for version behavior and limits. Where they disagree with the docs, follow the official source you can actually reach, and note it.</li>
 </ol>
-<div class="notice"><strong>衝突規則：</strong>不要自行調和。建立「主張、來源 A、來源 B、採用結論、仍待驗證」紀錄；無法解決時把文字降級成限制或待驗證。</div>
+<div class="notice"><strong>Conflict rule:</strong> do not reconcile the sources yourself. Record the claim, source A, source B, the conclusion you adopted, and what is still unverified; when you cannot resolve it, downgrade the text to a limitation or to something still to be verified.</div>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-tag-multiple-outline" aria-hidden="true"></i></span>Feature Manifest 工作法</h2>
-<p>研究前先建功能清單再寫章節。每列至少包含：<code>feature_id</code>、名稱、章節、成熟度、來源、驗證狀態、限制與安全註記。</p>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-tag-multiple-outline" aria-hidden="true"></i></span>Working from a feature manifest</h2>
+<p>Build the feature list before you research, and write the chapters after that. Every row carries at least: <code>feature_id</code>, name, chapter, maturity, source, verification status, limitations and a security note.</p>
 <pre class="code-block"><code>feature_id: [穩定識別]
 version: 5.8.9
 channel: [正式 | 實驗性 | 僅概念]
@@ -97,108 +97,108 @@ evidence:
 limitations: [限制]
 redact: [需要遮蔽的欄位]</code></pre>
 <ul class="check-list">
-<li>先掃官方文件模組清單，再比對 Woow_ha_emqx README 與 config。</li>
-<li>每章完成時反查 manifest，確保功能沒有漏寫、重複或跨版本。</li>
-<li>任何新增主張先更新 manifest，再進正文。</li>
+<li>Scan the module list in the official docs first, then compare it with the Woow_ha_emqx README and config.</li>
+<li>When a chapter is done, check it back against the manifest, so no feature is missing, duplicated or taken from another version.</li>
+<li>Update the manifest before any new claim goes into the body text.</li>
 </ul>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-camera-outline" aria-hidden="true"></i></span>唯讀截圖與遮蔽</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-camera-outline" aria-hidden="true"></i></span>Read-only screenshots and redaction</h2>
 <ol class="phase-list">
-<li><strong>規劃：</strong>先寫截圖目的、頁面、需要證明的 UI 狀態與可能敏感欄位。</li>
-<li><strong>唯讀導覽：</strong>只開啟無副作用分頁、搜尋、展開區塊；禁止任何改變狀態的按鈕。</li>
-<li><strong>原始檔隔離：</strong>首次截圖只存 gitignored <code>artifacts/raw-screenshots/</code>。</li>
-<li><strong>遮蔽：</strong>遮蔽 MQTT 密碼、client ID、username、API key、ngrok authtoken、TLS 私鑰、連線字串與私有 IP。</li>
-<li><strong>雙人檢查：</strong>第二人以 100% 放大檢查畫面、檔名、EXIF 與周邊文字，確認後才放進公開資產。</li>
+<li><strong>Plan:</strong> write down the purpose of the screenshot, the page, the UI state it has to prove, and the fields that could be sensitive.</li>
+<li><strong>Read-only walkthrough:</strong> open only tabs, searches and expandable blocks that have no side effects; no button that changes state.</li>
+<li><strong>Isolate the raw files:</strong> the first capture goes only into the gitignored <code>artifacts/raw-screenshots/</code>.</li>
+<li><strong>Redact:</strong> redact MQTT passwords, client IDs, usernames, API keys, ngrok authtokens, TLS private keys, connection strings and private IP addresses.</li>
+<li><strong>Two-person check:</strong> a second person checks the image, the file name, the EXIF data and the surrounding text at 100% zoom, and only then does it go into the public assets.</li>
 </ol>
-<div class="notice notice-warn"><strong>紅線：</strong>不要為了「更漂亮的畫面」按 Create／Delete／Save／Kick。缺畫面就用文字與可驗證示意結構，不仿造產品 UI 或 logo。</div>
+<div class="notice notice-warn"><strong>Hard line:</strong> do not press Create, Delete, Save or Kick for a "better-looking screen". When you have no screenshot, use text and a schematic you can verify; do not imitate the product UI or its logo.</div>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-book-open-page-variant-outline" aria-hidden="true"></i></span>22 章作者分工與骨架</h2>
-<div class="table-scroll"><table class="data-table"><thead><tr><th>篇章</th><th>章節</th><th>核心交付</th></tr></thead><tbody>
-<tr><td>基礎</td><td>01–04</td><td>認識、安裝、Dashboard、MQTT 心智模型。</td></tr>
-<tr><td>存取控制</td><td>05–08</td><td>連線、Authentication、Authorization、Listener／TLS。</td></tr>
-<tr><td>規則與整合</td><td>09–13</td><td>Rule Engine、動作、Connector／Sink／Source、HA 整合。</td></tr>
-<tr><td>維運</td><td>14–22</td><td>客戶端、監控、訊息、設定、Log／API、ngrok、備份、安全、排錯。</td></tr>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-book-open-page-variant-outline" aria-hidden="true"></i></span>Chapter assignments and the required skeleton</h2>
+<div class="table-scroll"><table class="data-table"><thead><tr><th>Part</th><th>Chapters</th><th>Core deliverable</th></tr></thead><tbody>
+<tr><td>Basics</td><td>01–04</td><td>What it is, installing, the Dashboard, the MQTT mental model.</td></tr>
+<tr><td>Access control</td><td>05–08</td><td>Connecting, Authentication, Authorization, Listeners and TLS.</td></tr>
+<tr><td>Rules and integrations</td><td>09–13</td><td>Rule Engine, actions, Connector, Sink and Source, Home Assistant integration.</td></tr>
+<tr><td>Operations</td><td>14–22</td><td>Clients, monitoring, messages, configuration, logs and the API, ngrok, backup, security, troubleshooting.</td></tr>
 </tbody></table></div>
-<h3>每章硬性骨架</h3>
+<h3>The required skeleton for every chapter</h3>
 <ul class="check-list">
-<li>8–12 個具唯一 <code>id</code> 與 <code>data-nav</code> 的 section；每個 h2 使用已定義的 <code>data-icon</code>。</li>
-<li>至少一組四步以上的 <code>ol.steps</code>；必要的 <code>table.data-table</code>，不得用 inline style。</li>
-<li>固定含 <code>id="troubleshoot"</code>，至少四個具體項目。</li>
-<li>固定含 <code>id="faq"</code>，至少四則。</li>
-<li>固定含 <code>id="sources"</code>，與 pinned 官方來源。</li>
+<li>8–12 sections, each with a unique <code>id</code> and <code>data-nav</code>; every h2 uses a defined <code>data-icon</code>.</li>
+<li>At least one <code>ol.steps</code> of four steps or more; a <code>table.data-table</code> wherever one is needed, and no inline style.</li>
+<li>Always an <code>id="troubleshoot"</code> section, with at least four concrete items.</li>
+<li>Always an <code>id="faq"</code> section, with at least four entries.</li>
+<li>Always an <code>id="sources"</code> section, with the pinned official sources.</li>
 </ul>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-shield-check" aria-hidden="true"></i></span>事實、安全、編輯與可及性審查</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-shield-check" aria-hidden="true"></i></span>Factual, security, editorial and accessibility review</h2>
 <div class="resource-grid">
 <article class="info-card"><h3>Factual review</h3>
 <ul>
-<li>逐段標出可驗證主張與來源；版本、預設值、UI 路徑逐項核對。</li>
-<li>搜尋「一定、完整、所有、保證、一律」並要求證據或改寫。</li>
-<li>確認 add-on 版本 5.9.0 與 EMQX 5.8.9 用語一致。</li>
+<li>Mark the verifiable claims and their sources paragraph by paragraph; check versions, defaults and UI paths one by one.</li>
+<li>Search for "always", "complete", "all", "guaranteed" and "in every case", and ask for evidence or a rewrite.</li>
+<li>Confirm that add-on version 5.9.0 and EMQX 5.8.9 are named consistently.</li>
 </ul></article>
 <article class="info-card"><h3>Security review</h3>
 <ul>
-<li>執行敏感資料掃描並人工查密碼、token、IP、hostname。</li>
-<li>高風險動作前必須有備份、影響、批准與回復。</li>
-<li>認證不得誤寫成任意防護；公開 1883 前說明風險。</li>
+<li>Run the sensitive-data scan, then check by hand for passwords, tokens, IP addresses and hostnames.</li>
+<li>Every high-risk action needs a backup, its impact, an approval and a rollback.</li>
+<li>Never write authentication up as protection against everything; state the risk before exposing 1883.</li>
 </ul></article>
 <article class="info-card"><h3>Editorial review</h3>
 <ul>
-<li>台灣繁體中文、稱「你」、無 emoji、無翻譯腔。</li>
-<li>首次技術詞採中文（English），之後一致。</li>
-<li>表格與程式碼在手機可橫向捲動。</li>
+<li>US English, address the reader as you, no emoji, no translationese.</li>
+<li>Define each technical term on first use, then keep the same wording.</li>
+<li>Tables and code scroll horizontally on a phone.</li>
 </ul></article>
 <article class="info-card"><h3>Accessibility review</h3>
 <ul>
-<li>標題階層、landmark、連結文字與表頭語意正確。</li>
-<li>鍵盤焦點可見，互動目標至少 44px。</li>
-<li>320／360px 不產生整頁水平捲動。</li>
+<li>Heading levels, landmarks, link text and table headers are semantically correct.</li>
+<li>Keyboard focus is visible, and interactive targets are at least 44px.</li>
+<li>At 320/360px the page does not scroll horizontally.</li>
 </ul></article>
 </div>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-test-tube" aria-hidden="true"></i></span>驗證命令與失敗處理</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-test-tube" aria-hidden="true"></i></span>Verification commands and handling failures</h2>
 <pre class="code-block"><code>node scripts/build_nav.js --check
 node scripts/check_links.js
 node scripts/check_content.js
 node scripts/check_sensitive.js
 node scripts/test_checks.js</code></pre>
 <ul class="check-list">
-<li>所有命令退出碼必須為 0；不要略過失敗，也不要為了通過而放寬 validator。</li>
-<li>另做 stale scan，確認沒有殘留 HA／Tailscale／Headscale／舊版內容。</li>
-<li>在桌面與 320／360px 檢查入口、內容、表格、程式碼、焦點與導覽。</li>
-<li>提交前檢查 git diff、未追蹤檔與變更範圍。</li>
+<li>Every command must exit 0; do not skip a failure, and do not loosen a validator to make it pass.</li>
+<li>Run a separate stale scan to confirm no leftover HA, Tailscale, Headscale or old-version content.</li>
+<li>Check the entry points, the content, tables, code, focus and navigation on desktop and at 320/360px.</li>
+<li>Before you commit, review the git diff, the untracked files and the scope of the change.</li>
 </ul>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-rocket-launch-outline" aria-hidden="true"></i></span>部署與交付</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-rocket-launch-outline" aria-hidden="true"></i></span>Deployment and delivery</h2>
 <ol class="phase-list">
-<li><strong>凍結事實基準：</strong>確認 EMQX 5.8.9、add-on 5.9.0 與 manifest 一致。</li>
-<li><strong>完整建置檢查：</strong>執行導覽、連結、內容、敏感資料與 manifest 驗證。</li>
-<li><strong>預覽環境：</strong>以 GitHub Pages 相同 base path 測根目錄與專案子路徑。</li>
-<li><strong>人工驗收：</strong>桌面、320px、360px、鍵盤與敏感內容二次檢查。</li>
-<li><strong>原子提交：</strong>只提交核准範圍，記錄 SHA、變更摘要、驗證輸出與回退。</li>
-<li><strong>發布後冒煙：</strong>檢查首頁四卡、22 章目錄、三本手冊、OG 圖、404 與外部來源。</li>
+<li><strong>Freeze the fact baseline:</strong> confirm that EMQX 5.8.9, add-on 5.9.0 and the manifest agree.</li>
+<li><strong>Full build check:</strong> run the navigation, link, content, sensitive-data and manifest checks.</li>
+<li><strong>Preview environment:</strong> test the root and the project subpath with the same base path GitHub Pages uses.</li>
+<li><strong>Human acceptance:</strong> a second pass over desktop, 320px, 360px, keyboard use and sensitive content.</li>
+<li><strong>Atomic commit:</strong> commit only the approved scope, and record the SHA, the summary of the change, the verification output and the rollback.</li>
+<li><strong>Post-release smoke test:</strong> check the four cards on the home page, the 22-chapter contents, the three handbooks, the OG image, the 404 page and the external sources.</li>
 </ol>
 </section>
 
 <section class="resource-section">
-<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-link-variant" aria-hidden="true"></i></span>固定來源</h2>
+<h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-link-variant" aria-hidden="true"></i></span>Pinned sources</h2>
 <ul class="source-list">
-<li><a href="https://docs.emqx.com/en/emqx/v5.8/">EMQX v5.8 官方文件</a></li>
+<li><a href="https://docs.emqx.com/en/emqx/v5.8/">EMQX v5.8 official docs</a></li>
 <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx">WoowTech Woow_ha_emqx add-on</a></li>
-<li><a href="tutorial.html">本站 22 章 EMQX 5.8.9 教學目錄</a></li>
-<li><a href="../STYLE.md">本站作者規格（repository 內）</a></li>
+<li><a href="tutorial.html">This site's 22-chapter EMQX 5.8.9 tutorial contents</a></li>
+<li><a href="../STYLE.md">This site's authoring spec (in the repository)</a></li>
 </ul>
 </section>
 
-<footer class="page-footer"><div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX 官方網站</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">官方文件</a><a href="https://github.com/emqx/emqx" rel="noopener">官方原始碼</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">本站原始碼</a></div><p><a href="index.html">資源總覽</a><a href="prompts.html">提示詞庫</a><a href="tutorial.html">22 章教學</a></p><p>這是研究與交付規格，不授權 agent 略過人工批准或在正式環境執行高風險操作。</p></footer>
+<footer class="page-footer"><div class="link-row"><a href="https://www.emqx.io/" rel="noopener">EMQX official website</a><a href="https://docs.emqx.com/en/emqx/v5.8/" rel="noopener">Official docs</a><a href="https://github.com/emqx/emqx" rel="noopener">Official source code</a><a href="https://github.com/WOOWTECH/Woow_ha_emqx" rel="noopener">WoowTech add-on</a><a href="https://github.com/WOOWTECH/Woow_emqx_tutorial_site" rel="noopener">Site source code</a></div><p><a href="index.html">Resource Hub</a><a href="prompts.html">Prompt Library</a><a href="tutorial.html">22-chapter tutorial</a></p><p>This is a research and delivery spec. It does not authorize an agent to skip human approval or to run high-risk operations in production.</p></footer>
 </main></body></html>
