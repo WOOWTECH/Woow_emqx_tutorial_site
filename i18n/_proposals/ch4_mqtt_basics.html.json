@@ -1,0 +1,55 @@
+{
+  "file": "ch4_mqtt_basics.html",
+  "entries": [
+    {
+      "unit": "#steps",
+      "zh": "<code>客廳/濕度</code>",
+      "en": "<code>living-room/humidity</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳/溫度</code>",
+      "en": "<code>living-room/temperature</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳/+/溫度</code>",
+      "en": "<code>living-room/+/temperature</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳/東/溫度</code>",
+      "en": "<code>living-room/east/temperature</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳/西/溫度</code>",
+      "en": "<code>living-room/west/temperature</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳/東/上/溫度</code>",
+      "en": "<code>living-room/east/upper/temperature</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳/#</code>",
+      "en": "<code>living-room/#</code>"
+    },
+    {
+      "unit": "#topic1",
+      "zh": "<code>客廳</code>",
+      "en": "<code>living-room</code>"
+    },
+    {
+      "unit": "#topic2",
+      "zh": "<code>$share/群組名/主題</code>",
+      "en": "<code>$share/&lt;group&gt;/&lt;topic&gt;</code>"
+    },
+    {
+      "unit": "#faq",
+      "zh": "<code>$share/群組/</code>",
+      "en": "<code>$share/&lt;group&gt;/</code>"
+    }
+  ]
+}

@@ -70,15 +70,15 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#what">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#topic1">Overview 總覽</a>
-      <a href="#topic2">側欄模組與語言／授權</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#what">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#topic1">Overview page</a>
+      <a href="#topic2">Sidebar modules</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -86,123 +86,123 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch3_dashboard.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 3</div>
-      <h1>EMQX Dashboard 導覽</h1>
-      <p class="lead">EMQX Dashboard 導覽：側欄各模組、Overview 與監控概覽、授權 banner、語言與版本資訊，以及從 Home Assistant 開啟 Web UI 的方式。</p>
+      <h1>A tour of the EMQX Dashboard</h1>
+      <p class="lead">A tour of the EMQX Dashboard: the sidebar modules, the Overview and monitoring pages, the license banner, language and version information, and how to open the Web UI from Home Assistant.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>EMQX 把 broker 的大小事都收進 Dashboard 這張管理介面。如果你只想靠設定檔案與 Log 逐一猜狀態，一定會掛掉一大半除錯循環——誰連上了、哪個訂閱有沒有成立、訊息是否有送出去，這些 Dashboard 用幾張卡片就講清楚。</p>
-      <p>這章目標是讓你把「這張介面的地圖」先在腦海裡建起來：側欄各模組管什麼、Overview 頁重點指標放在哪裡、版本與授權去哪確認。之後每一章（驗證、ACL、Listeners、Connector、監控、備份）你都會知道該前往哪個選單，而不是第一次操作才開始找。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>EMQX gathers everything involved in running a broker into one admin interface: the Dashboard. If you try to guess the state of things from config files and logs alone, you lose a good half of your debugging loop — who is connected, whether a subscription actually took, whether messages are going out. The Dashboard answers all of that with a handful of cards.</p>
+      <p>The goal of this chapter is to build a map of that interface in your head first: what each sidebar module covers, where the key metrics sit on the Overview page, and where to check the version and the license. In every chapter after this one (authentication, ACL, Listeners, Connector, monitoring, backup) you will already know which menu to head for, instead of starting to look the first time you need it.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>EMQX Dashboard 是內建的管理主控台，預設以 HTTP 監聽連接埠 <strong>18083</strong>。在 Home Assistant 裡，你可以用 Ingress（左側欄 EMQX 圖示）直接開，也可以開 <code>http://&lt;主機&gt;:18083</code>。</p>
-      <p>有個概念值得先記：Dashboard 只是可視化操作層，<strong>你不用開啟它 EMQX 也照常收發訊息</strong>。它的作用是讓你在一個地方監控叢集、連線、訂閱、規則與安全設定，而不是 broker 的必要零件。</p>
-      <p>登入後進首頁「Cluster Overview」（叢集總覽），這是整個 Dashboard 的地基。它告訴你「目前有多少連線與訂閱、訊息進出速率、叢集裡有幾個節點」，是你在任何排錯之前最該先瞄一眼的地方。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>The EMQX Dashboard is the admin console built into EMQX, and by default it listens on HTTP port <strong>18083</strong>. In Home Assistant you can open it straight through Ingress (the EMQX icon in the left sidebar), or you can go to <code>http://&lt;主機&gt;:18083</code>.</p>
+      <p>One idea is worth fixing early: the Dashboard is only a visual layer over EMQX, and <strong>EMQX sends and receives messages as usual whether or not you open it</strong>. Its job is to let you monitor the cluster, connections, subscriptions, rules and security settings in one place; it is not a required part of the broker.</p>
+      <p>Signing in lands you on the home page, Cluster Overview, which is the foundation the rest of the Dashboard rests on. It tells you how many connections and subscriptions there are right now, the rate messages are flowing in and out, and how many nodes the cluster has — the first thing to glance at before any troubleshooting.</p>
     </section>
 
-    <section id="what" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="what" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Dashboard</td><td>管理面板</td><td>EMQX 網頁管理介面</td></tr>
-            <tr><td>Cluster Overview</td><td>叢集總覽</td><td>登入後的首頁，叢集級數據</td></tr>
-            <tr><td>Nodes</td><td>節點</td><td>叢集裡每一座 EMQX 實例</td></tr>
-            <tr><td>Metrics</td><td>指標</td><td>訊息量、事件、流量等統計資料</td></tr>
-            <tr><td>Monitoring</td><td>監控</td><td>瀏覽連線、訂閱、系統指標的模組</td></tr>
-            <tr><td>License</td><td>授權</td><td>確認授權狀態的頁面（僅 EMQX Enterprise）</td></tr>
+            <tr><td>Dashboard</td><td>web admin interface</td><td>The EMQX web admin interface</td></tr>
+            <tr><td>Cluster Overview</td><td>the cluster at a glance</td><td>The page you land on after signing in, with cluster-level figures</td></tr>
+            <tr><td>Nodes</td><td>the individual servers</td><td>Every EMQX instance in the cluster</td></tr>
+            <tr><td>Metrics</td><td>counters and statistics</td><td>Statistics such as message volume, events and throughput</td></tr>
+            <tr><td>Monitoring</td><td>watching the system</td><td>The module for browsing connections, subscriptions and system metrics</td></tr>
+            <tr><td>License</td><td>your license</td><td>The page that confirms license status (EMQX Enterprise only)</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>從 Home Assistant 開</h3><p>Home Assistant 左側找 <strong>EMQX</strong> 圖示（Ingress 入口），點下就會開 Dashboard。</p></li>
-        <li><h3>或直接打 18083</h3><p>瀏覽器開 <code>http://&lt;主機位址&gt;:18083</code>。兩種進法都是同一座 Dashboard。</p></li>
-        <li><h3>登入並先改密碼</h3><p>以 <code>admin</code>／<code>public</code> 首次登入，依系統指示改成自己的密碼（見第 2 章）。</p></li>
-        <li><h3>把側欄走一遍</h3><p>沿左欄從 Monitoring、Access Control、Integration，一路看過 System，把每個模組的「用途一句話」記下來。回到 <strong>Monitoring → Cluster Overview</strong> 再看一次整体。</p></li>
+        <li><h3>Open it from Home Assistant</h3><p>In Home Assistant's left sidebar, find the <strong>EMQX</strong> icon (the Ingress entry point) and click it to open the Dashboard.</p></li>
+        <li><h3>Or go straight to 18083</h3><p>Open <code>http://&lt;主機位址&gt;:18083</code> in your browser. Both routes reach the same Dashboard.</p></li>
+        <li><h3>Sign in, and change the password first</h3><p>For the first login use <code>admin</code>/<code>public</code>, then follow the prompt to change it to a password of your own (see Chapter 2).</p></li>
+        <li><h3>Walk the sidebar end to end</h3><p>Go down the left column from Monitoring, Access Control and Integration all the way through System, and write down one line on what each module is for. Then go back to <strong>Monitoring → Cluster Overview</strong> and take in the whole picture again.</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="Overview 總覽">
-      <h2 data-icon="plan">Overview 總覽在看什麼</h2>
-      <p>Dashboard 首頁是 <strong>Cluster Overview</strong>，上半部左右兩張卡是核心指標：</p>
+    <section id="topic1" data-nav="Overview page">
+      <h2 data-icon="plan">What the Overview page shows you</h2>
+      <p>The Dashboard home page is <strong>Cluster Overview</strong>, and the two cards across the top half, left and right, are the core metrics:</p>
       <ul>
-        <li><strong>Message Rate（訊息速率）</strong>：系統每秒進出的訊息量，左上角卡片即時呈現。</li>
-        <li><strong>Connections／Subscriptions／Topics</strong>：目前連線數、訂閱總數、唯一主題數；連線一有變化就即時更新。</li>
+        <li><strong>Message Rate</strong>: how many messages the system takes in and sends out per second, shown live on the card in the top left.</li>
+        <li><strong>Connections/Subscriptions/Topics</strong>: the current connection count, the total number of subscriptions and the number of unique topics; they update the moment a connection changes.</li>
       </ul>
-      <p>下方是時間序列圖表，可選「過去 1 小時、6 小時、12 小時、1 天、3 天、7 天」來觀察連線數與訊息量走勢。圖太多訊息時，可以用「Reset Monitoring Data」把前面資料清掉，重新累積。</p>
-      <p>切到 <strong>Nodes</strong> 分頁，你能看整個叢集每個節點：名稱、狀態、持續運行時間、連線數、<strong>版本</strong>、Erlang 處理程序數、記憶體與 CPU 用量。節點畫成灰色表示它已停止。點節點名稱可再進「節點細節」看 system paths、log 路徑與更細統計。</p>
-      <p>要找<strong>目前運作的 EMQX 版本</strong>（本書目標是 5.8.9），最直接的地方就是 Nodes 分頁的版本欄。</p>
+      <p>Below that is a time-series chart, where you can pick the past 1 hour, 6 hours, 12 hours, 1 day, 3 days or 7 days to watch how connection counts and message volume trend. When the chart carries too much, use Reset Monitoring Data to clear what came before and start accumulating again.</p>
+      <p>Switch to the <strong>Nodes</strong> tab and you can see every node in the cluster: name, status, uptime, connection count, <strong>version</strong>, Erlang process count, and memory and CPU usage. A node drawn in gray has stopped. Click a node name to open the node detail view, with system paths, log paths and finer statistics.</p>
+      <p>To find <strong>the EMQX version you are running</strong> (this guide targets 5.8.9), the most direct place is the version column on the Nodes tab.</p>
     </section>
 
-    <section id="topic2" data-nav="側欄模組與語言／授權">
-      <h2 data-icon="tabs">側欄模組與語言／授權</h2>
-      <p>Dashboard 左側選單大致分成下面幾組：</p>
+    <section id="topic2" data-nav="Sidebar modules">
+      <h2 data-icon="tabs">Sidebar modules, language and license</h2>
+      <p>The Dashboard's left-hand menu breaks down roughly into these groups:</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>側欄群組</th><th>你的主用途</th></tr>
+            <tr><th>Sidebar group</th><th>What you'll use it for</th></tr>
           </thead>
           <tbody>
-            <tr><td>Monitoring</td><td>看叢集總覽、連線、訂閱、retained 訊息</td></tr>
-            <tr><td>Access Control</td><td>Authentication 與 Authorization（驗證與授權）</td></tr>
-            <tr><td>Integration</td><td>Rule Engine 與資料整合（Connectors、Actions、Sources、Sinks）</td></tr>
-            <tr><td>Management</td><td>Cluster Settings、Advanced MQTT、Extensions</td></tr>
-            <tr><td>Diagnose</td><td>WebSocket 測試、slow subscriptions、topic metrics</td></tr>
-            <tr><td>System</td><td>使用者、API key、audit log；License 與 SSO（單一登入）屬 Enterprise 專有</td></tr>
+            <tr><td>Monitoring</td><td>Reading Cluster Overview, connections, subscriptions and retained messages</td></tr>
+            <tr><td>Access Control</td><td>Authentication and Authorization</td></tr>
+            <tr><td>Integration</td><td>Rule Engine and Data Integration (Connectors, Actions, Sources, Sinks)</td></tr>
+            <tr><td>Management</td><td>Cluster Settings, Advanced MQTT, Extensions</td></tr>
+            <tr><td>Diagnose</td><td>WebSocket testing, slow subscriptions, topic metrics</td></tr>
+            <tr><td>System</td><td>Users, API keys, audit log; License and SSO (single sign-on) are Enterprise only</td></tr>
           </tbody>
         </table>
       </div>
-      <p>要看 <strong>License（授權）</strong>與<strong>SSO（單一登入）</strong>，須使用 EMQX Enterprise——Open Source 5.8.9 的 System 區塊沒有這兩個頁面；要看 <strong>版本</strong>，用 Nodes 分頁的版本欄即可。Dashboard 的<strong>語言</strong>通常在右上角使用者選單或偏好設定切換，把它改成你舒服的語言即可。</p>
-      <p>一個實用的歸納法：驗證與權限在 <strong>Access Control</strong>；把資料搬出去、寫規則，在 <strong>Integration</strong>；日常檢查先在 <strong>Monitoring</strong>。記住這三個落點，後續章節的選單路徑你就不容易迷路。</p>
+      <p>To see <strong>License</strong> and <strong>SSO (single sign-on)</strong> you need EMQX Enterprise — the System group in Open Source 5.8.9 does not have those two pages. For the <strong>version</strong>, the version column on the Nodes tab is all you need. The Dashboard's <strong>language</strong> is usually switched from the user menu in the top right or from preferences; set it to whichever language you are comfortable in.</p>
+      <p>A useful rule of thumb: authentication and permissions live under <strong>Access Control</strong>; moving data out and writing rules happen under <strong>Integration</strong>; day-to-day checks start under <strong>Monitoring</strong>. Hold on to those three landing points and the menu paths in later chapters are hard to get lost in.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>登入後 Dashboard 進不去</strong>：確認走的是 Ingress 還是 18083；若主機在其他網段，改打 <code>http://&lt;主機位址&gt;:18083</code>。</li>
-        <li><strong>找不到「版本」</strong>：進 <strong>Monitoring → Nodes</strong>，節點名稱旁的 version 欄就是目前運行的版本（預期 5.8.9）。</li>
-        <li><strong>某個側欄沒有出現</strong>：進階功能（例如 Delayed Publish、Alarms）在 Open Source 版預設不顯示，是正常的，不代表壞掉。</li>
-        <li><strong>首頁數字似乎沒更新</strong>：Overview 的圖有時間範圍可選；要重新累積可用「Reset Monitoring Data」。</li>
+        <li><strong>You sign in but the Dashboard will not open</strong>: check whether you are going through Ingress or through 18083; if the host is on another subnet, use <code>http://&lt;主機位址&gt;:18083</code> instead.</li>
+        <li><strong>You cannot find the version</strong>: go to <strong>Monitoring → Nodes</strong>; the version column beside the node name is the version now running (expect 5.8.9).</li>
+        <li><strong>A sidebar entry is missing</strong>: advanced features such as Delayed Publish and Alarms are not shown by default in the Open Source edition. That is normal, not a fault.</li>
+        <li><strong>The numbers on the home page look stuck</strong>: the Overview chart has a time range you can pick; to start accumulating again, use Reset Monitoring Data.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Dashboard 一定要啟動嗎</summary>
-        <div class="body"><p>不必。EMQX 即使不開 Dashboard 也照常收發 MQTT 訊息，Dashboard 只是管理介面。是以圖方式操作、監看與除錯的便利層。</p></div>
+        <summary>Does the Dashboard have to be running?</summary>
+        <div class="body"><p>No. EMQX sends and receives MQTT messages as usual even with the Dashboard closed; the Dashboard is only an admin interface. It is the convenience layer for working, watching and debugging visually.</p></div>
       </details>
       <details class="faq">
-        <summary>語言在哪切換</summary>
-        <div class="body"><p>通常在右上角使用者選單或偏好設定裡。換語言不會影響 broker 的行為，純粹是操作方便。</p></div>
+        <summary>Where do I switch the language?</summary>
+        <div class="body"><p>Usually in the user menu in the top right, or in preferences. Changing the language does not affect how the broker behaves; it is purely a matter of convenience.</p></div>
       </details>
       <details class="faq">
-        <summary>Overview 裡的「節點」是什麼</summary>
-        <div class="body"><p>每個 EMQX 實例就是一節點。你家用 add-on 通常一個節點；叢集才是多節點。Nodes 分頁能看每個節點的狀態、版本與系統資源。</p></div>
+        <summary>What is a node on the Overview page?</summary>
+        <div class="body"><p>Every EMQX instance is one node. A home add-on install usually runs a single node; several nodes only come with a cluster. The Nodes tab shows the status, version and system resources of each node.</p></div>
       </details>
       <details class="faq">
-        <summary>為什麼有些功能在側欄看不到</summary>
-        <div class="body"><p>進階資料整合與安全功能多屬 EMQX Enterprise（付費版）。Open Source 5.8.9 不顯示這些項目，不是設定出錯。</p></div>
+        <summary>Why are some features missing from the sidebar?</summary>
+        <div class="body"><p>Most advanced data integration and security features belong to EMQX Enterprise (the paid edition). Open Source 5.8.9 does not show those entries, and that is not a configuration error.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/introduction.md">EMQX 5.8 Dashboard Introduction（側欄模組、首登、18083）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 首頁（Cluster Overview／Nodes／Metrics）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md">EMQX 5.8 Monitoring 總覽</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（Dashboard 進入方式）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/introduction.md">EMQX 5.8 Dashboard Introduction (sidebar modules, first login, 18083)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard home page (Cluster Overview/Nodes/Metrics)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md">EMQX 5.8 Monitoring overview</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (how to open the Dashboard)</a></li>
       </ul>
     </section>
 

@@ -70,15 +70,15 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#what">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#topic1">EMQX 對照 Mosquitto</a>
-      <a href="#topic2">5.x 架構與叢集</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#what">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#topic1">vs Mosquitto</a>
+      <a href="#topic2">Architecture</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -86,119 +86,119 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch1_overview.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 1</div>
-      <h1>認識 EMQX 與 MQTT Broker</h1>
-      <p class="lead">認識 EMQX 這套開源 MQTT Broker：與 Home Assistant 內建 Mosquitto 的差異、EMQX 5.x 架構與 Dashboard 總覽、叢集概念，以及 Woow EMQX add-on 的定位與能力邊界。</p>
+      <h1>Getting to know EMQX and the MQTT Broker</h1>
+      <p class="lead">Get to know EMQX, the open source MQTT broker: how it differs from the Mosquitto built into Home Assistant, the EMQX 5.x architecture and a Dashboard overview, the idea of a cluster, and where the Woow EMQX add-on sits and what it can and cannot do.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>Home Assistant 內建的 <strong>Mosquitto</strong> 是不少人的第一個 MQTT broker，但它只有陽春的設定檔與零散的連線紀錄。把數十個感應器、開關、遙測全部塞進去之後，你會開始需要一個能一眼看出「誰在線上、誰在訂閱、訊息有沒有送出去」的管理介面——這就是 <strong>EMQX</strong> 的用武之地。</p>
-      <p>這章先幫你把 MQTT 的 broker 模型講清楚：<strong>publisher（發布者）</strong>、<strong>subscriber（訂閱者）</strong>與 <strong>topic（主題）</strong>之間為什麼不需要互相認識，broker 在其中扮演什麼角色，以及 EMQX 在這些角色之外多給了哪些現代 broker 該有的東西。之後第 2、3、4 章分別帶你安裝、認識 Dashboard、建立 MQTT 心智模型。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>The <strong>Mosquitto</strong> built into Home Assistant is many people's first MQTT broker, but all it gives you is a bare-bones config file and scattered connection records. Once you have pushed dozens of sensors, switches and telemetry feeds through it, you start to want an admin interface that shows you at a glance who is online, who is subscribed, and whether messages are actually going out — and that is where <strong>EMQX</strong> earns its place.</p>
+      <p>This chapter starts with the MQTT broker model: why a <strong>publisher</strong>, a <strong>subscriber</strong> and a <strong>topic</strong> never need to know about one another, what part the broker plays between them, and what EMQX adds on top of those roles that a modern broker is expected to have. Chapters 2, 3 and 4 then take you through the install, the Dashboard, and building a mental model of MQTT.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>MQTT（Message Queuing Telemetry Transport）是物聯網最常用的輕量訊息協定。它不走「客戶端直接找伺服器求資料」的路線，而是用<strong>發布／訂閱（publish/subscribe）</strong>模式：發布者把訊息依<strong>topic（主題）</strong>分類送出，訂閱者只訂閱我有興趣的主題；扮演 broker 的伺服器負責路由與過濾所有進來的訊息，再送給所有對該主題有興趣的訂閱者。</p>
-      <p>這三者的關係是關鍵：發布者與訂閱者完全脫鉤（decoupled），彼此不需要知道對方存在，唯一的共同依據是大家事前約定好的 topic。想新增一個感測器就多一個發布者，想多螢幕就多訂閱者，都不需要改動其他端點。EMQX 支援 MQTT 3.1、3.1.1 與 5.0，能讓 web 瀏覽器直接用 WebSocket 發 MQTT 訊息，這是 Mosquitto 預設沒有的能力。</p>
-      <p>EMQX 的設計目標就是高並發與高可用。它以 Erlang/OTP 平台為基礎、用全非同步架構、把連線、session、路由與叢集分層設計，並把「訊息收送」與「管理面板」分開，所以單一節點可撐起數百萬等級的連線，也能以多節點組成叢集向外擴展。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>MQTT (Message Queuing Telemetry Transport) is the lightweight messaging protocol most used in the Internet of Things. Instead of a client asking a server for data directly, it uses the <strong>publish/subscribe</strong> model: a publisher sends messages out sorted by <strong>topic</strong>, and a subscriber subscribes only to the topics it cares about; the server acting as the broker routes and filters every incoming message, then delivers it to every subscriber interested in that topic.</p>
+      <p>The relationship between the three is the point: publishers and subscribers are fully decoupled, neither needs to know the other exists, and the only thing they share is a topic agreed in advance. Add a sensor and you add a publisher; add a screen and you add a subscriber; no other endpoint has to change. EMQX supports MQTT 3.1, 3.1.1 and 5.0, and lets a web browser publish MQTT messages directly over WebSocket, which Mosquitto does not do by default.</p>
+      <p>EMQX is designed for high concurrency and high availability. It is built on the Erlang/OTP platform, uses a fully asynchronous architecture, and layers connections, sessions, routing and clustering separately, keeping message delivery apart from the Dashboard. That is why a single node can carry connections in the millions, and why several nodes can be joined into a cluster to scale out.</p>
     </section>
 
-    <section id="what" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="what" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>MQTT Broker</td><td>MQTT 代理伺服器</td><td>路由你與裝置之間所有訊息的伺服器</td></tr>
-            <tr><td>Publisher</td><td>發布者</td><td>把訊息發到某個 topic 的端點</td></tr>
-            <tr><td>Subscriber</td><td>訂閱者</td><td>宣告想收到哪些 topic 訊息的端點</td></tr>
-            <tr><td>Topic</td><td>主題</td><td>訊息被分類的階層名稱，例如 <code>客廳/溫度</code></td></tr>
-            <tr><td>Cluster</td><td>叢集</td><td>多個節點協同提供單一 broker 服務</td></tr>
-            <tr><td>Dashboard</td><td>管理面板</td><td>EMQX 內建的網頁管理介面</td></tr>
+            <tr><td>MQTT Broker</td><td>message broker</td><td>The server that routes every message between you and your devices</td></tr>
+            <tr><td>Publisher</td><td>the sender</td><td>An endpoint that publishes messages to a topic</td></tr>
+            <tr><td>Subscriber</td><td>the receiver</td><td>An endpoint that declares which topics it wants messages from</td></tr>
+            <tr><td>Topic</td><td>message label</td><td>The hierarchical name a message is filed under, for example <code>客廳/溫度</code></td></tr>
+            <tr><td>Cluster</td><td>a group of nodes</td><td>Several nodes working together to provide one broker service</td></tr>
+            <tr><td>Dashboard</td><td>web admin interface</td><td>The web admin interface built into EMQX</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>先看 add-on 有沒有在線</h3><p>在 Home Assistant 左側按 <strong>設定 → 附加元件</strong>，找到 <strong>Woow EMQX</strong>；如果已經安裝，你會看到它運作中的狀態。</p></li>
-        <li><h3>開啟 Web UI</h3><p>點該 add-on 的 <strong>開啟 Web UI</strong>，讓瀏覽器開 EMQX Dashboard。若還沒進不去，先回到第 2 章完成安裝與啟動。</p></li>
-        <li><h3>用預設帳號看一遍</h3><p>首次登入用使用者名稱 <code>admin</code>、密碼 <code>public</code>。系統會要求你改成自己的密碼，改完後再看主介面。</p></li>
-        <li><h3>找到「版本」在哪</h3><p>在 Dashboard 找得到版本與授權資訊在哪個頁面，之後第 3 章會帶著你逐一走一遍側欄模組。</p></li>
+        <li><h3>Check whether the add-on is running</h3><p>In Home Assistant's left sidebar, go to <strong>Settings → Add-ons</strong> and find <strong>Woow EMQX</strong>. If it is already installed, you will see it reported as running.</p></li>
+        <li><h3>Open the Web UI</h3><p>Click <strong>Open Web UI</strong> on the add-on to open the EMQX Dashboard in your browser. If you cannot get in yet, go back to Chapter 2 and finish the install and start it.</p></li>
+        <li><h3>Sign in with the default account and look around</h3><p>For the first login, use the username <code>admin</code> and the password <code>public</code>. You will be asked to change it to a password of your own; do that, then look over the main interface.</p></li>
+        <li><h3>Find where the version is shown</h3><p>Locate the page in the Dashboard that shows the version and license information. Chapter 3 then walks you through the sidebar modules one by one.</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="EMQX 對照 Mosquitto">
-      <h2 data-icon="compare">EMQX 對照 Mosquitto</h2>
-      <p>如果你是從 Home Assistant 內建的 Mosquitto 換過來，直覺就會想知道「差在哪」。Woow EMQX add-on 的 README 就有一張現成的比較表，重點如下。</p>
+    <section id="topic1" data-nav="vs Mosquitto">
+      <h2 data-icon="compare">EMQX compared with Mosquitto</h2>
+      <p>If you are moving over from the Mosquitto built into Home Assistant, the first thing you will want to know is what actually differs. The Woow EMQX add-on README already carries a comparison table; here are the main points.</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>能力</th><th>Mosquitto</th><th>EMQX</th></tr>
+            <tr><th>Capability</th><th>Mosquitto</th><th>EMQX</th></tr>
           </thead>
           <tbody>
-            <tr><td>圖形化管理介面</td><td>無，靠設定檔</td><td>有 Dashboard（Web UI）</td></tr>
-            <tr><td>用戶端管理</td><td>無</td><td>即時監控</td></tr>
-            <tr><td>規則引擎</td><td>無</td><td>有資料整合（Data Integration）</td></tr>
-            <tr><td>WebSocket 支援</td><td>需額外設定</td><td>內建</td></tr>
-            <tr><td>ACL 管理</td><td>檔案設定</td><td>Web UI 管理</td></tr>
-            <tr><td>叢集支援</td><td>無</td><td>支援</td></tr>
-            <tr><td>資源使用</td><td>極低</td><td>中等</td></tr>
-            <tr><td>最大連線數</td><td>數千</td><td>數百萬</td></tr>
+            <tr><td>Graphical admin interface</td><td>None, config file only</td><td>Dashboard (Web UI)</td></tr>
+            <tr><td>Client management</td><td>None</td><td>Real-time monitoring</td></tr>
+            <tr><td>Rule engine</td><td>None</td><td>Data Integration</td></tr>
+            <tr><td>WebSocket support</td><td>Needs extra configuration</td><td>Built in</td></tr>
+            <tr><td>ACL management</td><td>Set in a file</td><td>Managed in the Web UI</td></tr>
+            <tr><td>Clustering</td><td>None</td><td>Supported</td></tr>
+            <tr><td>Resource use</td><td>Very low</td><td>Moderate</td></tr>
+            <tr><td>Maximum connections</td><td>Thousands</td><td>Millions</td></tr>
           </tbody>
         </table>
       </div>
-      <p>結論不是你必須立刻換掉 Mosquitto：若主機吃緊、只需要純 broker，Mosquitto 仍很輕。但如果你想要視覺化管理、訂閱診斷、WebSocket 測試工具、規則引擎與日後擴展，<strong>EMQX</strong> 的中等資源換來的是顯著更多好用的功能。</p>
+      <p>The conclusion is not that you have to replace Mosquitto today: if your host is tight on resources and all you need is a plain broker, Mosquitto is still very light. But if you want visual management, subscription diagnostics, a WebSocket test client, the Rule Engine and room to grow later, the moderate resource use of <strong>EMQX</strong> buys you noticeably more to work with.</p>
     </section>
 
-    <section id="topic2" data-nav="5.x 架構與叢集">
-      <h2 data-icon="network">EMQX 5.x 架構與叢集</h2>
-      <p>EMQX 5.x 把「控制面板（Dashboard）」與「訊息處理」分層：Dashboard 只是提供視覺化操作，即使不開 Dashboard，EMQX 照常收發訊息。真正處理訊息的引擎是由 Erlang/OTP 組成的框架，以連線、session、route 與 cluster 四個層次設計，格局清晰、也容易向外擴展。</p>
-      <p><strong>叢集（cluster）</strong>是 EMQX 實作高可用的主力：多個 EMQX 節點組成單一 broker 服務，其中的某個節點故障時，MQTT 服務不會中斷；節點數量提高，整體吞吐量也會跟著被拉高。你所在的 add-on 預設是一個節點就夠用，但理解叢集的目的，是為了佈局「未來裝置變多時要往哪邊擴張」的心智模型。</p>
-      <p>以你的實際設定而言，Woow EMQX add-on 內建的 <strong>EMQX 版本是 5.8.9（Open Source）</strong>，add-on 本身版本為 <code>5.9.0</code>——這個 5.9.0 只多了 ngrok 通道這項功能，底層 broker 仍是 5.8.9。接下來的教學都鎖定 5.8.9 的事實與選單路徑。</p>
+    <section id="topic2" data-nav="Architecture">
+      <h2 data-icon="network">EMQX 5.x architecture and clustering</h2>
+      <p>EMQX 5.x separates the Dashboard from message processing: the Dashboard only gives you a visual way to work, and EMQX keeps sending and receiving messages whether or not the Dashboard is open. The engine that actually handles messages is a framework built on Erlang/OTP, designed in four layers — connection, session, route and cluster — which keeps the structure clear and makes it straightforward to scale out.</p>
+      <p>A <strong>cluster</strong> is how EMQX delivers high availability: several EMQX nodes make up a single broker service, so when one of them fails the MQTT service does not stop, and adding nodes raises the overall throughput. The add-on you are running defaults to a single node, which is enough, but understanding what a cluster is for gives you the mental model for where to expand once you have more devices.</p>
+      <p>In your actual setup, the <strong>EMQX version bundled with the Woow EMQX add-on is 5.8.9 (Open Source)</strong>, while the add-on's own version is <code>5.9.0</code> — that 5.9.0 only adds the ngrok tunnel, and the underlying broker is still 5.8.9. Everything that follows is written against the facts and menu paths of 5.8.9.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>還不清楚 broker 做什麼？</strong>：把 broker 想成「郵局／路由器」，publisher 寫好信封（topic）丟進去，broker 只把信送到有訂閱該信封的收件者。訂閱者不認識發信者，發信者也不認識訂閱者。</li>
-        <li><strong>找不到 EMQX 在哪？</strong>：先確認 add-on 有安裝且已啟動；若是要獨立開 Dashboard，第 2、3 章會帶你使用連接埠 18083 與 Ingress。</li>
-        <li><strong>Mosquitto 與 EMQX 能並存嗎？</strong>：兩者都用 1883 埠，不能同時啟動。詳細的處理方法在第 2、8 章的連接埠衝突段落。</li>
-        <li><strong>Dashboard 進不去？</strong>：先看 add-on Log 有無錯誤，再確認 18083 沒有被其他服務佔用；隧道與 Ingress 設定細節在後續章節。</li>
+        <li><strong>Still not sure what a broker does?</strong>: Think of the broker as a post office or a router. The publisher writes the envelope (the topic) and drops the letter in, and the broker delivers it only to the recipients who subscribed to that envelope. Subscribers do not know the senders, and senders do not know the subscribers.</li>
+        <li><strong>Cannot find EMQX?</strong>: First check that the add-on is installed and started. If you want to open the Dashboard on its own, Chapters 2 and 3 walk you through port 18083 and Ingress.</li>
+        <li><strong>Can Mosquitto and EMQX run side by side?</strong>: Both use port 1883, so they cannot both be started. Chapters 2 and 8 cover how to handle that in their port conflict sections.</li>
+        <li><strong>Dashboard will not open?</strong>: Check the add-on log for errors first, then make sure nothing else is holding port 18083. Tunnel and Ingress settings are covered in later chapters.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>EMQX 是免費的嗎</summary>
-        <div class="body"><p>EMQX Open Source 是開源免費版本，可自建自託管。EMQX Enterprise 是付費的自行客戶/自行部署軟體（一樣自建，但含進階資料整合與進階安全功能）；EMQX Cloud 則是 EMQX 另提供的、由官方代管的雲端服務，是自己的雲端 product，與 Enterprise 是不同的分銷管道。本書講的是 Open Source 的 5.8.9。</p></div>
+        <summary>Is EMQX free?</summary>
+        <div class="body"><p>EMQX Open Source is the open source and free edition, and you can build and host it yourself. EMQX Enterprise is paid software that you also deploy yourself (self-hosted in the same way, but with advanced data integration and advanced security features). EMQX Cloud is a separate cloud service that EMQX hosts for you, its own cloud product and a different distribution channel from Enterprise. This guide covers Open Source 5.8.9.</p></div>
       </details>
       <details class="faq">
-        <summary>為什麼不直接用 Home Assistant 的 Mosquitto 就好</summary>
-        <div class="body"><p>Mosquitto 輕量、貼著 Home Assistant 開箱。但長期要管理多裝置、看連線、寫規則、除錯時，EMQX 的 Dashboard、WebSocket、訂閱診斷與資料整合會省下你大量時間。資源允許的話，EMQX 是更進階的選擇。</p></div>
+        <summary>Why not just use Home Assistant's Mosquitto?</summary>
+        <div class="body"><p>Mosquitto is light and sits right next to Home Assistant out of the box. But over the long run, when you are managing many devices, watching connections, writing rules and debugging, the EMQX Dashboard, WebSocket, subscription diagnostics and Data Integration save you a great deal of time. If you have the resources for it, EMQX is the more capable choice.</p></div>
       </details>
       <details class="faq">
-        <summary>add-on 版本 5.9.0 跟 EMQX 5.8.9 是什麼關係</summary>
-        <div class="body"><p>add-on 的 5.9.0 是 Woow 修的套件版本，只有在裡面加 ngrok TCP 通道；你真正在跑的 MQTT broker 仍是 EMQX 5.8.9。本書的內容、選單與預設值都對齊 5.8.9。</p></div>
+        <summary>How does add-on version 5.9.0 relate to EMQX 5.8.9?</summary>
+        <div class="body"><p>The add-on's 5.9.0 is the package version Woow maintains, and the only thing it adds is an ngrok TCP tunnel. The MQTT broker you are actually running is still EMQX 5.8.9. The text, menus and default values in this guide all match 5.8.9.</p></div>
       </details>
       <details class="faq">
-        <summary>「叢集」要不要現在就裝二台</summary>
-        <div class="body"><p>不需要。你只要先懂「叢集 = 多節點共享一個 broker、單點故障不中斷」這個概念就好。家用單節點完全足夠；叢集可以等裝置多了，真的有吞吐量或備援需求再規劃。</p></div>
+        <summary>Do I need to set up two machines for a cluster right now?</summary>
+        <div class="body"><p>No. For now it is enough to understand the idea: a cluster means several nodes sharing one broker, so a single node failing does not interrupt the service. A single node at home is entirely sufficient. Plan a cluster later, once you have more devices and a real throughput or redundancy requirement.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit，含與 Mosquitto 比較）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/concept.md">EMQX 5.8 Concept FAQ（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (pinned commit, includes the Mosquitto comparison)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/concept.md">EMQX 5.8 Concept FAQ (pinned docs branch)</a></li>
         <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/feature.md">EMQX 5.8 Feature FAQ</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/feature-comparison.md">EMQX 5.8 Feature Comparison（含叢集規格）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/feature-comparison.md">EMQX 5.8 Feature Comparison (includes cluster specs)</a></li>
       </ul>
     </section>
 

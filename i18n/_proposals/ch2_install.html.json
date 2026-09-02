@@ -1,0 +1,25 @@
+{
+  "file": "ch2_install.html",
+  "entries": [
+    {
+      "unit": "#concept",
+      "zh": "<code>http://&lt;主機&gt;:18083</code>",
+      "en": "<code>http://&lt;host&gt;:18083</code>"
+    },
+    {
+      "unit": "#steps",
+      "zh": "<code>&lt;你的新密碼&gt;</code>",
+      "en": "<code>&lt;your-new-password&gt;</code>"
+    },
+    {
+      "unit": "#topic2",
+      "zh": "<code>emqx ctl admins passwd &lt;帳號&gt; &lt;新密碼&gt;</code>",
+      "en": "<code>emqx ctl admins passwd &lt;username&gt; &lt;new-password&gt;</code>"
+    },
+    {
+      "unit": "#troubleshoot",
+      "zh": "<code>http://&lt;Home Assistant 位址&gt;:18083</code>",
+      "en": "<code>http://&lt;home-assistant-host&gt;:18083</code>"
+    }
+  ]
+}
