@@ -1,0 +1,20 @@
+{
+  "file": "ch12_sources_bridge.html",
+  "entries": [
+    {
+      "unit": "#source_mqtt",
+      "zh": "<code>$share/群組名/topic</code>",
+      "en": "<code>$share/&lt;group&gt;/topic</code>"
+    },
+    {
+      "unit": "#troubleshoot",
+      "zh": "<code>$share/群組/topic</code>",
+      "en": "<code>$share/&lt;group&gt;/topic</code>"
+    },
+    {
+      "unit": "#troubleshoot",
+      "zh": "<code>$bridges/mqtt:&lt;名稱&gt;</code>",
+      "en": "<code>$bridges/mqtt:&lt;name&gt;</code>"
+    }
+  ]
+}

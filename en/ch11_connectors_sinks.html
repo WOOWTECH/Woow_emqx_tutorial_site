@@ -70,15 +70,15 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#targets">連線目標</a>
-      <a href="#webhook">實作 HTTP</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#targets">Connector targets</a>
+      <a href="#webhook">HTTP hands-on</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -86,124 +86,124 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch11_connectors_sinks.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 11</div>
-      <h1>Connectors 與 Sinks</h1>
-      <p class="lead">Connector 是 EMQX 連到外部系統的底層通道，Sink 則把規則輸出的資料外送到 Webhook、HTTP、Kafka、PostgreSQL／MySQL 等目標；這章以 Webhook／HTTP 為主實作。</p>
+      <h1>Connectors and Sinks</h1>
+      <p class="lead">A Connector is the low-level channel EMQX uses to reach an external system, and a Sink pushes the data a rule produces out to targets such as Webhook, HTTP, Kafka and PostgreSQL/MySQL; this chapter works mainly with Webhook/HTTP.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>規則引擎把資料轉好之後，「要怎麼送出去」是另一個難題。家裡的感測器事件若想送進手機通知、簡訊閘道、雲端 API 或關聯式資料庫，你得先建立一條 EMQX 通往外部系統的<strong>連線通道</strong>。</p>
-      <p>EMQX 5.x 把這過程拆成 <strong>Connector（連線）</strong>與 <strong>Sink（輸出）</strong>：Connector 只建一次可被多個 Sink／Source 共用；Sink 把規則輸出的資料實際送到外部目標。Webhook／HTTP 是最容易先在智慧家庭裡試的起點。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>Once the Rule Engine has shaped the data, getting it out again is a separate problem. To push a sensor event at home into a phone notification, an SMS gateway, a cloud API or a relational database, you first have to build a <strong>connection channel</strong> from EMQX to that external system.</p>
+      <p>EMQX 5.x splits that job into a <strong>Connector (the connection)</strong> and a <strong>Sink (the output)</strong>: you create a Connector once and several Sinks and Sources can share it, and the Sink is what actually delivers a rule's output to the external target. Webhook/HTTP is the easiest starting point to try in a smart home.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p><strong>Connector（連線器）</strong>是 EMQX 對外部資料系統的底層連線通道，只負責「怎麼連」，不負責「處理哪筆資料」。建立 Sink／Source 時可以選用已有的 Connector，或在建立過程中順手生出一個。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p><strong>A Connector</strong> is the low-level connection channel from EMQX to an external data system. It is responsible only for how to connect, never for which data gets processed. When you create a Sink or a Source you can pick a Connector that already exists, or create one on the spot.</p>
       <ul>
-        <li><strong>分離設定</strong>：連線資訊（伺服器位址、帳密）與資料設定（規則、topic 對應、payload 模板）分開，改連線不給影響規則。</li>
-        <li><strong>重用</strong>：要連多個 Sink／Source 的外部系統，只需一個 Connector。</li>
-        <li><strong>狀態可觀察</strong>：Dashboard 可看 Connector 連線狀態（Connecting、Connected、Disconnected、Inconsistent），有助排錯。</li>
+        <li><strong>Settings stay separate</strong>: connection details (server address, credentials) sit apart from data settings (rules, topic mapping, payload templates), so changing the connection does not affect the rules.</li>
+        <li><strong>Reuse</strong>: an external system that several Sinks and Sources talk to needs only one Connector.</li>
+        <li><strong>Observable state</strong>: the Dashboard shows each Connector's connection state (Connecting, Connected, Disconnected, Inconsistent), which helps when you troubleshoot.</li>
       </ul>
-      <p><strong>Sink（輸出端）</strong>決定「把規則輸出的資料送往哪個外部目標及格式」，例如 Webhook、HTTP Server、Kafka 或資料庫。它放在規則的「Action Outputs」裡，挑選一個 Connector並給出對應參數。</p>
+      <p><strong>A Sink</strong> decides which external target a rule's output goes to and in what format — Webhook, HTTP Server, Kafka or a database, for example. It sits in the rule's "Action Outputs", where you pick a Connector and fill in its parameters.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>Connector</td><td>連線器</td><td>對外系統的底層連線通道</td></tr>
-            <tr><td>Sink</td><td>輸出端</td><td>把 EMQX 資料寫出去的外部目標</td></tr>
-            <tr><td>Source</td><td>來源</td><td>從外部系統把資料收進 EMQX 的入口</td></tr>
-            <tr><td>Webhook</td><td>網路鉤子</td><td>以 HTTP 將訊息送出的外部目標</td></tr>
-            <tr><td>HTTP Server Integration</td><td>HTTP 資料離場</td><td>透過 Connector＋規則把資料送進 HTTP 服務</td></tr>
+            <tr><td>Connector</td><td>connection</td><td>The low-level connection channel to an external system</td></tr>
+            <tr><td>Sink</td><td>output target</td><td>The external target EMQX writes its data out to</td></tr>
+            <tr><td>Source</td><td>input source</td><td>The entry point that brings data from an external system into EMQX</td></tr>
+            <tr><td>Webhook</td><td>HTTP callback</td><td>An external target that receives messages over HTTP</td></tr>
+            <tr><td>HTTP Server Integration</td><td>data out over HTTP</td><td>Sends data into an HTTP service through a Connector plus a rule</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
-      <p>以官方教學的 HTTP Server Sink 為例，把 <code>t/#</code> 的 MQTT 訊息送到本機 Flask HTTP 服務。</p>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
+      <p>Following the official tutorial's HTTP Server Sink example, send the MQTT messages on <code>t/#</code> to a Flask HTTP service on the local machine.</p>
       <ol class="steps">
-        <li><h3>建立 HTTP Server Connector</h3><p>Dashboard 左側選 <strong>Integration → Connectors</strong>，按 <strong>Create</strong>，選 <strong>HTTP Server</strong> 連線器，取名 <code>my_httpserver</code>，URL 填 <code>http://localhost:5000</code>；可先按 <strong>Test Connectivity</strong> 測試。</p></li>
-        <li><h3>建立規則</h3><p>選 <strong>Integration → Rules → Create</strong>，SQL 輸入 <code>SELECT * FROM "t/#"</code>。</p></li>
-        <li><h3>新增 HTTP Sink 動作</h3><p>按 <strong>+ Add Action</strong>，Type 選 <strong>HTTP Server</strong>；Connector 下拉選 <code>my_httpserver</code>，Method 選 <strong>POST</strong>，填名稱說明。</p></li>
-        <li><h3>建立規則</h3><p>回到 Create Rule 頁確認 Sink 在 Action Outputs，按 <strong>Create</strong> 完成。</p></li>
-        <li><h3>用訊息觸發</h3><p>用 MQTTX 向 <code>t/1</code> 發布例如 <code>{"msg":"hello HTTP Server"}</code>，再到 Flask server 端看收到的 POST request。</p></li>
+        <li><h3>Create the HTTP Server Connector</h3><p>In the Dashboard sidebar go to <strong>Integration → Connectors</strong>, click <strong>Create</strong>, pick the <strong>HTTP Server</strong> connector, name it <code>my_httpserver</code> and set the URL to <code>http://localhost:5000</code>. You can click <strong>Test Connectivity</strong> first to check it.</p></li>
+        <li><h3>Create the rule</h3><p>Go to <strong>Integration → Rules → Create</strong> and enter <code>SELECT * FROM "t/#"</code> as the SQL.</p></li>
+        <li><h3>Add the HTTP Sink action</h3><p>Click <strong>+ Add Action</strong> and set Type to <strong>HTTP Server</strong>. Pick <code>my_httpserver</code> from the Connector dropdown, set Method to <strong>POST</strong>, and fill in the name and description.</p></li>
+        <li><h3>Create the rule</h3><p>Back on the Create Rule page, confirm the Sink is listed under Action Outputs and click <strong>Create</strong> to finish.</p></li>
+        <li><h3>Trigger it with a message</h3><p>Use MQTTX to publish to <code>t/1</code>, for example <code>{"msg":"hello HTTP Server"}</code>, then look at the Flask server for the POST request it received.</p></li>
       </ol>
     </section>
 
-    <section id="targets" data-nav="連線目標">
-      <h2 data-icon="network">Connector 的目標有哪些</h2>
-      <p>EMQX 5.8.9 提供多種外部目標做 Sink，但「開源版」能用的是有限的。官方在 Connector 文件標註：<strong>EMQX 開源版（Community）只支援 HTTP 與 MQTT 兩種 Connector</strong>；Kafka、PostgreSQL、MySQL、AWS、Azure 等目標屬 <strong>企業版（Enterprise）</strong>功能。</p>
+    <section id="targets" data-nav="Connector targets">
+      <h2 data-icon="network">What a connector can target</h2>
+      <p>EMQX 5.8.9 offers many external targets you can use as a Sink, but the Open Source edition can reach only a few of them. The official Connector documentation states that <strong>EMQX Open Source supports only two connectors, HTTP and MQTT</strong>; Kafka, PostgreSQL, MySQL, AWS and Azure targets are <strong>Enterprise edition</strong> features.</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>目標</th><th>適合</th><th>版本</th></tr>
+            <tr><th>Target</th><th>Best for</th><th>Edition</th></tr>
           </thead>
           <tbody>
-            <tr><td>Webhook</td><td>不需規則處理、直接把 MQTT 資料送給 HTTP 服務</td><td>開源版可用</td></tr>
-            <tr><td>HTTP Server</td><td>先用規則過濾／加工再送 HTTP 外送</td><td>開源版可用</td></tr>
-            <tr><td>MQTT Broker</td><td>跨 broker 橋接（第 12 章）</td><td>開源版可用</td></tr>
-            <tr><td>Kafka</td><td>把事件流送進 Kafka 訊息佇列</td><td>企業版</td></tr>
-            <tr><td>PostgreSQL／MySQL</td><td>把裝置資料直接寫進關聯式資料庫</td><td>企業版</td></tr>
+            <tr><td>Webhook</td><td>Sending MQTT data straight to an HTTP service, with no rule processing</td><td>Open Source</td></tr>
+            <tr><td>HTTP Server</td><td>Filtering or reshaping with a rule before sending it out over HTTP</td><td>Open Source</td></tr>
+            <tr><td>MQTT Broker</td><td>Bridging across brokers (Chapter 12)</td><td>Open Source</td></tr>
+            <tr><td>Kafka</td><td>Pushing an event stream into a Kafka message queue</td><td>Enterprise</td></tr>
+            <tr><td>PostgreSQL/MySQL</td><td>Writing device data straight into a relational database</td><td>Enterprise</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Webhook 與 HTTP Server 的差別，主要是要不要先用規則（SQL）處理資料：Webhook 較簡單、不需 SQL；HTTP Server 則能把規則輸出再動態組出 request header、body 甚至 URL。</p>
+      <p>The difference between Webhook and HTTP Server is mainly whether a rule (SQL) processes the data first: Webhook is simpler and needs no SQL, while HTTP Server can take a rule's output and build the request header, the body and even the URL from it.</p>
     </section>
 
-    <section id="webhook" data-nav="實作 HTTP">
-      <h2 data-icon="disk">以 Webhook／HTTP 外送資料</h2>
-      <p>最常先在智慧家庭情境試的是「把事件通知送到 HTTP 服務」，有兩條路：</p>
+    <section id="webhook" data-nav="HTTP hands-on">
+      <h2 data-icon="disk">Sending data out over Webhook/HTTP</h2>
+      <p>The first thing most people try in a smart home is sending an event notification to an HTTP service. There are two routes:</p>
       <ul>
-        <li><strong>Webhook（較簡）</strong>：不需規則處理，適合「只要把收到的訊息送給外部 HTTP 端點」的簡單整合，目標清楚。</li>
-        <li><strong>HTTP Server Integration（較進階）</strong>：先把資料經規則引擎提取與轉換，再送進 HTTP 服務。做法是先建立 HTTP Server Connector（URL、方法），再加規則與 HTTP Sink 動作。</li>
+        <li><strong>Webhook (simpler)</strong>: no rule processing, so it suits a simple integration where you only need to hand the message you received to an external HTTP endpoint, and the target is clear.</li>
+        <li><strong>HTTP Server Integration (more advanced)</strong>: the Rule Engine extracts and transforms the data first, then it goes to the HTTP service. Create the HTTP Server Connector (URL, method) first, then add the rule and the HTTP Sink action.</li>
       </ul>
-      <p>HTTP Sink 可選 POST／PUT 等方法，並可設定 request 內容與帳密（可使用 <code>${var}</code> 佔位符）。EMQX 會顯示每個 Sink 的連線狀態與請求次數，方便確認資料是否送出。</p>
-      <p>只送一則狀態通知給某個 API，用 Webhook 最輕；需要過濾、加欄位或加工後再外送，就選 HTTP Sink 搭配規則。</p>
+      <p>An HTTP Sink can use POST, PUT and other methods, and you can set the request body and the credentials (the <code>${var}</code> placeholder works there). EMQX shows each Sink's connection state and request count, so it is easy to confirm the data is going out.</p>
+      <p>To send a single status notification to one API, Webhook is the lightest option. When you need to filter, add fields or reshape the data before it leaves, use an HTTP Sink together with a rule.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>外部 HTTP 服務沒收到資料</strong>：確認 Connector 狀態為 Connected、URL 與 Method 正確、Sink 已加進規則、規則已啟用。</li>
-        <li><strong>選不到 Kafka／PostgreSQL／MySQL 連接器</strong>：開源版只支援 HTTP 與 MQTT 連接器；這些目標屬企業版。</li>
-        <li><strong>改了 Connector 之後資料中斷</strong>：正在使用的 Connector 被更新會觸發 Sink／Source reload，可能暫時中斷，建議離峰更新。</li>
-        <li><strong>刪不掉 Connector</strong>：使用中的 Connector 不能刪；先刪依附它的 Sink／Source。Dashboard 會列出關聯的 Sink。</li>
+        <li><strong>The external HTTP service receives nothing</strong>: check that the Connector state is Connected, that the URL and Method are correct, that the Sink has been added to the rule, and that the rule is enabled.</li>
+        <li><strong>Kafka, PostgreSQL and MySQL connectors are not in the list</strong>: Open Source supports only the HTTP and MQTT connectors; those targets are Enterprise.</li>
+        <li><strong>Data stops after you change a Connector</strong>: updating a Connector that is in use reloads its Sinks and Sources, which can interrupt traffic briefly, so make the change off peak.</li>
+        <li><strong>A Connector will not delete</strong>: a Connector that is in use cannot be deleted; delete the Sinks and Sources that depend on it first. The Dashboard lists the Sinks attached to it.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Connector 與 Sink 差在哪</summary>
-        <div class="body"><p>Connector 是底層連線通道（連到哪個外部系統）；Sink 是「把規則輸出送到那個目標」的執行設定，放在規則的 Action 裡。一個 Connector 可被多個 Sink／Source 使用。</p></div>
+        <summary>What is the difference between a Connector and a Sink?</summary>
+        <div class="body"><p>A Connector is the low-level connection channel: which external system you connect to. A Sink is the setup that sends a rule's output to that target, and it lives in the rule's Action. One Connector can serve several Sinks and Sources.</p></div>
       </details>
       <details class="faq">
-        <summary>Webhook 與 HTTP Server 怎麼選</summary>
-        <div class="body"><p>資料若不需規則處理，用 Webhook 最簡單；若要先去噪、再轉址，就用 HTTP Server Sink 搭配規則。官方建議不需規則處理時直接用 Webhook。</p></div>
+        <summary>How do I choose between Webhook and HTTP Server?</summary>
+        <div class="body"><p>If the data needs no rule processing, Webhook is the simplest. If you need to strip noise out first and then redirect it, use an HTTP Server Sink together with a rule. The official advice is to use Webhook directly when no rule processing is needed.</p></div>
       </details>
       <details class="faq">
-        <summary>開源版能連哪些外部目標</summary>
-        <div class="body"><p>開源版（Community edition）只支援 HTTP 與 MQTT 兩種 Connector；Kafka、PostgreSQL、MySQL 等目標屬企業版功能。</p></div>
+        <summary>Which external targets can Open Source connect to?</summary>
+        <div class="body"><p>The Open Source edition supports only two connectors, HTTP and MQTT. Kafka, PostgreSQL, MySQL and similar targets are Enterprise edition features.</p></div>
       </details>
       <details class="faq">
-        <summary>想送資料到資料庫一定要企業版嗎</summary>
-        <div class="body"><p>官方原生的資料庫 Sink（PostgreSQL、MySQL 等）在企業版才可用。開源版可改用 HTTP Sink 搭配自己的資料庫 API，或先用 MQTT 橋接到另一套資料處理服務。</p></div>
+        <summary>Do I need Enterprise to send data to a database?</summary>
+        <div class="body"><p>The native database Sinks (PostgreSQL, MySQL and so on) are available only in the Enterprise edition. On Open Source you can use an HTTP Sink against your own database API instead, or bridge over MQTT to a separate data processing service.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/connector.md">EMQX 5.8 Connector（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6a41e/en_US/develop/data-integration/data-bridge-webhook.md">EMQX 5.8 HTTP／Webhook Data Integration（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/webhook.md">EMQX 5.8 Webhook（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/connector.md">EMQX 5.8 Connector (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6a41e/en_US/develop/data-integration/data-bridge-webhook.md">EMQX 5.8 HTTP/Webhook Data Integration (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/webhook.md">EMQX 5.8 Webhook (pinned docs branch)</a></li>
       </ul>
     </section>
 

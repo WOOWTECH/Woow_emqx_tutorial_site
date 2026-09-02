@@ -1,0 +1,15 @@
+{
+  "file": "ch17_configuration.html",
+  "entries": [
+    {
+      "unit": "#files",
+      "zh": "<pre><code>node {\n  name = \"emqx@127.0.0.1\"\n  cookie = \"&lt;你的cookie&gt;\"\n}</code></pre>",
+      "en": "<pre><code>node {\n  name = \"emqx@127.0.0.1\"\n  cookie = \"&lt;your-cookie&gt;\"\n}</code></pre>"
+    },
+    {
+      "unit": "#secret",
+      "zh": "<code>&lt;你的密碼&gt;</code>",
+      "en": "<code>&lt;your-password&gt;</code>"
+    }
+  ]
+}

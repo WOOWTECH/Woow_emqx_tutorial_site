@@ -1,0 +1,25 @@
+{
+  "file": "ch10_rule_actions.html",
+  "entries": [
+    {
+      "unit": "#concept",
+      "zh": "<code>${欄位名}</code>",
+      "en": "<code>${field}</code>"
+    },
+    {
+      "unit": "#republish",
+      "zh": "<code>t/#</code 收進、轉發到 <code>a/1</code>",
+      "en": "<code>t/#</code in and republishes it to <code>a/1</code>"
+    },
+    {
+      "unit": "#republish",
+      "zh": "<code>[rule action] 規則ID + Action Data + Envs</code>",
+      "en": "<code>[rule action] ruleID + Action Data + Envs</code>"
+    },
+    {
+      "unit": "#troubleshoot",
+      "zh": "<code>${欄位}</code>",
+      "en": "<code>${field}</code>"
+    }
+  ]
+}

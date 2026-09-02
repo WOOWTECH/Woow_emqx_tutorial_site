@@ -70,16 +70,16 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#files">設定檔</a>
-      <a href="#envvars">EMQX_ 環境變數</a>
-      <a href="#secret">Secret 管理</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#files">Config files</a>
+      <a href="#envvars">Env variables</a>
+      <a href="#secret">Secrets</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -87,130 +87,130 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch17_configuration.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 17</div>
-      <h1>設定與組態</h1>
-      <p class="lead">EMQX 設定與組態：Dashboard 可調設定、EMQX_ 環境變數、設定檔與 Secret 管理，以及 add-on 的 env_vars 用法。</p>
+      <h1>Configuration</h1>
+      <p class="lead">EMQX configuration: the settings you can change from the Dashboard, EMQX_ environment variables, config files and secret management, and how the add-on's env_vars work.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>EMQX 的參數散在幾個地方：可以直接在 Dashboard 動態調整的、藏在設定檔的、以及以環境變數覆蓋的。家用場景常會不小心把兩個設定寫到不同層，結果改不動卻又不確定誰贏。</p>
-      <p>這章把 EMQX 的設定體系講清楚：Dashboard 的 Management 模組先說明，再講設定檔（emqx.conf、HOCON）與 <code>EMQX_</code> 環境變數的優先權，最後帶到 Secret（敏感值）與 add-on 的 env_vars 用法。讀完，你改任何設定都不會再東猜西猜。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>EMQX parameters are scattered across several places: the ones you adjust dynamically in the Dashboard, the ones tucked away in a config file, and the ones you override with an environment variable. In a home setup it is easy to write the same setting into two different layers by accident, and then find that your change does nothing and you are not sure which layer won.</p>
+      <p>This chapter sets out how EMQX configuration fits together. It starts with the Dashboard's Management module, then covers the precedence between the config files (emqx.conf, HOCON) and <code>EMQX_</code> environment variables, and ends with secrets and the add-on's env_vars. After that you will not have to guess where a setting belongs.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>EMQX 的設定分「靜態」與「動態」兩類目錄。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>EMQX splits its configuration into two kinds of directory: static and dynamic.</p>
       <ul>
-        <li><strong>靜態設定 <code>etc</code></strong>：通常是唯讀，放在主設定檔（例如 <code>emqx.conf</code>）；主要在部署或升級時改。</li>
-        <li><strong>動態設定 <code>data/configs</code></strong>：可寫，把你從 Dashboard、REST API、CLI 做的變更儲存到 <code>cluster.hocon</code>。</li>
+        <li><strong>Static configuration, <code>etc</code></strong>: usually read-only, and it lives in the main config file (<code>emqx.conf</code>, for example). You mostly change it at deployment or upgrade time.</li>
+        <li><strong>Dynamic configuration, <code>data/configs</code></strong>: writable. Changes you make from the Dashboard, the REST API or the CLI are saved into <code>cluster.hocon</code>.</li>
       </ul>
-      <p>優先權從低到高是：<code>base.hocon</code>（5.8.4 起才有）＜ <code>cluster.hocon</code> ＜ <code>emqx.conf</code> ＜ 環境變數。也就是說，越後面越高。</p>
-      <p>Dashboard 的 <strong>Management</strong> 模組就是「動態調整」的入口：Cluster Settings、MQTT Settings、Logging、Monitoring 等都可以在執行中不重啟就套用。</p>
+      <p>Precedence, lowest to highest, is <code>base.hocon</code> (only there from 5.8.4 on) &lt; <code>cluster.hocon</code> &lt; <code>emqx.conf</code> &lt; environment variables. In other words, the further down that list, the higher it wins.</p>
+      <p>The Dashboard's <strong>Management</strong> module is the way in to dynamic changes: Cluster Settings, MQTT Settings, Logging and Monitoring can all be applied while EMQX is running, with no restart.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Configuration</td><td>設定／組態</td><td>EMQX 的參數集合</td></tr>
-            <tr><td>HOCON</td><td>HOCON</td><td>EMQX 使用的可讀設定格式</td></tr>
-            <tr><td>emqx.conf</td><td>主設定檔</td><td>靜態設定，優先權高於 cluster.hocon</td></tr>
-            <tr><td>cluster.hocon</td><td>叢集設定檔</td><td>Dashboard 動態變更的落點</td></tr>
-            <tr><td>Environment Variable</td><td>環境變數</td><td>最高優先，以 <code>EMQX_</code> 開頭</td></tr>
-            <tr><td>Secret</td><td>秘密／敏感值</td><td>密碼、token 這類不應外洩的值</td></tr>
+            <tr><td>Configuration</td><td>the settings</td><td>The set of parameters EMQX runs on</td></tr>
+            <tr><td>HOCON</td><td>readable config format</td><td>The human-readable configuration format EMQX uses</td></tr>
+            <tr><td>emqx.conf</td><td>the main config file</td><td>Static configuration; takes precedence over cluster.hocon</td></tr>
+            <tr><td>cluster.hocon</td><td>the cluster config file</td><td>Where dynamic changes made in the Dashboard land</td></tr>
+            <tr><td>Environment Variable</td><td>environment variable</td><td>Highest precedence; the name starts with <code>EMQX_</code></td></tr>
+            <tr><td>Secret</td><td>a sensitive value</td><td>A password, a token — anything that must not leak</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>進 Cluster Settings 看動態設定</h3><p>左側 <strong>Management → Cluster Settings</strong>，這裡可調整 MQTT、Listener、Logging 等設定，儲存後立即生效。</p></li>
-        <li><h3>用 add-on 的 env_vars 追加環境變數</h3><p>Home Assistant → 左側 EMQX add-on → 組態（Configuration）。在 env_vars 填 <code>name</code> 與 <code>value</code>；add-on 只接受以 <code>EMQX_</code> 開頭的變數名，改完後記得重啟。</p></li>
-        <li><h3>用環境變數覆蓋一個預設值</h3><p>例如要改節點名，填 <code>EMQX_NODE__NAME</code>（雙底線代表設定層級）。存檔後重啟 add-on，再看 Dashboard 數值。</p></li>
-        <li><h3>若需要「靜態」設定檔</h3><p>進 add-on 的「資料」目錄可以看到 /data/emqx/etc/emqx.conf。除非必要，不手動改，因為 Dashboard 寫的都落在 <code>cluster.hocon</code>。</p></li>
+        <li><h3>Open Cluster Settings to see the dynamic settings</h3><p>In the sidebar, choose <strong>Management → Cluster Settings</strong>. This is where you adjust MQTT, Listener and Logging settings, and they take effect as soon as you save.</p></li>
+        <li><h3>Add an environment variable through the add-on's env_vars</h3><p>Home Assistant → the EMQX add-on in the sidebar → Configuration. Fill in <code>name</code> and <code>value</code> under env_vars. The add-on accepts only variable names that start with <code>EMQX_</code>, and remember to restart it once you have made the change.</p></li>
+        <li><h3>Override one default with an environment variable</h3><p>To change the node name, for example, use <code>EMQX_NODE__NAME</code> (the double underscore stands for one level of the configuration). Save, restart the add-on, then read the value back in the Dashboard.</p></li>
+        <li><h3>If you do need the static config file</h3><p>The add-on's data directory holds /data/emqx/etc/emqx.conf. Do not edit it by hand unless you have to, because everything the Dashboard writes lands in <code>cluster.hocon</code>.</p></li>
       </ol>
     </section>
 
-    <section id="files" data-nav="設定檔">
-      <h2 data-icon="disk">設定檔：HOCON 與優先權</h2>
-      <p>從 EMQX 5.0 起用 <strong>HOCON</strong> 格式（是 JSON 的 superset，可用巢狀物件或扁平路徑寫）。</p>
+    <section id="files" data-nav="Config files">
+      <h2 data-icon="disk">Config files: HOCON and precedence</h2>
+      <p>From EMQX 5.0 on, configuration is written in <strong>HOCON</strong> (a superset of JSON, so you can use nested objects or flat paths).</p>
       <pre><code>node {
   name = "emqx@127.0.0.1"
   cookie = "&lt;你的cookie&gt;"
 }</code></pre>
-      <p>也可以寫成扁平：<code>node.name = "emqx@127.0.0.1"</code>。</p>
-      <p>實際的優先權如果沒特別記，很容易混亂。重點是「後出現優先」與「高層優先」：<code>base.hocon</code> 最弱、環境變數最強。若你在動態調整寫的是 <code>cluster.hocon</code>，但同一項目在 <code>emqx.conf</code> 或環境變數裡另有設定，重啟後可能被改回去。</p>
-      <p class="note">建議：不要在 emqx.conf 與 cluster.hocon 同時寫同一項目，以免重開後數值回到其中一端。</p>
+      <p>The flat form works too: <code>node.name = "emqx@127.0.0.1"</code>.</p>
+      <p>The real precedence order is easy to muddle if you have not committed it to memory. The two rules are that later wins and the higher layer wins: <code>base.hocon</code> is the weakest, environment variables the strongest. If a dynamic change of yours went into <code>cluster.hocon</code> but the same item is also set in <code>emqx.conf</code> or in an environment variable, it can be changed back after a restart.</p>
+      <p class="note">Recommended: do not set the same item in both emqx.conf and cluster.hocon, or the value will snap back to one of the two after a restart.</p>
     </section>
 
-    <section id="envvars" data-nav="EMQX_ 環境變數">
-      <h2 data-icon="labels">EMQX_ 環境變數與 add-on env_vars</h2>
-      <p>環境變數與設定檔的轉換規則：</p>
+    <section id="envvars" data-nav="Env variables">
+      <h2 data-icon="labels">EMQX_ environment variables and the add-on's env_vars</h2>
+      <p>The rules for converting between a config file and an environment variable:</p>
       <ul>
-        <li>設定檔用點（<code>.</code>）分隔層級，環境變數用雙底線（<code>__</code>）。</li>
-        <li>變數名稱一律以 <code>EMQX_</code> 開頭。</li>
-        <li>值會以 HOCON 解析，因此可傳入複雜型態。</li>
+        <li>A config file separates levels with a dot (<code>.</code>); an environment variable uses a double underscore (<code>__</code>).</li>
+        <li>Variable names always start with <code>EMQX_</code>.</li>
+        <li>The value is parsed as HOCON, so you can pass complex types.</li>
       </ul>
-      <p>Woow EMQX add-on 在 <code>config.yaml</code> 定義了 <code>env_vars</code> 組態。範例：</p>
+      <p>In <code>config.yaml</code>, the Woow EMQX add-on defines the <code>env_vars</code> option. For example:</p>
       <pre><code>env_vars:
   - name: EMQX_NODE__NAME
     value: "something@else.local"
   - name: EMQX_LISTENERS__TCP__DEFAULT__MAX_CONNECTIONS
     value: "1000000"</code></pre>
-      <p>存檔後重啟 add-on 才會生效。</p>
+      <p>It takes effect only after you save and restart the add-on.</p>
     </section>
 
-    <section id="secret" data-nav="Secret 管理">
-      <h2 data-icon="security">Secret 管理：別踩 HOCON 的註解坑</h2>
-      <p>EMQX 的設定有「Secret」型別，用來存密碼與 token 這類敏感值。在 add-on 或 Dashboard 的欄位輸入時，一律以佔位符（例如 <code>&lt;你的密碼&gt;</code>）代替實值，不寫實際秘密。</p>
-      <p>一個常見的坑：HOCON 裡 `#` 是註解開頭。若密碼含 <code>#</code>，例如 <code>MQtt#123</code>，沒有加引號，解析器會把它當成 <code>MQtt</code>，`#123` 會被當成註解丟掉。要用「HOCON 層級雙引號」把它包起來，才能保留整個字面值：</p>
+    <section id="secret" data-nav="Secrets">
+      <h2 data-icon="security">Managing secrets: avoid the HOCON comment trap</h2>
+      <p>EMQX configuration has a "Secret" type, used for sensitive values such as passwords and tokens. Whenever you write down what goes into an add-on or Dashboard field, use a placeholder (<code>&lt;你的密碼&gt;</code>, for example) in place of the real value, and never the actual secret.</p>
+      <p>One common trap: in HOCON, `#` starts a comment. If a password contains <code>#</code> — say <code>MQtt#123</code> — and it is not quoted, the parser reads it as <code>MQtt</code> and throws `#123` away as a comment. Wrap it in HOCON-level double quotes to keep the whole literal value:</p>
       <pre><code>export EMQX_DASHBOARD__DEFAULT_PASSWORD='"MQtt#123"'</code></pre>
-      <p>含 <code>:</code> 或 <code>=</code> 的值也要比照。URL 編碼（如 <code>%23</code>）不適用——EMQX 不會解開環境變數的 URL encoding。</p>
+      <p>Do the same for values containing <code>:</code> or <code>=</code>. URL encoding (such as <code>%23</code>) does not apply here — EMQX does not decode URL encoding in environment variables.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>改了設定，重開後又被打回原形</strong>：多半是 emqx.conf 或環境變數的優先權較高。把要用的值改到高一層（例如環境變數），把它固定住。</li>
-        <li><strong>env_vars 不生效</strong>：先確認變數名以 <code>EMQX_</code> 開頭且用了雙底線（<code>__</code>）；存檔後要重啟 add-on。名字拼錯會在啟動 log 裡看到 warning。</li>
-        <li><strong>密碼含 # 卻被截斷</strong>：因為 HOCON 把 # 當註解。把它加上一層雙引號整體存進去（連引號），不要只貼原值。</li>
-        <li><strong>找不到要改的設定</strong>：先判斷它是 Dashboard 可動態調、還是在設定檔裡的靜態項目。前者用 Management；後者去 emqx.conf 或用環境變數。</li>
+        <li><strong>A setting you changed is back to what it was after a restart</strong>: usually emqx.conf or an environment variable has the higher precedence. Move the value you want up a layer (to an environment variable, say) and pin it there.</li>
+        <li><strong>env_vars has no effect</strong>: first check that the variable name starts with <code>EMQX_</code> and uses a double underscore (<code>__</code>), and restart the add-on after saving. A misspelled name shows up as a warning in the startup log.</li>
+        <li><strong>A password containing # gets truncated</strong>: HOCON treats # as a comment. Store the whole thing wrapped in an extra pair of double quotes (quotes included) rather than pasting the raw value.</li>
+        <li><strong>You cannot find the setting you want to change</strong>: work out first whether the Dashboard can change it dynamically or whether it is a static item in a config file. Use Management for the first; go to emqx.conf or an environment variable for the second.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Dashboard 改的設定存在哪</summary>
-        <div class="body"><p>Dashboard、REST API、CLI 的動態調整會被寫進 <code>data/configs/cluster.hocon</code>（叢集級）。如果不希望它被改，就去寫更高層的 emqx.conf 或環境變數。</p></div>
+        <summary>Where do the settings I change in the Dashboard get stored?</summary>
+        <div class="body"><p>Dynamic changes from the Dashboard, the REST API and the CLI are written into <code>data/configs/cluster.hocon</code> (cluster level). If you do not want a value changed there, set it in a higher layer instead — emqx.conf or an environment variable.</p></div>
       </details>
       <details class="faq">
-        <summary>emqx.conf 與 cluster.hocon 誰優先</summary>
-        <div class="body"><p><code>emqx.conf</code> 優先於 cluster.hocon。不過兩者都不要重疊同一個參數，以免重開後搞不清楚最終值。</p></div>
+        <summary>Which wins, emqx.conf or cluster.hocon?</summary>
+        <div class="body"><p><code>emqx.conf</code> takes precedence over cluster.hocon. Even so, do not set the same parameter in both, or you will lose track of the final value after a restart.</p></div>
       </details>
       <details class="faq">
-        <summary>同一參數同時寫在環境變數與設定檔呢</summary>
-        <div class="body"><p>環境變數最高。環境變數會蓋過設定檔，但它的值會被當成 HOCON 解析；含特殊字元（#、:、=）時要包 HOCON 雙引號。</p></div>
+        <summary>What if the same parameter is set in both an environment variable and a config file?</summary>
+        <div class="body"><p>The environment variable wins. It overrides the config file, but its value is parsed as HOCON, so wrap it in HOCON double quotes when it contains a special character (#, :, =).</p></div>
       </details>
       <details class="faq">
-        <summary>add-on 的 env_vars 限哪些變數名</summary>
-        <div class="body"><p>add-on 的 config.yaml 用正表示 `^EMQX_([A-Z0-9_])+$` 校驗環境變數名，所以只能填入以 <code>EMQX_</code> 開頭的變數名。</p></div>
+        <summary>Which variable names does the add-on's env_vars accept?</summary>
+        <div class="body"><p>The add-on's config.yaml validates environment variable names against the regular expression `^EMQX_([A-Z0-9_])+$`, so you can only enter names that start with <code>EMQX_</code>.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/configuration.md">EMQX 5.8 設定檔與環境變數（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/configuration.md">EMQX 5.8 Management 動態設定（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml">Woow EMQX add-on config.yaml（env_vars）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/configuration.md">EMQX 5.8 configuration files and environment variables (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/configuration.md">EMQX 5.8 Management dynamic configuration (pinned docs branch)</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (pinned commit)</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/config.yaml">Woow EMQX add-on config.yaml (env_vars)</a></li>
       </ul>
     </section>
 

@@ -70,15 +70,15 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼要學這個</a>
-      <a href="#concept">核心概念</a>
-      <a href="#what">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#topic1">授權順序與鏈</a>
-      <a href="#topic2">ACL 規則與 allow／deny</a>
-      <a href="#troubleshoot">故障排除</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#what">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#topic1">Authorizer chain</a>
+      <a href="#topic2">ACL rules</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -86,103 +86,103 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch7_authorization.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 7</div>
-      <h1>Authorization 與 ACL</h1>
-      <p class="lead">EMQX Authorization 授權與 ACL：授權順序、Built-in Database ACL、主題規則配對、拒絕策略，以及與 Authentication 搭配達成最小權限。</p>
+      <h1>Authorization and ACL</h1>
+      <p class="lead">EMQX Authorization and ACL: authorizer order, the Built-in Database ACL, how topic rules match, what a denial does, and pairing it with Authentication to reach least privilege.</p>
     </div>
 
-    <section id="why" data-nav="為什麼要學這個">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>第 6 章的驗證擋得住「誰能連線」，但擋不住「連上去之後能對哪些主題做什麼」。同一個帳號，你可能希望它只能讀工作室的感應器、並控制自己的開關，而不是隨意讀別的主題、更不會去控制你不希望碰的裝置。這就是授權（Authorization）要處理的：在 EMQX 用內建資料庫放 ACL 規則，把 publish／subscribe 的權限按「人＋主題＋動作」配對，並學會「允許（allow）」與「拒絕（deny）」的執行順序。</p>
-      <p>讀完之後，你就能把 Home Assistant 與各裝置的權限收緊到「只碰自己該碰的主題」，完成「驗證＋授權」的最小權限閉環。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>The authentication in Chapter 6 controls who may connect, but not what a client may do to which topics once it is in. For one account you may want it to read only the studio sensors and control its own switches, not read any topic it likes, and certainly not control the devices you would rather it left alone. That is what authorization handles: you keep ACL rules in EMQX's built-in database, match publish/subscribe permissions on who + topic + action, and learn the order in which allow and deny are applied.</p>
+      <p>By the end you can tighten Home Assistant and each device down to the topics they are supposed to touch, and close the authentication + authorization loop at least privilege.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>授權是對 MQTT 的<strong>發布（publish）與訂閱（subscribe）操作</strong>做權限控制。EMQX 的後端類型有：<strong>ACL File（檔案規則）</strong>、<strong>內建資料庫（Built-in Database）</strong>、外部資料庫（MySQL／PostgreSQL／MongoDB／Redis），以及 <strong>HTTP Server</strong>。除錯的介面從 Dashboard 左側 <strong>Access Control → Authorization</strong> 進去。</p>
-      <p>接著聊「順序」的關鍵：client 每次要 publish／subscribe 時，EMQX 會依序檢查一連串的授權器（Authorizer）。每個授權器內有它的 Access Control List（ACL）規則，EMQX 從第一個授權器開始比對；找到第一筆<strong>命中該 client 的規則</strong>，就照那筆規則的 allow／deny 執行。沒有規則命中就跳到下一個授權器，全部都不命中時，再由 <strong>Global Settings</strong> 的全域預設值決定（allow 或 deny）。</p>
-      <p>所以「驗證你是誰」＋「授權你能做什麼」是互補的兩層：內建資料庫的 ACL 可以按 username 或 client ID 來區分誰該對哪些主題與動作有權限。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>Authorization controls permissions on MQTT's <strong>publish and subscribe operations</strong>. EMQX offers these backend types: <strong>ACL File (rules in a file)</strong>, the <strong>built-in database (Built-in Database)</strong>, an external database (MySQL/PostgreSQL/MongoDB/Redis), and <strong>HTTP Server</strong>. You reach the screen from the Dashboard sidebar at <strong>Access Control → Authorization</strong>.</p>
+      <p>Order is the key part. Every time a client wants to publish or subscribe, EMQX walks a chain of authorizers in order. Each authorizer holds its own access control list (ACL) rules, and EMQX starts matching at the first authorizer; the first <strong>rule that matches that client</strong> decides, and its allow or deny is applied. If nothing in an authorizer matches, EMQX moves to the next one, and when nothing matches anywhere the global default in <strong>Global Settings</strong> decides (allow or deny).</p>
+      <p>So authentication (who you are) and authorization (what you may do) are two complementary layers: the built-in database ACL can key off username or client ID to decide who gets which topics and which actions.</p>
     </section>
 
-    <section id="what" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="what" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>Authorization</td><td>授權</td><td>決定 publish／subscribe 的權限</td></tr>
-            <tr><td>ACL</td><td>存取控制清單</td><td>主題權限規則的集合</td></tr>
-            <tr><td>Authorizer</td><td>授權器</td><td>一套規則與後端的執行單位</td></tr>
-            <tr><td>Allow</td><td>允許</td><td>放行這個動作（＋主題）</td></tr>
-            <tr><td>Deny</td><td>拒絕</td><td>阻擋這個動作（＋主題）</td></tr>
-            <tr><td>Action</td><td>動作</td><td>publish 或 subscribe</td></tr>
-            <tr><td>Topic Filter</td><td>主題過濾</td><td>可含萬用字元的規則主題</td></tr>
+            <tr><td>Authorization</td><td>what you may do</td><td>Decides publish/subscribe permissions</td></tr>
+            <tr><td>ACL</td><td>access control list</td><td>The set of topic permission rules</td></tr>
+            <tr><td>Authorizer</td><td>authorization checker</td><td>One unit that runs a rule set against a backend</td></tr>
+            <tr><td>Allow</td><td>let it through</td><td>Lets this action (and topic) through</td></tr>
+            <tr><td>Deny</td><td>block it</td><td>Blocks this action (and topic)</td></tr>
+            <tr><td>Action</td><td>the operation being checked</td><td>publish or subscribe</td></tr>
+            <tr><td>Topic Filter</td><td>topic pattern</td><td>A rule's topic, which may contain wildcards</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>進到 Authorization 授權頁</h3><p>登入 Dashboard，左側 <strong>Access Control → Authorization</strong>，按右上 <strong>Create</strong>。</p></li>
-        <li><h3>建立內建資料庫授權器</h3><p>後端選 <strong>Built-in Database</strong>（內建資料庫不需另外設參數），按 <strong>Create</strong> 完成。之後回到授權清單（Authorization List）。</p></li>
-        <li><h3>新增 ACL 規則</h3><p>在該筆授權器的 <strong>Actions → Permissions</strong> 進入規則編輯：選 <strong>客戶身分（client ID／username／所有使用者）</strong>，填入主題（可含 <code>+</code>、<code>#</code>），選擇動作 publish／subscribe，並設定 <strong>Allow 或 Deny</strong>。存下。</p></li>
-        <li><h3>設定全域與驗證</h3><p>回 Authorization 清單按 <strong>Settings</strong>（全域設定），決定「沒有規則命中時」要 allow 還是 deny，以及拒絕後是要 ignore（捨棄請求）還是 disconnect client。最後用你的測試帳號實際 publish／subscribe 走一遍，確認 allow／deny 真的照規則生效。</p></li>
+        <li><h3>Open the Authorization page</h3><p>Log in to the Dashboard, go to <strong>Access Control → Authorization</strong> in the sidebar, and click <strong>Create</strong> at the top right.</p></li>
+        <li><h3>Create a built-in database authorizer</h3><p>Choose <strong>Built-in Database</strong> as the backend (the built-in database needs no extra parameters) and click <strong>Create</strong> to finish. You land back on the Authorization List.</p></li>
+        <li><h3>Add an ACL rule</h3><p>On that authorizer, go to <strong>Actions → Permissions</strong> to edit the rules: pick the <strong>client identity (client ID / username / all users)</strong>, enter the topic (it may contain <code>+</code> and <code>#</code>), choose the action publish or subscribe, and set <strong>Allow or Deny</strong>. Save.</p></li>
+        <li><h3>Set the global defaults and verify</h3><p>Back on the Authorization list, click <strong>Settings</strong> (the global settings) and decide whether "no rule matched" means allow or deny, and whether a denial should ignore (drop the request) or disconnect the client. Finally, run a real publish and subscribe with your test account and confirm that allow and deny behave the way the rules say.</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="授權順序與鏈">
-      <h2 data-icon="advanced">授權順序與鏈</h2>
-      <p>Authorization 支援同時建立多個授權器，client 在做 publish／subscribe 時逐個檢查，先命中的規則先決——所以<strong>順序很重要</strong>。在 Authorization List 你可以用滑鼠拖曳、或在 Actions 列調整順序；EMQX 從第一個開始，直到找到能命中某筆 ACL 為止。</p>
-      <p>「第一筆命中便定生死」正是順序的要點：假設你有一條很寬的 deny <code>device/#</code> 排在前，又有一條允許的 allow <code>device/+/state</code> 排在其後，前面那條太寬的 deny 會先命中，後面的 allow 便永遠輪不到內容。因此撰寫規則時要把「窄而精確」的思路想清楚，再依權重排序。</p>
-      <p><strong>Global Settings</strong> 決定最後的兜底：當所有授權器都找不到命中規則時，你可以要求 EMQX 一律 allow 或一律 deny；並選擇「拒絕後」是 ignore（靜默捨棄請求）還是 disconnect client。家用環境多數會把未命中設為 <strong>deny</strong>，走「不白名單就擋」的安全側。</p>
+    <section id="topic1" data-nav="Authorizer chain">
+      <h2 data-icon="advanced">Authorization order and the authorizer chain</h2>
+      <p>Authorization lets you create several authorizers at once. When a client publishes or subscribes, EMQX checks them one by one and the first rule that matches decides — so <strong>order matters</strong>. On the Authorization List you can drag rows with the mouse, or reorder them from the Actions column; EMQX starts at the first one and works down until an ACL rule matches.</p>
+      <p>"The first match settles it" is exactly the point of ordering: say you have a very broad deny on <code>device/#</code> in front, and an allow on <code>device/+/state</code> behind it. The over-broad deny matches first, and the allow behind it never gets a turn. So think the narrow, precise rule through before you write it, and then order the rules by weight.</p>
+      <p><strong>Global Settings</strong> decides the final fallback: when no authorizer finds a matching rule, you can have EMQX always allow or always deny, and choose whether a denial means ignore (drop the request silently) or disconnect the client. In a home setup most people set the no-match case to <strong>deny</strong> and stay on the safe side: if it is not on the allow list, it is blocked.</p>
     </section>
 
-    <section id="topic2" data-nav="ACL 規則與 allow／deny">
-      <h2 data-icon="security">ACL 規則配對與 allow／deny</h2>
-      <p>內建資料庫的 ACL 用「客戶＋主題＋動作」三個維度描述權限，靠「誰對哪個主題做哪個動作」一列一條規則。你可以選「所有使用者（all users）」設定基線，再針對特定 client ID 或 username 補上專屬規則。</p>
-      <p>配對時主題可以帶萬用字元：例如把家裡的開關主題集中成 <code>客廳/開關/+/state</code>，一條規則就能涵蓋到所有客廳開關。<strong>Allow</strong> 就是放行該（動作＋主題），<strong>Deny</strong> 就是擋掉。同一題目可同時含 allow 與 deny，配對的優先權由授權順序與全域設定共同決定。</p>
-      <p>家用最常見的建議是「最小權限」：先只 allow 每個帳號真正需要的 publish／subscribe 主題，不要先開「全部」再用 deny 補洞。這樣即使順序或全域設定有疏漏，風險範圍也最小。</p>
+    <section id="topic2" data-nav="ACL rules">
+      <h2 data-icon="security">ACL rule matching and allow/deny</h2>
+      <p>The built-in database ACL describes a permission along three dimensions, client + topic + action, one rule per row saying who may do which action on which topic. You can pick "all users" to set a baseline, then add rules for a specific client ID or username on top.</p>
+      <p>The topic in a rule can carry wildcards: collect your switch topics at home under <code>客廳/開關/+/state</code>, for example, and one rule covers every living-room switch. <strong>Allow</strong> lets that action-and-topic pair through, <strong>Deny</strong> blocks it. The same topic can carry both allow and deny rules, and which one wins is decided together by the authorizer order and the global settings.</p>
+      <p>The usual advice for a home setup is least privilege: allow only the publish/subscribe topics each account genuinely needs, rather than opening everything first and then patching holes with deny. That way, even if the ordering or the global settings have a gap, the exposure stays small.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="故障排除">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>連得上卻不能往某個主題發布</strong>：多半是授權規則把該動作或主題擋掉。到 Authorization → Permissions 檢查該帳號／client 是否有一條「動作＋主題＋Allow」覆蓋到你要的主題，並注意 Global Settings 的未命中值是否是 deny。</li>
-        <li><strong>明明有 Allow 規則卻還是被擋</strong>：檢查規則順序，EMQX 以「第一筆命中」為準。如果前面有一條更寬的 <code>#</code> deny 先命中，後面的 Allow 就永遠輪不到；簡化規則或調整排序。</li>
-        <li><strong>想擋某個 client 卻一直沒效果</strong>：把針對它的那條規則改為 deny，或加一條「該主題＋subscribe／publish＋deny」放在較前順序；再於 Global Settings 確認未命中時不是隱性 allow。</li>
-        <li><strong>外部資料庫授權器顯示 Disconnected</strong>：外部資料庫位址、帳密或查詢語法不對，或該庫未就緒。設定照樣可存取，但執行時會失敗；修好外部狀態後回到 Overview 看健康度，並確認你選的真的是內建資料庫。</li>
+        <li><strong>The client connects but cannot publish to a topic</strong>: usually an authorization rule is blocking that action or that topic. Go to Authorization → Permissions and check whether that account or client has an "action + topic + Allow" rule covering the topic you want, and watch whether the no-match value in Global Settings is deny.</li>
+        <li><strong>There is an Allow rule and it is still blocked</strong>: check the rule order, because EMQX goes by the first match. If a broader <code>#</code> deny sits in front and matches first, the Allow behind it never gets a turn; simplify the rules or reorder them.</li>
+        <li><strong>You want to block a client and nothing happens</strong>: change the rule aimed at it to deny, or add a "that topic + subscribe/publish + deny" rule earlier in the order; then confirm in Global Settings that a no-match is not an implicit allow.</li>
+        <li><strong>An external database authorizer shows Disconnected</strong>: the external database address, credentials or query syntax is wrong, or that database is not ready. The configuration still saves, but it fails at run time; fix the external side, go back to Overview to read its health, and confirm that what you picked really is the built-in database.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>授權與驗證到底怎麼分工</summary>
-        <div class="body"><p>驗證先確認「你是誰」，授權再決定「做不做得了」。驗證擋不掉「亂訂閱別人主題」的行為，唯有授權規則能在主題粒度上做 allow／deny。兩者都設定齊了，才談得上最小權限。</p></div>
+        <summary>How do authorization and authentication divide the work</summary>
+        <div class="body"><p>Authentication confirms who you are first; authorization then decides whether you can do it. Authentication cannot stop a client from subscribing to someone else's topics — only authorization rules can allow or deny at topic granularity. Least privilege only starts once both are configured.</p></div>
       </details>
       <details class="faq">
-        <summary>內建資料庫 ACL 跟 ACL 檔案哪個好</summary>
-        <div class="body"><p>家用透過 Dashboard 設定、想每次改動都維持、直覺，選內建資料庫；ACL 檔案是文字檔規則、適合稍微工程師用版本管理，但編輯較不直覺。多數 add-on 使用者用內建資料庫就夠。</p></div>
+        <summary>Which is better, the built-in database ACL or an ACL file</summary>
+        <div class="body"><p>For a home setup where you configure things in the Dashboard, want every change to stick and want it to feel obvious, pick the built-in database. An ACL file keeps the rules as text, which suits a more engineering-minded owner who wants them under version control, but it is less obvious to edit. For most add-on users the built-in database is enough.</p></div>
       </details>
       <details class="faq">
-        <summary>deny 之後 client 會被切掉的連線嗎</summary>
-        <div class="body"><p>那要看你的 Global Settings。EMQX 允許「拒絕後捨棄請求（ignore the message）」或「直接斷開 client（disconnect）」。你要「悄悄擋 message」選 ignore，你要「直接切線」選 disconnect，沒有一個絕對；家用常選 ignore 以免整串重連。</p></div>
+        <summary>Does a client get disconnected after a deny</summary>
+        <div class="body"><p>That depends on your Global Settings. EMQX allows either "drop the request after a denial (ignore the message)" or "disconnect the client outright (disconnect)". Pick ignore if you want the message blocked quietly, disconnect if you want the connection cut; neither is absolute, and home setups often pick ignore to avoid a run of reconnects.</p></div>
       </details>
       <details class="faq">
-        <summary>為什麼一再強調「最小權限」</summary>
-        <div class="body"><p>權限開得愈大，一個帳號被拖／被竊時，可被竄改感染的範圍就愈大。只開放每個帳號「此刻需要的」 publish／subscribe 主題、其餘都 deny，才能把單一裝置壞掉的影響降到最低——這是家用 IoT 重要的防縮。</p></div>
+        <summary>Why does least privilege keep coming up</summary>
+        <div class="body"><p>The wider the permissions, the larger the area that can be tampered with once an account is compromised or stolen. Open only the publish/subscribe topics each account needs right now and deny the rest — that keeps the damage from one broken device as small as it can be, and containment like this is what matters in home IoT.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authz.md">EMQX 5.8 Dashboard Authorization（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/acloverview.md">EMQX 5.8 Access Control 總覽（ACL 概念）</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（Access Control 授權／ACL）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/authz.md">EMQX 5.8 Dashboard Authorization (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/acloverview.md">EMQX 5.8 Access Control overview (ACL concepts)</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (Access Control authorization / ACL)</a></li>
       </ul>
     </section>
 

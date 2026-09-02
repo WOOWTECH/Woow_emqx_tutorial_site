@@ -70,16 +70,16 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#retained">Retained 管理</a>
-      <a href="#topics">Topics 與 Metrics</a>
-      <a href="#delayed">延遲發布</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#retained">Retained messages</a>
+      <a href="#topics">Topics and Metrics</a>
+      <a href="#delayed">Delayed Publish</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -87,133 +87,133 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch16_message_management.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 16</div>
-      <h1>訊息與主題管理</h1>
-      <p class="lead">EMQX 訊息與主題管理：Message publish、retained 訊息管理、主題樹、Topic Metrics 與延遲發布（Delayed Publish）。</p>
+      <h1>Message and topic management</h1>
+      <p class="lead">EMQX message and topic management: publishing messages, managing retained messages, the topic tree, Topic Metrics and Delayed Publish.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>MQTT 的訊息是「發布／訂閱」制的：它不會被 broker 存檔永久保留，除非你用了 retained 的旗標。因此「某個訊息到底有沒有被留住、位在哪個主題、是否照預期送出」這些問題，就需要在 Dashboard 裡那幾個訊息管理頁面上找答案。</p>
-      <p>這章帶你認識與訊息／主題相關的 Dashboard 功能：發布與測試用的 WebSocket Client、retained（保留）訊息的管理與設定、主題的總覽入口，以及（Enterprise）主題度量與延遲發布。讀完之後，你就能回答「這筆訊息還在哪裡」。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>MQTT messages work on a publish/subscribe model: the broker does not file them away and keep them forever unless you set the retained flag. So the questions "was that message actually kept, which topic is it on, did it go out the way I expected" get their answers on the handful of message management pages in the Dashboard.</p>
+      <p>This chapter walks you through the Dashboard features that deal with messages and topics: the WebSocket Client you publish and test with, managing and configuring retained messages, the way into the topic overview, and (on Enterprise) Topic Metrics and Delayed Publish. By the end you will be able to answer "where is that message now".</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p><strong>Retained Message（保留訊息）</strong>：當客戶端用 RETAIN 旗標發布訊息，EMQX 會把它存在系統裡。之後任何客戶端新訂閱這個主題，立刻就會收到這一筆 retained 訊息。它「預設不會過期」，除非你手動刪除。</p>
-      <p>Dashboard 的 <strong>Monitoring → Retained Messages</strong> 頁列出目前所有 retained 訊息（主題、QoS、發布者、發布時間），你可以按 <strong>Show Payload</strong> 看內容、或按 <strong>Delete</strong> 刪掉某筆。</p>
-      <p><strong>Delayed Publish（延遲發布）</strong> 是 EMQX Enterprise 的延伸功能：發布到 `$delayed/{DelayInterval}/{Topic}` 的訊息，會照你指定的秒數延後送出。這與 retained 是兩種不同的工具：它負責把發布延後，而不是「留住最新一筆」。</p>
-      <p>注意界線：Delayed Publish 與 Topic Metrics 都是 EMQX Enterprise 版功能，Open Source 5.8.9 的 Dashboard 不顯示。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p><strong>Retained Message</strong>: when a client publishes a message with the RETAIN flag, EMQX stores it in the system. From then on, any client that newly subscribes to that topic receives the retained message immediately. By default it never expires, unless you delete it by hand.</p>
+      <p>The Dashboard's <strong>Monitoring → Retained Messages</strong> page lists every retained message there is right now (topic, QoS, publisher, publish time). Press <strong>Show Payload</strong> to read the content, or <strong>Delete</strong> to remove one.</p>
+      <p><strong>Delayed Publish</strong> is an EMQX Enterprise extension: a message published to `$delayed/{DelayInterval}/{Topic}` goes out after the number of seconds you specify. It and retained are two different tools — this one delays the publish, it does not hold on to the latest message.</p>
+      <p>Know where the line is: Delayed Publish and Topic Metrics are both EMQX Enterprise features, and the Open Source 5.8.9 Dashboard does not show them.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Publish</td><td>發布</td><td>client 把一則訊息寫進主題</td></tr>
-            <tr><td>Subscribe</td><td>訂閱</td><td>client 對某主題接收訊息的意願</td></tr>
-            <tr><td>Payload</td><td>內容體</td><td>訊息的資料內容（字串、JSON、二進位）</td></tr>
-            <tr><td>Retained Message</td><td>保留訊息</td><td>broker 記住並在新訂閱時立即送出的訊息</td></tr>
-            <tr><td>Retainer</td><td>保留器</td><td>管理 retained 訊息功能的設定分頁</td></tr>
-            <tr><td>Delayed Publish</td><td>延遲發布</td><td>依照 $delayed/ 前綴延後送出的 MQTT 延伸功能</td></tr>
+            <tr><td>Publish</td><td>send a message</td><td>A client writes one message into a topic</td></tr>
+            <tr><td>Subscribe</td><td>ask to receive</td><td>A client's declared interest in receiving messages on a topic</td></tr>
+            <tr><td>Payload</td><td>the message body</td><td>The data a message carries (a string, JSON, binary)</td></tr>
+            <tr><td>Retained Message</td><td>the message the broker keeps</td><td>A message the broker remembers and delivers immediately to a new subscriber</td></tr>
+            <tr><td>Retainer</td><td>retained message settings</td><td>The settings tab that manages the retained message feature</td></tr>
+            <tr><td>Delayed Publish</td><td>send it later</td><td>An MQTT extension that delays delivery, based on the $delayed/ prefix</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>進 Retained Messages 頁</h3><p>左側 <strong>Monitoring → Retained Messages</strong>，看到目前系統中所有 retained 訊息清單。</p></li>
-        <li><h3>看某一筆的 payload</h3><p>在該列的 Actions 按下 <strong>Show Payload</strong>，下方彈出內容；可選擇 JSON 或 Hex 等格式，右下按 Copy 可複製。</p></li>
-        <li><h3>刪掉一筆 retained</h3><p>按該列的 <strong>Delete</strong> 移除；或用 <strong>Clear All</strong> 清掉整群 cluster 的 retained。</p></li>
-        <li><h3>用 WebSocket Client 試發布</h3><p>左側 <strong>Diagnose → WebSocket Client</strong>，新增一個連線，用 subscribe／publish 快速驗證某主題與 retained 行為。</p></li>
+        <li><h3>Open the Retained Messages page</h3><p>In the sidebar, choose <strong>Monitoring → Retained Messages</strong> to see the list of every retained message in the system right now.</p></li>
+        <li><h3>Read one message's payload</h3><p>In that row's Actions column, press <strong>Show Payload</strong>; the content opens below. You can pick a format such as JSON or Hex, and Copy at the bottom right copies it.</p></li>
+        <li><h3>Delete one retained message</h3><p>Press <strong>Delete</strong> on the row to remove it, or use <strong>Clear All</strong> to clear the retained messages across the whole cluster.</p></li>
+        <li><h3>Try publishing with the WebSocket Client</h3><p>In the sidebar, choose <strong>Diagnose → WebSocket Client</strong>, add a connection, and use subscribe/publish to check a topic and its retained behavior quickly.</p></li>
       </ol>
     </section>
 
-    <section id="retained" data-nav="Retained 管理">
-      <h2 data-icon="plan">管理保留訊息與設定</h2>
-      <p>清單左上方是<b>Show Payload</b> 與 <b>Delete</b>，右上方 <strong>Refresh</strong> 重新載入清單。<strong>Settings</strong> 會帶你到 <strong>Management → MQTT Settings → Retainer</strong> 分頁，在那裡你可以啟用／停用保留訊息功能，並設定多項參數。</p>
+    <section id="retained" data-nav="Retained messages">
+      <h2 data-icon="plan">Managing retained messages and their settings</h2>
+      <p>At the top left of the list are <b>Show Payload</b> and <b>Delete</b>; at the top right, <strong>Refresh</strong> reloads the list. <strong>Settings</strong> takes you to the <strong>Management → MQTT Settings → Retainer</strong> tab, where you can enable or disable the retained message feature and set several parameters.</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>設定欄位</th><th>預設值</th><th>說明</th></tr>
+            <tr><th>Setting</th><th>Default</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Storage Type（儲存類型）</td><td>Built-in Database</td><td>儲存的後台</td></tr>
-            <tr><td>Storage Method（儲存方式）</td><td>ram</td><td>ram：只存記憶體；disc：記憶體＋硬碟</td></tr>
-            <tr><td>Max Retained Messages（上限）</td><td>0</td><td>0＝不限；超過時以新換舊</td></tr>
-            <tr><td>Max Payload Size</td><td>1MB</td><td>超過會被視為一般訊息，不保留</td></tr>
-            <tr><td>Message Expire Interval</td><td>Never</td><td>0＝不過期；可設幾小時後自動刪</td></tr>
+            <tr><td>Storage Type</td><td>Built-in Database</td><td>The storage backend</td></tr>
+            <tr><td>Storage Method</td><td>ram</td><td>ram: memory only; disc: memory plus disk</td></tr>
+            <tr><td>Max Retained Messages</td><td>0</td><td>0 = no limit; past the limit, new messages replace old ones</td></tr>
+            <tr><td>Max Payload Size</td><td>1MB</td><td>Anything larger is treated as an ordinary message and not retained</td></tr>
+            <tr><td>Message Expire Interval</td><td>Never</td><td>0 = never expires; you can have it deleted automatically after a number of hours</td></tr>
           </tbody>
         </table>
       </div>
-      <p>EMQX 預設會保留三則 $SYS 系統主題的 retained 訊息（例如節點描述、版本、叢集節點清單）。若要「把某個主題的 retained 清掉」，最常用的作法是發布一則空訊息到該主題。</p>
+      <p>By default EMQX keeps three retained messages on $SYS system topics (the node description, the version and the cluster node list, for example). To clear the retained message on a topic, the usual way is to publish an empty message to that topic.</p>
     </section>
 
-    <section id="topics" data-nav="Topics 與 Metrics">
-      <h2 data-icon="network">主題總覽與主題度量</h2>
-      <p>Dashboard 的 <strong>Monitoring → Subscriptions → Topics</strong> 分頁，把所有節片上目前被訂閱的主題去重（去重複）後列成一份清單；你可以用模糊搜尋找主題，並在「Actions」欄按 <strong>Create Monitor</strong> 帶到主題度量頁。</p>
-      <p><strong>Topic Metrics（主題度量）</strong>是 EMQX Enterprise 功能的診斷工具，位置是 <strong>Diagnose → Topic Metrics</strong>。它的用途是只針對「一個特定主題」統計訊息量。</p>
-      <p>新增時要輸入一個<b>完整的主題名稱</b>；目前不支援帶萬用字元（`+`、`#`）的主題過濾器。<code>a/+</code> 這種寫法無法建立度量。</p>
-      <p>在清單的 Actions 你可以在 <strong>View</strong> 開啟明細（依 QoS 分層看），<strong>Reset</strong> 重新開始計、<strong>Delete</strong> 移除該筆。</p>
+    <section id="topics" data-nav="Topics and Metrics">
+      <h2 data-icon="network">Topic overview and Topic Metrics</h2>
+      <p>The Dashboard's <strong>Monitoring → Subscriptions → Topics</strong> tab takes every topic currently subscribed on any node, removes the duplicates, and lists what is left. You can find a topic with a fuzzy search, and press <strong>Create Monitor</strong> in the Actions column to go to the Topic Metrics page.</p>
+      <p><strong>Topic Metrics</strong> is a diagnostic tool in EMQX Enterprise, at <strong>Diagnose → Topic Metrics</strong>. Its job is to count message volume for one specific topic and nothing else.</p>
+      <p>When you add one, you have to type a <b>complete topic name</b>; topic filters that carry a wildcard (`+`, `#`) are not supported at present. Something written as <code>a/+</code> cannot be turned into a metric.</p>
+      <p>In the list's Actions column, <strong>View</strong> opens the details (broken down by QoS), <strong>Reset</strong> starts the count over, and <strong>Delete</strong> removes the entry.</p>
     </section>
 
-    <section id="delayed" data-nav="延遲發布">
-      <h2 data-icon="now">Delayed Publish（Enterprise）</h2>
-      <p>Delayed Publish 是 EMQX 的 MQTT 擴充功能：當 client 發布的主題開頭是 <code>$delayed/</code>，EMQX 就會把這筆訊息「延後」一段時間才送到真實主題。</p>
-      <p>格式是：</p>
+    <section id="delayed" data-nav="Delayed Publish">
+      <h2 data-icon="now">Delayed Publish (Enterprise)</h2>
+      <p>Delayed Publish is EMQX's MQTT extension: when the topic a client publishes to starts with <code>$delayed/</code>, EMQX holds the message back for a while before it goes out on the real topic.</p>
+      <p>The format is:</p>
       <pre><code>$delayed/{DelayInterval}/{TopicName}</code></pre>
       <ul>
-        <li><code>$delayed/15/x/y</code>：15 秒後發布到 <code>x/y</code>。</li>
-        <li><code>$delayed/60/a/b</code>：1 分鐘後發布到 <code>a/b</code>。</li>
-        <li><code>$delayed/3600/$SYS/topic</code>：1 小時後發布給 <code>$SYS/topic</code>。</li>
+        <li><code>$delayed/15/x/y</code>: published to <code>x/y</code> 15 seconds later.</li>
+        <li><code>$delayed/60/a/b</code>: published to <code>a/b</code> one minute later.</li>
+        <li><code>$delayed/3600/$SYS/topic</code>: delivered to <code>$SYS/topic</code> one hour later.</li>
       </ul>
-      <p>{DelayInterval} 最大可到 4294967 秒；如果無法被解析成整數，EMQX 會把這筆訊息丟棄。</p>
-      <p>要管理這個功能，從左側 <strong>Management → Delayed Publish</strong> 進入設定，可啟用／停用並限制最大延遲訊息數。</p>
+      <p>{DelayInterval} can go up to 4294967 seconds; if it cannot be parsed as an integer, EMQX drops the message.</p>
+      <p>To manage the feature, open <strong>Management → Delayed Publish</strong> in the sidebar, where you can enable or disable it and cap the number of delayed messages.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>訂閱某主題卻沒收到 retained 訊息</strong>：確認那筆 retained 還在（Retained Messages 頁看得到）；若已刪除，就不會再送。</li>
-        <li><strong>想刪掉某主題的 retained 卻按不到 Delete</strong>：更常用的做法是直接發布一筆「空訊息」到該主題（RETAIN），這也會把舊的蓋掉。</li>
-        <li><strong>找不到 Delayed Publish 或 Topic Metrics 頁</strong>：兩者都屬 EMQX Enterprise 版，Open Source 5.8.9 的 Dashboard 不顯示，不是壞掉。</li>
-        <li><strong>Topic Metrics 新增時不接受帳號</strong>：這個功能目前只支援單一主題，不支援 <code>+</code>／<code>#</code> 萬用字元；改用完整主題名重新建。</li>
+        <li><strong>You subscribed to a topic but no retained message arrived</strong>: check that the retained message is still there (it shows on the Retained Messages page). Once it is deleted, it is not sent again.</li>
+        <li><strong>You want to delete a topic's retained message but cannot reach Delete</strong>: the more common approach is to publish an empty message to that topic with RETAIN, which also overwrites the old one.</li>
+        <li><strong>You cannot find the Delayed Publish or Topic Metrics page</strong>: both belong to EMQX Enterprise. The Open Source 5.8.9 Dashboard does not show them, and nothing is broken.</li>
+        <li><strong>Topic Metrics rejects what you type when you add one</strong>: the feature only supports a single topic at present, not the <code>+</code>/<code>#</code> wildcards. Create it again with a complete topic name.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Retained Message 會自動過期嗎</summary>
-        <div class="body"><p>預設不會。除非你主動刪除、發布空訊息蓋掉，或是在 Retainer 設定中給了過期時間（Message Expire Interval）。你可以在 PUBLISH packet 帶上不同的過期秒數，優先採 PUBLISH 的值。</p></div>
+        <summary>Does a retained message expire on its own?</summary>
+        <div class="body"><p>Not by default. It stays until you delete it, overwrite it with an empty message, or give it an expiry time in the Retainer settings (Message Expire Interval). You can also carry a different expiry in seconds on the PUBLISH packet, and the value on the PUBLISH wins.</p></div>
       </details>
       <details class="faq">
-        <summary>為什麼重發 retained 後，訂閱者收到的不是新值</summary>
-        <div class="body"><p>通常因為那筆 retained 已經被清掉了，或重新發布時沒用 RETAIN 旗標。用 RETAIN 發布一筆新訊息到同一主題，保留訊息會以同一主題相同欄位覆蓋舊值。</p></div>
+        <summary>Why do subscribers get the old value after I publish the retained message again?</summary>
+        <div class="body"><p>Usually because that retained message has already been cleared, or because the new publish went out without the RETAIN flag. Publish a new message to the same topic with RETAIN and the retained message overwrites the old value in the same fields on the same topic.</p></div>
       </details>
       <details class="faq">
-        <summary>Delayed Publish 與 retained 是不是同一件事</summary>
-        <div class="body"><p>不是。retained 是「記住最後一筆，新訂閱者都能立刻拿到」；Delayed Publish 是「延後送出」（`$delayed/` 前綴）。兩者可以一起用，但角色不同，且 Delayed 是 Enterprise 功能。</p></div>
+        <summary>Are Delayed Publish and retained the same thing?</summary>
+        <div class="body"><p>No. Retained means "remember the last message so every new subscriber gets it immediately"; Delayed Publish means "send it later" (the `$delayed/` prefix). You can use both together, but they play different parts, and Delayed Publish is an Enterprise feature.</p></div>
       </details>
       <details class="faq">
-        <summary>Topic Metrics 為什麼不能用 a/+</summary>
-        <div class="body"><p>官方文件明列：「主題度量只支援單一主題名稱」，也就是說 `+` / `#` 萬用字元目前不支援。要監控，請用一個確定的主題名。</p></div>
+        <summary>Why can't Topic Metrics use a/+?</summary>
+        <div class="body"><p>The official documentation spells it out: Topic Metrics supports a single topic name only, which means the `+` / `#` wildcards are not supported at present. To monitor a topic, use one definite topic name.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/retained.md">EMQX 5.8 Retained Messages（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/delay-pub.md">EMQX 5.8 Delayed Publish（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-delayed-publish.md">EMQX 5.8 Delayed Publish 主題格式（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/topic-metrics.md">EMQX 5.8 Topic Metrics（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/retained.md">EMQX 5.8 Retained Messages (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/delay-pub.md">EMQX 5.8 Delayed Publish (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/get-started/messaging/mqtt-delayed-publish.md">EMQX 5.8 Delayed Publish topic format (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/topic-metrics.md">EMQX 5.8 Topic Metrics (pinned docs branch)</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (pinned commit)</a></li>
       </ul>
     </section>
 

@@ -70,16 +70,16 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#clients">Clients 清單</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#clients">Clients list</a>
       <a href="#subscriptions">Subscriptions</a>
-      <a href="#diagnose">慢訂閱與監控</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#diagnose">Slow subscriptions</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -87,118 +87,118 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch14_client_management.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 14</div>
-      <h1>客戶端與訂閱管理</h1>
-      <p class="lead">EMQX 客戶端與訂閱管理：Clients 清單、踢除與統計、Subscriptions 連線與訂閱明細、慢訂閱與主題監控。</p>
+      <h1>Client and subscription management</h1>
+      <p class="lead">Manage clients and subscriptions in EMQX: the Clients list, kicking a client out and reading its statistics, connection and subscription details under Subscriptions, and slow subscription and topic monitoring.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>智慧家庭裡最常見的狀況，是某台裝置「明明設定好了，卻收不到訊息」。退一步想，要把問題找出來，你得先能回答幾件事：哪個 client 正在連線、它到底訂了哪些主題、訊息有沒有真的送出去。EMQX 的 <strong>Clients</strong> 與 <strong>Subscriptions</strong> 頁，就是把這些「連線的事實」講清楚的地方。</p>
-      <p>這章帶你建立一套停線診斷流程：先到 Clients 清單確認誰在線上、哪一台有 session，再看 Subscriptions 掌握訂閱細節，最後認識慢訂閱與主題監控工具（以及它們的授權）。讀完之後，遇到「收不到訊息」這類問題，你就不必瞎猜，能先在 Dashboard 上把範圍縮小。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>The most common situation in a smart home is a device that is "set up correctly and still receives nothing". To track that down, you first have to be able to answer a few things: which client is connected, which topics it actually subscribed to, and whether the messages went out at all. The <strong>Clients</strong> and <strong>Subscriptions</strong> pages in EMQX are where those connection facts are spelled out.</p>
+      <p>This chapter gives you a routine for diagnosing a dropped connection: start at the Clients list to see who is online and which device still has a session, move to Subscriptions for the subscription details, and finish with the slow subscription and topic monitoring tools (and the license each one needs). After that, a problem like "nothing is coming through" no longer takes guesswork — you can narrow it down in the Dashboard first.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>EMQX 的 <strong>Clients</strong> 頁顯示「目前連線的 client」以及「尚未過期的 session」。連線（connection）是一條活的 MQTT 通道；而 session 是 EMQX 替該 client 保留的狀態，在連線斷掉後如果設為持久（persistent）並給定了 session 過期時間，它仍會存在數秒。 所以 Clients 清單裡看到的，不只是「這一秒在線」的裝置。</p>
-      <p><strong>Subscriptions</strong> 頁以「client ID × topic」為單位列出所有訂閱，並補上 QoS 與 MQTT 5.0 的新訂閱選項；<strong>Topics</strong> 分頁則以「主題名稱」去重，把同一台節點的相同訂閱只列一次。</p>
-      <p>先講一個界線：<strong>Slow Subscriptions</strong>（慢訂閱統計）與 <strong>Topic Metrics</strong>（主題度量）是 EMQX Enterprise 版功能，Open Source 5.8.9 的 Diagnose 左欄看不到它們。知道這條界線，你就不會在自架 Open Source 版時找不到工具而白費時間。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>The <strong>Clients</strong> page in EMQX shows the clients connected right now, and the sessions that have not expired yet. A connection is one live MQTT channel; a session is the state EMQX keeps on that client's behalf, and once the connection drops it still exists for some seconds if the client asked for a persistent session and gave a session expiry interval. So the Clients list is not only the devices that are online this second.</p>
+      <p>The <strong>Subscriptions</strong> page lists every subscription as one client ID and topic pair, and adds QoS and the new MQTT 5.0 subscription options; the <strong>Topics</strong> tab deduplicates by topic name, so the same subscription on one node is listed only once.</p>
+      <p>One boundary before anything else: <strong>Slow Subscriptions</strong> and <strong>Topic Metrics</strong> are EMQX Enterprise features, and the Diagnose group in the sidebar of Open Source 5.8.9 does not show them. Knowing where that line falls saves you from hunting for a tool that a self-hosted Open Source install never had.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Client</td><td>客戶端</td><td>連上 EMQX 的 MQTT 裝置或程式</td></tr>
-            <tr><td>Connection</td><td>連線</td><td>client 與 EMQX 之間的活通道</td></tr>
-            <tr><td>Session</td><td>會話</td><td>EMQX 替 client 保留的訂閱與訊息狀態</td></tr>
-            <tr><td>Subscription</td><td>訂閱</td><td>client 對某主題表達接收訊息的意願</td></tr>
-            <tr><td>QoS</td><td>服務品質</td><td>0／1／2 三級投遞保證</td></tr>
-            <tr><td>Kick Out</td><td>踢除</td><td>強制中斷某 client 的連線</td></tr>
+            <tr><td>Client</td><td>connected device</td><td>An MQTT device or program that connects to EMQX</td></tr>
+            <tr><td>Connection</td><td>live channel</td><td>The live channel between a client and EMQX</td></tr>
+            <tr><td>Session</td><td>kept state</td><td>The subscription and message state EMQX keeps for a client</td></tr>
+            <tr><td>Subscription</td><td>request for messages</td><td>A client saying it wants the messages on a topic</td></tr>
+            <tr><td>QoS</td><td>quality of service</td><td>Three levels of delivery guarantee: 0, 1 and 2</td></tr>
+            <tr><td>Kick Out</td><td>forced disconnect</td><td>Closes a client's connection by force</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>開啟 Clients 清單</h3><p>左側選 <strong>Monitoring → Clients</strong>。預設顯示目前連線的 client，欄位含 client ID、username、連線狀態、IP、heartbeat、session 資訊與連線完成時間。</p></li>
-        <li><h3>用過濾條件找一台裝置</h3><p>頂端搜尋列可用 client ID 或 username 做模糊搜尋；展開右側箭頭後，可有連線狀態、時間範圍、目標 IP 等過濾欄。</p></li>
-        <li><h3>看某台 client 的明細</h3><p>在清單點 client ID，進入連線明細頁。右上可手動重新整理、也可手動清除 session；下方能看到該連線目前的訂閱主題。</p></li>
-        <li><h3>踢除一台 client</h3><p>回到清單，勾選一台 client，按 <strong>Kick Out</strong> 中斷連線。若該 client 是持久 session、有 session 到期，重連後還是會對回同一 session。</p></li>
+        <li><h3>Open the Clients list</h3><p>In the sidebar, pick <strong>Monitoring → Clients</strong>. It shows the currently connected clients by default, with columns for client ID, username, connection status, IP, heartbeat, session information and the time the connection completed.</p></li>
+        <li><h3>Find one device with a filter</h3><p>The search bar at the top does a fuzzy search on client ID or username; expand the arrow on the right for filter fields such as connection status, time range and target IP.</p></li>
+        <li><h3>Look at one client in detail</h3><p>Click a client ID in the list to open its connection detail page. The top right lets you refresh by hand and clear the session by hand; further down you can see the topics this connection currently subscribes to.</p></li>
+        <li><h3>Kick a client out</h3><p>Back in the list, tick a client and press <strong>Kick Out</strong> to break the connection. If that client has a persistent session with a session expiry, it maps back onto the same session when it reconnects.</p></li>
       </ol>
     </section>
 
-    <section id="clients" data-nav="Clients 清單">
-      <h2 data-icon="plan">Clients 清單與明細細節</h2>
-      <p>清單最上，<strong>Select Column</strong> 讓你可選擇顯示哪些欄位；<strong>Refresh</strong> 會重置所有過濾條件並重新載入。IP 位址欄是把 client 的來源 IP 與所用連接埠併起來顯示。</p>
-      <p>點入明細頁後，除了清單上已有的基本資訊，還多了幾項：連線使用的協定版本（例如 MQTT 3.1.1 或 5.0）、session 是否要在離線後清理、以及（如果已離線）上次離線的時間。</p>
-      <p>明細的最上方與資訊分成兩區：<strong>Connection Information</strong>（連線資訊）與右側 <strong>Session Information</strong>（會話資訊）。session 欄位包括 session 過期時間、建立時間、訂閱數量、訊息佇列長度、傳輸視窗長度、QoS2 接收佇列長度。</p>
-      <p>再往下是流量、訊息與封包的統計指標，方便你只看一台 client 的進出量。整頁底部就是它目前訂閱的主題：可以按 <strong>Add Subscription</strong> 補一個簡單訂閱，或在清單按 <strong>Unsubscribe</strong> 取消。</p>
+    <section id="clients" data-nav="Clients list">
+      <h2 data-icon="plan">The Clients list and client details</h2>
+      <p>At the top of the list, <strong>Select Column</strong> lets you choose which columns are shown; <strong>Refresh</strong> resets every filter and reloads. The IP address column puts the client's source IP and the port it came in on together in one field.</p>
+      <p>The detail page adds a few things to the basics already in the list: the protocol version the connection uses (MQTT 3.1.1 or 5.0, for example), whether the session is to be cleaned up once the client goes offline, and — if it is offline already — the time it last went offline.</p>
+      <p>The information at the top of the detail page splits into two panels: <strong>Connection Information</strong>, and <strong>Session Information</strong> on the right. The session fields cover the session expiry interval, the creation time, the number of subscriptions, the message queue length, the inflight window length and the QoS2 receive queue length.</p>
+      <p>Below that come the traffic, message and packet statistics, which make it easy to read the in and out volume of a single client. The bottom of the page is the topics it subscribes to right now: press <strong>Add Subscription</strong> to add a simple subscription, or <strong>Unsubscribe</strong> in the list to cancel one.</p>
     </section>
 
     <section id="subscriptions" data-nav="Subscriptions">
-      <h2 data-icon="tabs">Subscriptions 與 Topics</h2>
-      <p><strong>Subscriptions</strong> 頁把每個連線的訂閱，以「client ID ＋ topic」建欄列出，包含 QoS 與 MQTT 5.0 的新訂閱選項：</p>
+      <h2 data-icon="tabs">Subscriptions and Topics</h2>
+      <p>The <strong>Subscriptions</strong> page lists the subscriptions of every connection in columns keyed on "client ID + topic", including QoS and the new MQTT 5.0 subscription options:</p>
       <ul>
-        <li><strong>No Local</strong>：設為 1 時，server 不會把自己的訊息轉回給你。</li>
-        <li><strong>Retain As Published</strong>：指定轉發訊息時要不要保留 RETAIN 旗標（這與 retained 訊息本身的 RETAIN 旗標無關）。</li>
-        <li><strong>Retain Handling</strong>：訂閱時 server 何時送 retained 訊息。0＝訂閱成功就送；1＝只有當舊訂閱不存在才送；2＝無論如何不送。</li>
+        <li><strong>No Local</strong>: set to 1, the server does not forward your own messages back to you.</li>
+        <li><strong>Retain As Published</strong>: sets whether the RETAIN flag is kept when a message is forwarded (this has nothing to do with the RETAIN flag on a retained message itself).</li>
+        <li><strong>Retain Handling</strong>: when the server sends retained messages on subscribe. 0 = send as soon as the subscription succeeds; 1 = send only when no earlier subscription exists; 2 = never send.</li>
       </ul>
-      <p>搜尋列預設有 Node、Client ID、Topic 三個過濾欄；展開箭頭後還可填 QoS 與共享訂閱名（Shared Name）。</p>
-      <p><strong>Topics</strong> 頁則把所有節點上、目前被訂閱的主題去重整成一份清單，可模糊搜尋。某列的 <strong>Create Monitor</strong> 會帶你到 <strong>Diagnose → Topic Metrics</strong> 建立這主題的監控。</p>
-      <p class="callout note">提醒：Subscriptions 是「以 client 為單位」，Topics 是「以主題為單位」；同一主題可能同時被不同 client 訂閱，兩欄才都很重要。</p>
+      <p>The search bar carries three filter fields by default: Node, Client ID and Topic; expand the arrow and you can also fill in QoS and the shared subscription name (Shared Name).</p>
+      <p>The <strong>Topics</strong> page takes the topics currently subscribed to on every node, deduplicates them into one list, and lets you fuzzy-search it. <strong>Create Monitor</strong> on a row takes you to <strong>Diagnose → Topic Metrics</strong> to set up monitoring for that topic.</p>
+      <p class="callout note">Reminder: Subscriptions counts per client, Topics counts per topic; the same topic can be subscribed to by several clients at once, which is why both views matter.</p>
     </section>
 
-    <section id="diagnose" data-nav="慢訂閱與監控">
-      <h2 data-icon="tips">慢訂閱與主題監控（Enterprise）</h2>
-      <p>若一台裝置明明在線、卻收訊息很慢，EMQX 的 <strong>Slow Subscriptions</strong> 能統計「從訊息抵達 EMQX、到送出完成」的延遲。在 <strong>Diagnose → Slow Subscriptions</strong> 啟用後，可以設統計門檻（Stats Threshold，最小 100ms）、紀錄筆數上限（最多 1000 筆）、紀錄淘汰時間（預設 300 秒），以及計算方式（whole／internal／response）。</p>
-      <p>清單以延遲時間由大到小排序，欄位有 Client ID、Topic、Duration、Node、Updated；點 Client ID 可以開此 client 的明細，深入調查。</p>
-      <p><strong>Topic Metrics</strong> 則專門統計特定主題：在 <strong>Diagnose → Topic Metrics</strong>（或 Topics 頁的 Create Monitor）新增一筆監控，指定一個主題名稱。要注意這個功能「不能用萬用字元」，<code>+</code> 或 <code>#</code> 目前都不支援；只能用完整主題名。</p>
-      <p class="note">兩種都僅限 EMQX Enterprise 版。如果你是 Open Source 5.8.9，其實你所在的 Diagnose 左欄就不會有它們。</p>
+    <section id="diagnose" data-nav="Slow subscriptions">
+      <h2 data-icon="tips">Slow subscriptions and topic monitoring (Enterprise)</h2>
+      <p>When a device is clearly online but slow to receive messages, EMQX's <strong>Slow Subscriptions</strong> can measure the latency from the moment a message reaches EMQX to the moment it finishes being sent. Once you enable it under <strong>Diagnose → Slow Subscriptions</strong>, you can set the statistics threshold (Stats Threshold, 100ms minimum), the record limit (1000 records at most), how long a record is kept before it is dropped (300 seconds by default), and the calculation method (whole/internal/response).</p>
+      <p>The list is sorted from the longest latency down, with columns for Client ID, Topic, Duration, Node and Updated; click a Client ID to open that client's details and dig deeper.</p>
+      <p><strong>Topic Metrics</strong> measures one named topic instead: add a monitor under <strong>Diagnose → Topic Metrics</strong> (or with Create Monitor on the Topics page) and give it a topic name. Note that this feature does not take wildcards — neither <code>+</code> nor <code>#</code> is supported today; only a full topic name works.</p>
+      <p class="note">Both are EMQX Enterprise only. On Open Source 5.8.9 they are simply not in the Diagnose group of your sidebar.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>在 Clients 找不到某台裝置</strong>：先用 client ID 或 username 模糊搜尋；也確認它真的連線了。若它已離線，可能是 session 還留著，看起來像上線。</li>
-        <li><strong>Kick Out 之後，同一台 client 又回連</strong>：如果該 client 用持久 session，中斷後會在 session 過期時間內重新連回同一 session。要「防它再回」，應改用 Authentication／ACL 或 Blacklist，而不是每次手動踢。</li>
-        <li><strong>訂了某主題卻收不到</strong>：在 Subscriptions 頁承認該訂閱的 QoS、No Local 有沒有被設錯。再用 <strong>Diagnose → WebSocket Client</strong> 的訂閱工具對同一主題抓一遍，確認 broker 有沒有在發。</li>
-        <li><strong>找不到 Slow Subscriptions 或 Topic Metrics</strong>：兩者是 Enterprise 版功能。若你是 Open Source 5.8.9，請改用 Clients ／Subscriptions 的統計欄做簡易判斷。</li>
+        <li><strong>A device is missing from Clients</strong>: fuzzy-search by client ID or username first, and confirm it really did connect. If it is offline already, its session may still be there, which makes it look online.</li>
+        <li><strong>The same client is back right after a Kick Out</strong>: a client on a persistent session reconnects to that same session within the session expiry interval. To keep it out, use Authentication/ACL or the Blacklist rather than kicking it by hand every time.</li>
+        <li><strong>Subscribed to a topic, but nothing arrives</strong>: on the Subscriptions page, check whether that subscription's QoS or No Local is set wrong. Then subscribe to the same topic once more with the subscription tool in <strong>Diagnose → WebSocket Client</strong>, to confirm the broker is publishing at all.</li>
+        <li><strong>Slow Subscriptions or Topic Metrics is nowhere to be found</strong>: both are Enterprise features. On Open Source 5.8.9, use the statistics columns in Clients and Subscriptions for a rough read instead.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Clients 與 Sessions 有什麼差別</summary>
-        <div class="body"><p>Clients 頁同時呈現「連線」與「會話」。連線斷的瞬間，session 未必跟著消失；如果該 client 是持久 session 並設定過期，session 會在到期前繼續存在。明細右上區的 Session Information 就是 session 的細項。</p></div>
+        <summary>What is the difference between Clients and Sessions?</summary>
+        <div class="body"><p>The Clients page shows connections and sessions at the same time. A session does not necessarily disappear the instant its connection drops; if that client uses a persistent session with an expiry set, the session lives on until it expires. Session Information, in the top right of the detail page, is where the session's own fields are.</p></div>
       </details>
       <details class="faq">
-        <summary>為什麼用 Kick Out 踢一台，它又自動連回</summary>
-        <div class="body"><p>Kick Out 只是中斷連線，不是禁止重連。若 device 設定自動重連，就會在允許的 session 過期時間內回去。要多次拒絕某個 client，改考量 Blacklist 或 ACL 層面的阻擋。</p></div>
+        <summary>Why does a client I kicked out connect again on its own?</summary>
+        <div class="body"><p>Kick Out only breaks the connection; it does not forbid reconnection. A device set to reconnect automatically comes back within the session expiry interval it is allowed. To turn a client away again and again, look at blocking it with the Blacklist or at the ACL level.</p></div>
       </details>
       <details class="faq">
-        <summary>Topics 清單與 Subscriptions 清單是不是一樣</summary>
-        <div class="body"><p>不完全一樣。Subscriptions 以「client＋topic」為一筆；Topics 是「全節去重」的主題名稱。同一主題若被兩台裝置訂了，Topics 只列一行，Subscriptions 卻會有兩筆。</p></div>
+        <summary>Are the Topics list and the Subscriptions list the same thing?</summary>
+        <div class="body"><p>Not entirely. Subscriptions counts one row per "client + topic"; Topics lists topic names deduplicated across all nodes. If two devices subscribe to the same topic, Topics shows one row and Subscriptions shows two.</p></div>
       </details>
       <details class="faq">
-        <summary>慢訂閱統計與主題監控為什麼找不到</summary>
-        <div class="body"><p>Slow Subscriptions 與 Topic Metrics 在 EMQX Enterprise 版才提供，Open Source 5.8.9 的 Diagnose 左欄不會顯示它們。若你的版是 Open Source，先以 Clients 的統計資訊做手動判斷。</p></div>
+        <summary>Why can I not find slow subscription statistics and topic monitoring?</summary>
+        <div class="body"><p>Slow Subscriptions and Topic Metrics ship with EMQX Enterprise only; the Diagnose group in the Open Source 5.8.9 sidebar does not show them. If your edition is Open Source, work from the statistics on the Clients page by hand.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/connections.md">EMQX 5.8 Clients 清單與明細（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/subscription-management.md">EMQX 5.8 Subscription Management（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/slow-subscribers-statistics.md">EMQX 5.8 Slow Subscriptions 統計（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/connections.md">EMQX 5.8 Clients list and details (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/subscription-management.md">EMQX 5.8 Subscription Management (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/slow-subscribers-statistics.md">EMQX 5.8 Slow Subscriptions statistics (pinned docs branch)</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (pinned commit)</a></li>
       </ul>
     </section>
 

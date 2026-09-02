@@ -70,15 +70,15 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
       <a href="#source_mqtt">MQTT Source</a>
-      <a href="#bridge_back">跨 broker 橋接與寫回</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#bridge_back">Broker bridging</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -86,126 +86,126 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch12_sources_bridge.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 12</div>
-      <h1>Sources 與資料匯入</h1>
-      <p class="lead">Source 是把「外部 MQTT broker 的訊息接回你自己的 EMQX」的入口，配合 republish 動作就能把外部訊息寫回 EMQX，實現跨 broker 橋接。</p>
+      <h1>Sources and data import</h1>
+      <p class="lead">A Source is the entry point that brings messages from an external MQTT broker back into your own EMQX; pair it with a republish action and those external messages get written back into EMQX, which is how you bridge across brokers.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>不是所有裝置都連到你的 EMQX。也許你有一台 Zigbee 整合器或雲端平台，已經把資料發布到 <em>別的</em> MQTT broker。想讓這些外部消息也能進到你的 EMQX、再進規則或 HA，就需要一條「進來的通道」，這就是 <strong>Source（來源）</strong>。</p>
-      <p>11 章講的 Sink 是「往外送」，這章講相反方向的<strong>資料匯入</strong>：透過 MQTT Source 從遠端 broker 收資料，再用 republish（或規則）把外部訊息「回寫」成 EMQX 本地可用的 topic。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>Not every device connects to your EMQX. You may have a Zigbee gateway or a cloud platform that already publishes its data to <em>another</em> MQTT broker. To get those external messages into your EMQX, and from there into a rule or into Home Assistant, you need a way in — and that is a <strong>Source</strong>.</p>
+      <p>The Sink in Chapter 11 sends data out; this chapter goes the other way, into <strong>data import</strong>: an MQTT Source collects data from a remote broker, and a republish action (or a rule) writes those external messages back onto a topic your local EMQX can use.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>MQTT broker 之間的資料橋接（許多人叫「MQTT 橋接」，EMQX 5.x 的文件叫 <strong>MQTT Broker Data Integration</strong>）讓 EMQX 以「client」身分連到另一個 MQTT 服務，做<strong>雙向</strong>訊息交換：</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>Data bridging between MQTT brokers (many people call it an MQTT broker bridge, and the EMQX 5.x documentation calls it <strong>MQTT Broker Data Integration</strong>) lets EMQX connect to another MQTT service as a client and exchange messages in <strong>both directions</strong>:</p>
       <ul>
-        <li><strong>出站（Sink）</strong>：把本地 EMQX 的訊息發布到遠端 broker 的指定 topic。</li>
-        <li><strong>入站（Source）</strong>：訂閱遠端 broker 的 topic，把收到的訊息送回本地 EMQX。</li>
+        <li><strong>Egress (Sink)</strong>: publishes messages from your local EMQX to a chosen topic on the remote broker.</li>
+        <li><strong>Ingress (Source)</strong>: subscribes to a topic on the remote broker and feeds what it receives back into your local EMQX.</li>
       </ul>
-      <p>兩者共用同一個 <strong>Connector</strong>（第 11 章）。同一個連線上可以配置多條橋接規則，各自有不同的 topic 對應與轉換。Source 收進來的訊息要能讓本地 client 讀到，通常要加上一個 republish 動作寫回本地。</p>
+      <p>Both share the same <strong>Connector</strong> (Chapter 11). One connection can carry several bridge rules, each with its own topic mapping and transformation. For a local client to read what a Source brings in, you normally add a republish action that writes it back locally.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>Source</td><td>來源</td><td>外部資料進入 EMQX 的入口（入站）</td></tr>
-            <tr><td>Sink</td><td>輸出端</td><td>EMQX 資料送往外部（出站）</td></tr>
-            <tr><td>MQTT Broker Bridge</td><td>MQTT 橋接</td><td>在兩個 MQTT broker 之間傳訊息</td></tr>
-            <tr><td>Ingress</td><td>入站</td><td>把遠端 broker 的訊息接進 EMQX</td></tr>
-            <tr><td>Egress</td><td>出站</td><td>把 EMQX 訊息發布到遠端 broker</td></tr>
+            <tr><td>Source</td><td>input source</td><td>Where external data enters EMQX (ingress)</td></tr>
+            <tr><td>Sink</td><td>output target</td><td>Where EMQX data goes out to an external system (egress)</td></tr>
+            <tr><td>MQTT Broker Bridge</td><td>MQTT bridge</td><td>Moves messages between two MQTT brokers</td></tr>
+            <tr><td>Ingress</td><td>inbound</td><td>Brings messages from a remote broker into EMQX</td></tr>
+            <tr><td>Egress</td><td>outbound</td><td>Publishes EMQX messages to a remote broker</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
-      <p>以官方教學為例：把遠端 broker（<code>broker.emqx.io</code>）收到的 <code>f/#</code> 訊息橋接成本地 <code>sub/#</code>。</p>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
+      <p>Following the official tutorial: bridge what a remote broker (<code>broker.emqx.io</code>) receives on <code>f/#</code> onto your local <code>sub/#</code>.</p>
       <ol class="steps">
-        <li><h3>建立 MQTT Broker Connector</h3><p>Dashboard 選 <strong>Integration → Connectors → Create</strong>，選 <strong>MQTT Broker</strong>，填名稱 <code>my_mqtt_bridge</code>，伺服器設 <code>broker.emqx.io:1883</code>（若需要驗證則填帳密）；按 Create。</p></li>
-        <li><h3>建立規則並加入 MQTT Source</h3><p>選 <strong>Integration → Rules → Create</strong>；在「Data Inputs」分頁刪掉預設的 Message 輸入，再按 <strong>Add Input</strong>，選 <strong>MQTT Broker</strong>，選 Connector，設定訂閱 Topic（例如 <code>$share/1/f/#</code>）與 QoS。</p></li>
-        <li><h3>查看規則 SQL</h3><p>加入 Source 後，規則 SQL 自動變成 <code>SELECT * FROM "$bridges/mqtt:my_source"</code>，表示資料來源是這個 MQTT 橋接。</p></li>
-        <li><h3>新增 Republish 動作</h3><p>切到「Action Outputs」分頁按 <strong>+ Add Action</strong>，選 <strong>Republish</strong>；Topic 填 <code>sub/${topic}</code>，QoS 選 <code>${qos}</code>，Payload 填 <code>${payload}</code>。</p></li>
-        <li><h3>建立並驗證</h3><p>按 <strong>Create</strong> 完成規則。訂閱本地 <code>sub/#</code>，在遠端 broker 的 <code>f/1</code> 發布訊息，本地應接到 <code>sub/f/1</code>。</p></li>
+        <li><h3>Create the MQTT Broker Connector</h3><p>In the Dashboard go to <strong>Integration → Connectors → Create</strong> and pick <strong>MQTT Broker</strong>. Name it <code>my_mqtt_bridge</code>, set the server to <code>broker.emqx.io:1883</code> (fill in the credentials if the remote broker requires authentication), then click Create.</p></li>
+        <li><h3>Create the rule and add the MQTT Source</h3><p>Go to <strong>Integration → Rules → Create</strong>. On the "Data Inputs" tab, delete the default Message input, click <strong>Add Input</strong>, pick <strong>MQTT Broker</strong>, choose the Connector, then set the subscribe Topic (<code>$share/1/f/#</code>, for example) and the QoS.</p></li>
+        <li><h3>Check the rule SQL</h3><p>Once the Source is added, the rule SQL becomes <code>SELECT * FROM "$bridges/mqtt:my_source"</code> on its own, which says the data source is this MQTT broker bridge.</p></li>
+        <li><h3>Add the Republish action</h3><p>Switch to the "Action Outputs" tab, click <strong>+ Add Action</strong> and pick <strong>Republish</strong>. Set Topic to <code>sub/${topic}</code>, QoS to <code>${qos}</code> and Payload to <code>${payload}</code>.</p></li>
+        <li><h3>Create it and verify</h3><p>Click <strong>Create</strong> to finish the rule. Subscribe to <code>sub/#</code> locally, publish a message to <code>f/1</code> on the remote broker, and it should arrive locally on <code>sub/f/1</code>.</p></li>
       </ol>
     </section>
 
     <section id="source_mqtt" data-nav="MQTT Source">
-      <h2 data-icon="network">MQTT Source 與 <code>$bridges</code> 語法</h2>
-      <p>建立 MQTT Source 時留意兩件事：</p>
+      <h2 data-icon="network">MQTT Source and the <code>$bridges</code> syntax</h2>
+      <p>Two things to watch when you create an MQTT Source:</p>
       <ul>
-        <li><strong>訂閱 topic 支援 <code>+</code> 與 <code>#</code> 萬用字元</strong>，可一次收一系列 remote topic。</li>
-        <li><strong>叢集或連線池時要用共享訂閱</strong>：當 EMQX 是叢集部署、或 Connector 開了連線池，多個 client 同時訂閱同一 topic 會收到重複訊息；官方建議用 <code>$share/群組名/topic</code>（例如 <code>$share/1/f/#</code>）把它分攤掉。</li>
+        <li><strong>The subscribe topic accepts the <code>+</code> and <code>#</code> wildcards</strong>, so one Source can pick up a whole family of remote topics.</li>
+        <li><strong>Use a shared subscription with a cluster or a connection pool</strong>: when EMQX runs as a cluster, or the Connector has a connection pool open, several clients subscribe to the same topic at once and each of them receives the message. The official advice is to spread that load with <code>$share/群組名/topic</code> (for example <code>$share/1/f/#</code>).</li>
       </ul>
-      <p>Source 收進來的訊息欄位（供規則 SQL 使用）包括：</p>
+      <p>The fields a Source brings in, for use in the rule SQL, are:</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>欄位</th><th>說明</th></tr>
+            <tr><th>Field</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td><code>topic</code></td><td>原始訊息 topic</td></tr>
-            <tr><td><code>server</code></td><td>來源 broker 位址</td></tr>
-            <tr><td><code>payload</code></td><td>訊息內容</td></tr>
-            <tr><td><code>qos</code></td><td>訊息 QoS</td></tr>
-            <tr><td><code>retain</code></td><td>是否 retained</td></tr>
-            <tr><td><code>pub_props</code></td><td>MQTT 5.0 訊息屬性（user property 等）</td></tr>
-            <tr><td><code>message_received_at</code></td><td>接收時間（毫秒）</td></tr>
+            <tr><td><code>topic</code></td><td>The topic of the original message</td></tr>
+            <tr><td><code>server</code></td><td>The address of the source broker</td></tr>
+            <tr><td><code>payload</code></td><td>The message payload</td></tr>
+            <tr><td><code>qos</code></td><td>The QoS of the message</td></tr>
+            <tr><td><code>retain</code></td><td>Whether the message is retained</td></tr>
+            <tr><td><code>pub_props</code></td><td>MQTT 5.0 message properties (user property and so on)</td></tr>
+            <tr><td><code>message_received_at</code></td><td>The time it was received, in milliseconds</td></tr>
           </tbody>
         </table>
       </div>
-      <p>規則用 <code>$bridges/mqtt:&lt;name&gt;</code> 當資料來源，其中 <code>&lt;name&gt;</code> 是 Connector／Source 的名稱。</p>
+      <p>A rule uses <code>$bridges/mqtt:&lt;name&gt;</code> as its data source, where <code>&lt;name&gt;</code> is the name of the Connector/Source.</p>
     </section>
 
-    <section id="bridge_back" data-nav="跨 broker 橋接與寫回">
-      <h2 data-icon="export">跨 broker 橋接與回寫 EMQX</h2>
-      <p><strong>出站</strong>這側很單純：建立 MQTT <strong>Sink</strong>（egress），把本地 topic 發布到遠端。例如規則 <code>SELECT * FROM "t/#"</code> 對應 <code>pub/${topic}</code> 目標，本地 <code>t/1</code> 會被轉送到遠端 <code>pub/t/1</code>。發送時 QoS 與 retain 可用 <code>${qos}</code>、<code>${flags.retain}</code> 佔位符沿用原訊息。</p>
-      <p><strong>入站寫回</strong>這條就是 Source 的用途：Source 把遠端訂閱到的訊息引進規則，但<strong>不會就地發布到本地</strong>——你得再加一個 Republish 動作把它「回寫」成本地 topic。官方範例用 <code>sub/${topic}</code>，所以遠端 <code>f/1</code> 進到你 <code>sub/f/1</code>，本地 client 訂 <code>sub/#</code> 即可收到。</p>
-      <p>想用設定檔宣告時，在 <code>rule_engine</code> 與 <code>connector/bridges</code> 區域建立對應的 ingress（Source）與 egress（Sink）bridge，與規則的 SQL 相呼應。若為叢集或多節點連線，MQTT 的固定 client ID 會彼此衝突，官方因此不支援在此處設定固定 client ID。</p>
+    <section id="bridge_back" data-nav="Broker bridging">
+      <h2 data-icon="export">Bridging across brokers and writing back to EMQX</h2>
+      <p>The <strong>egress</strong> side is simple: create an MQTT <strong>Sink</strong> (egress) that publishes a local topic to the remote broker. A rule of <code>SELECT * FROM "t/#"</code> pointed at the target <code>pub/${topic}</code>, for example, forwards your local <code>t/1</code> to <code>pub/t/1</code> on the remote broker. On the way out, QoS and retain can carry over from the original message through the <code>${qos}</code> and <code>${flags.retain}</code> placeholders.</p>
+      <p><strong>Ingress write-back</strong> is what a Source is for: it pulls the messages it subscribed to on the remote broker into a rule, but it <strong>does not publish them locally by itself</strong> — you have to add a Republish action to write them back onto a local topic. The official example uses <code>sub/${topic}</code>, so a remote <code>f/1</code> lands on your <code>sub/f/1</code>, and a local client that subscribes to <code>sub/#</code> receives it.</p>
+      <p>To declare all of this in a config file instead, create the matching ingress (Source) and egress (Sink) bridges in the <code>rule_engine</code> and <code>connector/bridges</code> sections, mirroring the rule's SQL. On a cluster or across several nodes a fixed MQTT client ID would collide between them, which is why a fixed client ID is not supported here.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>Source 沒收到遠端訊息</strong>：確認 Connector 狀態為 Connected、訂閱 Topic 與 QoS 正確、萬用字元無誤、遠端 broker 確有資料發布。</li>
-        <li><strong>叢集／連線池資料重複</strong>：改用共享訂閱 <code>$share/群組/topic</code>，避免多個 bridge client 重複收到同一筆。</li>
-        <li><strong>本地收不到回寫的訊息</strong>：Source 只是把訊息引進；需另外用 Republish 動作才真的寫回本地 topic。確認動作已加並已創建。</li>
-        <li><strong>SQL 欄位拿不到</strong>：確認規則 <code>FROM</code> 是正確的 <code>$bridges/mqtt:&lt;名稱&gt;</code>，且放進 的名稱與 Source 名稱一致。</li>
+        <li><strong>The Source receives nothing from the remote broker</strong>: check that the Connector state is Connected, that the subscribe Topic and QoS are right, that the wildcards are correct, and that something really is publishing on the remote broker.</li>
+        <li><strong>Duplicate data with a cluster or a connection pool</strong>: switch to a shared subscription, <code>$share/群組/topic</code>, so several bridge clients do not each receive the same message.</li>
+        <li><strong>The written-back messages never arrive locally</strong>: a Source only brings the message in; it takes a separate Republish action to actually write it back onto a local topic. Check that the action was added and the rule created.</li>
+        <li><strong>A SQL field comes back empty</strong>: check that the rule's <code>FROM</code> is the right <code>$bridges/mqtt:&lt;名稱&gt;</code>, and that the name you put in matches the Source's name.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Source 與 Sink 的差別</summary>
-        <div class="body"><p>Source 是入站（外部 → EMQX），Sink 是出站（EMQX → 外部）。同一個 MQTT Connector 可同時供 Source 與 Sink 使用，訊息的進出彼此獨立。</p></div>
+        <summary>What is the difference between a Source and a Sink?</summary>
+        <div class="body"><p>A Source is ingress (external → EMQX) and a Sink is egress (EMQX → external). One MQTT Connector can serve a Source and a Sink at the same time, and the traffic in and out is independent.</p></div>
       </details>
       <details class="faq">
-        <summary>MQTT 橋接一定要叢集嗎</summary>
-        <div class="body"><p>不必。但它支援叢集與連線池；當多節點或多 client 並連時，官方建議用共享訂閱避免重複訊息。</p></div>
+        <summary>Does an MQTT broker bridge need a cluster?</summary>
+        <div class="body"><p>No. It does support clusters and connection pools, though; when several nodes or several clients connect at once, the official advice is to use a shared subscription to avoid duplicate messages.</p></div>
       </details>
       <details class="faq">
-        <summary>能用固定 client ID 連到遠端 broker 嗎</summary>
-        <div class="body"><p>不建議。叢集或連線池時多個節點用同一 client ID 會衝突，斷後重連也不穩；MQTT 橋接不提供固定 client ID，EMQX 會自動產生唯一的 client ID。</p></div>
+        <summary>Can I connect to the remote broker with a fixed client ID?</summary>
+        <div class="body"><p>It is not advisable. With a cluster or a connection pool, several nodes sharing one client ID collide, and reconnecting after a drop is unreliable. An MQTT broker bridge does not offer a fixed client ID; EMQX generates a unique one for you.</p></div>
       </details>
       <details class="faq">
-        <summary>入站訊息一定要用 Republish 嗎</summary>
-        <div class="body"><p>要。Source 只把外部訊息帶進規則處理流程，不會自動發布到本地 topic；想讓本地 client（或 HA）能收到，就得加 Republish（或送往 Sink）動作。</p></div>
+        <summary>Does an inbound message have to go through Republish?</summary>
+        <div class="body"><p>Yes. A Source only brings the external message into the rule's processing pipeline; it does not publish to a local topic on its own. For a local client (or Home Assistant) to receive it, add a Republish action — or send it to a Sink.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridge-mqtt.md">EMQX 5.8 MQTT Broker Bridge（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/connector.md">EMQX 5.8 Connector（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-sql-events-and-fields.md">EMQX 5.8 Data Sources and Fields（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/data-bridge-mqtt.md">EMQX 5.8 MQTT Broker Bridge (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/connector.md">EMQX 5.8 Connector (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-sql-events-and-fields.md">EMQX 5.8 Data Sources and Fields (pinned docs branch)</a></li>
       </ul>
     </section>
 

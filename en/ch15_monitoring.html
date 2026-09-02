@@ -70,16 +70,16 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#words">名詞對照</a>
-      <a href="#steps">動手做</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#words">Terms</a>
+      <a href="#steps">Hands-on</a>
       <a href="#overview">Cluster Overview</a>
-      <a href="#stats">指標 Metrics</a>
+      <a href="#stats">Metrics</a>
       <a href="#prometheus">Prometheus</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -87,125 +87,125 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch15_monitoring.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 15</div>
-      <h1>監控與 Metrics</h1>
-      <p class="lead">EMQX 監控與 Metrics：Dashboard 統計、節點狀態、系統資源、Prometheus 整合概念與訊息速率指標。</p>
+      <h1>Monitoring and Metrics</h1>
+      <p class="lead">EMQX monitoring and Metrics: Dashboard statistics, node status, system resources, the concepts behind the Prometheus integration, and message rate metrics.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>broker 用起來正常，不代表它負載健康。要守住一間房子的訊息骨幹，你需要知道「目前有多少連線與訂閱、每台節點還剩多少記憶體、訊息進出速率是不是爆炸」。EMQX 的 <strong>Monitoring</strong> 模組，就是把這些數值集中在一起看的地方。</p>
-      <p>這章會帶你讀懂 Dashboard 裡的叢集統計、節點狀態與系統資源欄，以及 EMQX 提供的 Stats 與 Metrics 兩種指標。最後再用 Prometheus 說明「把 EMQX 監控搬進自己的監控系統」的入門概念，讓你在家也能搭自己的 Grafana 儀表。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>A broker that works is not the same as a broker that is healthy under load. To keep the message backbone of a house running, you need to know how many connections and subscriptions there are right now, how much memory each node has left, and whether the rate of messages in and out has blown up. The EMQX <strong>Monitoring</strong> module is where all of those numbers are gathered in one place.</p>
+      <p>This chapter walks you through the cluster statistics, the node status and the system resource columns in the Dashboard, and through the two kinds of figures EMQX gives you: Stats and Metrics. It closes with Prometheus, as an introduction to moving EMQX monitoring into a monitoring system of your own, so you can build your own Grafana dashboard at home.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>EMQX 把監控資料分成兩類：<strong>Statistics</strong>（統計）是整數型計值，給你某一個時間點的單一數值；<strong>Metrics</strong>（計量）是整數型的累加計數器，例如累計的位元組數與訊息數。兩者都是 Dashboard 最直接的觀察方式。</p>
-      <p>在 Dashboard 左側展開 <strong>Monitoring</strong>，會看到幾個子選單：<strong>Cluster Overview</strong>（叢集總覽）、<strong>Clients</strong>、<strong>Subscriptions</strong>、<strong>Retained Messages</strong>，以及 <strong>Delayed Publish</strong> 與 <strong>Alarms</strong>——後兩個是 EMQX Enterprise 版的功能。</p>
-      <p>若不想打開 Dashboard，你還有三條路：用 REST API 抓同一份資料、訂閱 <code>$SYS/</code> 開頭的系統主題，或把指標推給 Prometheus 等第三方監控。這章尾段會帶到 Prometheus。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>EMQX splits monitoring data into two kinds. <strong>Statistics</strong> are integer gauges: a single number for one moment in time. <strong>Metrics</strong> are integer counters that accumulate, such as the running total of bytes and messages. Both are the most direct thing to watch in the Dashboard.</p>
+      <p>Expand <strong>Monitoring</strong> in the Dashboard sidebar and you get a handful of sub-items: <strong>Cluster Overview</strong>, <strong>Clients</strong>, <strong>Subscriptions</strong> and <strong>Retained Messages</strong>, plus <strong>Delayed Publish</strong> and <strong>Alarms</strong> — the last two are EMQX Enterprise features.</p>
+      <p>If you would rather not open the Dashboard, you have three other routes: pull the same data over the REST API, subscribe to the system topics that start with <code>$SYS/</code>, or push the metrics to third-party monitoring such as Prometheus. Prometheus comes up at the end of this chapter.</p>
     </section>
 
-    <section id="words" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="words" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>說明</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Monitoring</td><td>監控</td><td>Dashboard 中觀察叢集狀態的模組</td></tr>
-            <tr><td>Cluster Overview</td><td>叢集總覽</td><td>登入後的首頁，叢集級數字</td></tr>
-            <tr><td>Node</td><td>節點</td><td>叢集裡的一座 EMQX 實例</td></tr>
-            <tr><td>Statistics</td><td>統計</td><td>某一時間點的整數型計值</td></tr>
-            <tr><td>Metrics</td><td>指標</td><td>累計型的計數器（位元組、封包、訊息、事件）</td></tr>
-            <tr><td>Prometheus</td><td>普羅米修斯</td><td>第三方監控／蒐集指標的服務</td></tr>
+            <tr><td>Monitoring</td><td>cluster monitoring</td><td>The Dashboard module for watching the state of the cluster</td></tr>
+            <tr><td>Cluster Overview</td><td>cluster-wide summary</td><td>The page you land on after login, with cluster-level numbers</td></tr>
+            <tr><td>Node</td><td>one EMQX instance</td><td>A single EMQX instance in the cluster</td></tr>
+            <tr><td>Statistics</td><td>point-in-time counts</td><td>An integer gauge for one moment in time</td></tr>
+            <tr><td>Metrics</td><td>running totals</td><td>Counters that accumulate (bytes, packets, messages, events)</td></tr>
+            <tr><td>Prometheus</td><td>metrics collector</td><td>A third-party service that monitors systems and collects metrics</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>進入 Monitoring 模組</h3><p>左側選 <strong>Monitoring → Cluster Overview</strong>，先看到叢集層級的連線數、訂閱數與主題數。</p></li>
-        <li><h3>切到 Nodes 分頁</h3><p>上半部把群組切到 <strong>Nodes</strong>，展開叢集裡的每一顆節點（你家用 add-on 一般是單節點）。</p></li>
-        <li><h3>看系統資源與版本</h3><p>節點欄可看到連線數、版本、持續運行時間、Erlang 進程數與記憶體／CPU 用量。點節點名能再進「節點細節」。</p></li>
-        <li><h3>利用〔Metrics〕分頁看累計指標</h3><p>再切 <strong>Metrics</strong> 分頁，逐項看 bytes、packets、messages、 events 四組計量；把數字與時間選取範圍一起觀察。</p></li>
+        <li><h3>Open the Monitoring module</h3><p>In the sidebar, choose <strong>Monitoring → Cluster Overview</strong>. The first thing you see is the cluster-level connection, subscription and topic counts.</p></li>
+        <li><h3>Switch to the Nodes tab</h3><p>In the top half, switch the group to <strong>Nodes</strong> to expand every node in the cluster (a home add-on install is usually a single node).</p></li>
+        <li><h3>Read the system resources and the version</h3><p>The node row shows the connection count, the version, uptime, the number of Erlang processes and memory/CPU usage. Click the node name to go into the node details.</p></li>
+        <li><h3>Use the Metrics tab for the cumulative counters</h3><p>Switch to the <strong>Metrics</strong> tab and work through the four groups of counters one by one: bytes, packets, messages and events. Read the numbers together with the time range you have selected.</p></li>
       </ol>
     </section>
 
     <section id="overview" data-nav="Cluster Overview">
-      <h2 data-icon="plan">Cluster Overview：連線與節點總覽</h2>
-      <p><strong>Cluster Overview</strong> 是 Monitoring 的第一個子選單。切到 <strong>Nodes</strong> 分頁，能看到每個節點的名稱、狀態、持續時間、連線數、版本、Erlang 進程數、記憶體與 CPU 用量。節點畫成灰色表示它已停止，點名稱可進「節點細節」看 system paths 與 log 路徑。</p>
-      <p>居家環境通常是單節點，因此 Node 分頁的第一個預設就是你的 add-on 本身。版本欄是確認「目前 EMQX 是 5.8.9」最直接的地方。</p>
-      <p>下方時間序列圖可以選過去 1 小時、6 小時…… 到 7 天，觀察連線數與訊息量的走勢。</p>
-      <p>若想讓 Dashboard 重新開始計數，可以用 <strong>Reset Monitoring Data</strong> 把前面累積的資料清掉再累積。</p>
+      <h2 data-icon="plan">Cluster Overview: connections and nodes at a glance</h2>
+      <p><strong>Cluster Overview</strong> is the first item under Monitoring. Switch to the <strong>Nodes</strong> tab and you see each node's name, status, uptime, connection count, version, Erlang process count, and memory and CPU usage. A node drawn in gray has stopped; click its name to open the node details and read the system paths and the log path.</p>
+      <p>A home setup is usually a single node, so the first entry on the Node tab is your add-on itself. The Version column is the most direct place to confirm that the EMQX you are running is 5.8.9.</p>
+      <p>The time series chart below can be set to the last 1 hour, 6 hours … up to 7 days, so you can watch how connection counts and message volume trend.</p>
+      <p>To make the Dashboard start counting again, use <strong>Reset Monitoring Data</strong> to clear what has accumulated so far and start over.</p>
     </section>
 
-    <section id="stats" data-nav="指標 Metrics">
-      <h2 data-icon="network">Statistics 與 Metrics</h2>
-      <p>在 Cluster Overview 的 <strong>Metrics</strong> 分頁，EMQX 的 Metrics 分四個維度：<strong>bytes</strong>（輸入輸出的位元組數）、<strong>packets</strong>（各種 MQTT 封包收發數）、<strong>messages</strong>（訊息數，含 QoS 0／1／2、接收、送出、轉發、捨棄）、<strong>events</strong>（事件數，如連線、session、認證與存取）。</p>
-      <p>另有一部分是 <strong>Statistics</strong>，例如：</p>
+    <section id="stats" data-nav="Metrics">
+      <h2 data-icon="network">Statistics and Metrics</h2>
+      <p>On the <strong>Metrics</strong> tab of Cluster Overview, EMQX's Metrics come in four dimensions: <strong>bytes</strong> (bytes in and out), <strong>packets</strong> (MQTT packets of each kind, sent and received), <strong>messages</strong> (message counts, including QoS 0/1/2, received, sent, forwarded and dropped) and <strong>events</strong> (event counts, such as connections, sessions, authentication and access).</p>
+      <p>Another part of it is <strong>Statistics</strong>, for example:</p>
       <ul>
-        <li><code>connections.count</code>／<code>connections.max</code>：目前連線數與歷史最大值。</li>
-        <li><code>sessions.count</code>／<code>sessions.max</code>：目前的 session 數。</li>
-        <li><code>subscriptions.count</code>：目前訂閱總數（含共享訂閱）。</li>
-        <li><code>topics.count</code>：目前唯一主題數。</li>
-        <li><code>retained.count</code>：目前保留（retained）資訊數量。</li>
-        <li><code>delayed.count</code>：目前延遲發布的資訊數。</li>
+        <li><code>connections.count</code>/<code>connections.max</code>: the current connection count and the all-time maximum.</li>
+        <li><code>sessions.count</code>/<code>sessions.max</code>: the current session count.</li>
+        <li><code>subscriptions.count</code>: the total number of subscriptions right now (shared subscriptions included).</li>
+        <li><code>topics.count</code>: the number of unique topics right now.</li>
+        <li><code>retained.count</code>: the number of retained messages right now.</li>
+        <li><code>delayed.count</code>: the number of delayed-publish messages right now.</li>
       </ul>
-      <p>多數指標都用「目前值＋歷史最大」的形式給你看，適合做長期趨勢。</p>
+      <p>Most of these are shown as a current value plus an all-time maximum, which suits long-term trends.</p>
     </section>
 
     <section id="prometheus" data-nav="Prometheus">
-      <h2 data-icon="advanced">跟 Prometheus 整合</h2>
-      <p>EMQX 可以把監控名片揭露給第三方監控系統，最常見的是 <strong>Prometheus</strong>。好處是讓 EMQX 與主機其他量在同一張圖上，或用 <strong>Grafana</strong> 畫出視覺化儀表、用 Alertmanager 通知異常。</p>
-      <p>在 Dashboard 的 <strong>Management → Monitoring</strong> 頁，「Integration」分頁選 Prometheus 設定。EMQX 支援兩種模式：</p>
+      <h2 data-icon="advanced">Integrating with Prometheus</h2>
+      <p>EMQX can expose its monitoring data to a third-party monitoring system, and the most common one is <strong>Prometheus</strong>. That puts EMQX on the same chart as everything else you measure on the host, or lets you draw a visual dashboard with <strong>Grafana</strong> and have Alertmanager tell you when something is off.</p>
+      <p>On the Dashboard's <strong>Management → Monitoring</strong> page, open the "Integration" tab and choose the Prometheus settings. EMQX supports two modes:</p>
       <ul>
-        <li><strong>Pull（拉取）模式</strong>：Prometheus 定期來打 EMQX 的 REST API，例如 <code>/api/v5/prometheus/stats</code>（基本指標與計數器）、<code>/api/v5/prometheus/auth</code>（存取控制）、<code>/api/v5/prometheus/data_integration</code>（規則、Connector、Action、Sink）、Sink 相關）。</li>
-        <li><strong>Push（推送）模式</strong>：EMQX 把指標推給 Pushgateway（預設關閉），再由 Prometheus 去收集；此模式目前只包含 basic 指標。</li>
+        <li><strong>Pull mode</strong>: Prometheus polls EMQX's REST API on a schedule, for example <code>/api/v5/prometheus/stats</code> (basic metrics and counters), <code>/api/v5/prometheus/auth</code> (access control) and <code>/api/v5/prometheus/data_integration</code> (rules, Connectors, Actions and Sinks).</li>
+        <li><strong>Push mode</strong>: EMQX pushes the metrics to a Pushgateway (off by default) and Prometheus collects them from there; right now this mode covers only the basic metrics.</li>
       </ul>
-      <p>基本上最常用的是「拉取模式」——你只要在 Prometheus 設定底下 url 指到 EMQX，就能收 metrics。</p>
-      <p class="note">拉模式 API 預設不需驗證；若要啟用 Basic Auth，需在 EMQX 建立一組 API key，並把 key 放進 Prometheus 設定。</p>
+      <p>Pull mode is what most people use: point the url in your Prometheus configuration at EMQX and the metrics start arriving.</p>
+      <p class="note">The pull-mode API needs no authentication by default. To turn Basic Auth on, create an API key in EMQX and put the key into your Prometheus configuration.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>首頁數字看似沒有更新</strong>：Overview 的圖有時間範圍與整理間隔可選；改長範圍再觀察，或按 Reset Monitoring Data 重新累積。</li>
-        <li><strong>某節點畫成灰色</strong>：表示該節點停止。別把資料誤判成「缺號」；先看到節點狀態欄。</li>
-        <li><strong>想找目前 EMQX 版本</strong>：進 <strong>Monitoring → Nodes</strong>，Version 欄就是正在運作的 EMQX 版本（本書目標是 5.8.9）。</li>
-        <li><strong>Delayed Publish／Alarms 在左欄消失</strong>：這兩項是 EMQX Enterprise 版功能，Open Source 5.8.9 不提供，不是壞掉。</li>
+        <li><strong>The numbers on the home page look stuck</strong>: the Overview charts have a time range and an aggregation interval you can change; widen the range and look again, or press Reset Monitoring Data to start accumulating from scratch.</li>
+        <li><strong>A node is drawn in grey</strong>: that node has stopped. Do not read the data as a missing entry; check the node status column first.</li>
+        <li><strong>You need the EMQX version you are running</strong>: go to <strong>Monitoring → Nodes</strong>; the Version column is the EMQX version currently running (this guide targets 5.8.9).</li>
+        <li><strong>Delayed Publish/Alarms have vanished from the sidebar</strong>: both are EMQX Enterprise features. Open Source 5.8.9 does not offer them, and nothing is broken.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Statistics 跟 Metrics 到底差在哪</summary>
-        <div class="body"><p>Statistics 是一次抓的整數型計值（例如現在有幾個訂閱、歷史最大幾個）；Metrics 是累計型計數器（例如累計收了多少 bytes、發出多少封包）。Dashboard 把兩者都擺在 Monitoring 裡。</p></div>
+        <summary>What is the actual difference between Statistics and Metrics?</summary>
+        <div class="body"><p>Statistics are integer gauges read in one shot (how many subscriptions there are right now, what the all-time maximum was). Metrics are counters that accumulate (how many bytes have been received in total, how many packets have gone out). The Dashboard keeps both under Monitoring.</p></div>
       </details>
       <details class="faq">
-        <summary>為什麼 Dashboard 看不到 Alarms／Delayed Publish</summary>
-        <div class="body"><p>因為它們是 EMQX Enterprise 版的功能。Open Source 5.8.9 不會在 Monitoring 左欄顯示，這是授權界線，不是設定錯。</p></div>
+        <summary>Why can't I see Alarms/Delayed Publish in the Dashboard?</summary>
+        <div class="body"><p>Because they are EMQX Enterprise features. Open Source 5.8.9 does not show them in the Monitoring sidebar. That is a licensing boundary, not a setting you got wrong.</p></div>
       </details>
       <details class="faq">
-        <summary>Prometheus 的 Pull 與 Push 我該選哪種</summary>
-        <div class="body"><p>多數人選 Pull（拉取），EMQX 官方文件也建議 Pull，因為 Pushgateway push 模式目前只包含 basic 指標，沒有 auth 或 data_integration 的那麼完整。</p></div>
+        <summary>Should I pick Pull or Push for Prometheus?</summary>
+        <div class="body"><p>Most people pick Pull, and the official EMQX documentation recommends Pull too, because the Pushgateway push mode currently covers only the basic metrics — it is not as complete as auth or data_integration.</p></div>
       </details>
       <details class="faq">
-        <summary>怎麼看一座節點的系統資源</summary>
-        <div class="body"><p>進 Monitoring → Nodes，點節點名稱開啟細節頁，裡面有記憶體／CPU 用量、Erlang 進程數與連線數等。家用單節點把它當作「EMQX 實例的健康狀態」即可。</p></div>
+        <summary>How do I check one node's system resources?</summary>
+        <div class="body"><p>Go to Monitoring → Nodes and click the node name to open its details page, which holds memory/CPU usage, the Erlang process count, the connection count and so on. On a single node at home, read that page as the health of your EMQX instance.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard 首頁（Cluster Overview／Nodes）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md">EMQX 5.8 Monitoring 總覽</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/metrics-and-stats.md">EMQX 5.8 Statistics 與 Metrics</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/prometheus.md">EMQX 5.8 Prometheus 整合</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（pinned commit）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/dashboard.md">EMQX 5.8 Dashboard home page (Cluster Overview/Nodes)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/dashboard/monitoring.md">EMQX 5.8 Monitoring overview</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/metrics-and-stats.md">EMQX 5.8 Statistics and Metrics</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/observability/prometheus.md">EMQX 5.8 Prometheus integration</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (pinned commit)</a></li>
       </ul>
     </section>
 

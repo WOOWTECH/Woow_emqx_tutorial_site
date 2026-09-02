@@ -1,0 +1,15 @@
+{
+  "file": "ch9_rule_engine.html",
+  "entries": [
+    {
+      "unit": "#sql",
+      "zh": "<pre><code>SELECT &lt;欄位與運算式&gt; FROM &lt;資料來源&gt; [WHERE &lt;條件&gt;]</code></pre>",
+      "en": "<pre><code>SELECT &lt;fields and expressions&gt; FROM &lt;data source&gt; [WHERE &lt;condition&gt;]</code></pre>"
+    },
+    {
+      "unit": "#sql",
+      "zh": "<code>${欄位名}</code>",
+      "en": "<code>${field}</code>"
+    }
+  ]
+}

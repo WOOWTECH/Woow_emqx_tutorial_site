@@ -70,15 +70,15 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼</a>
-      <a href="#concept">核心概念</a>
-      <a href="#actions">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#republish">Republish 與 Console</a>
-      <a href="#config">設定檔動作</a>
-      <a href="#troubleshoot">排錯</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#actions">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#republish">Republish and Console</a>
+      <a href="#config">Actions in config</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -86,82 +86,82 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch10_rule_actions.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 10</div>
-      <h1>內建動作與訊息轉發</h1>
-      <p class="lead">規則 SQL 算出結果之後，動作就是「把結果送到哪」。這章深入 <strong>Republish</strong> 與 <strong>Console Output</strong> 兩種內建動作，也看設定檔如何宣告動作。</p>
+      <h1>Built-in actions and message republishing</h1>
+      <p class="lead">Once the rule SQL has worked out a result, the action decides where that result goes. This chapter goes deep on the two built-in actions <strong>Republish</strong> and <strong>Console Output</strong>, and looks at how a config file declares an action.</p>
     </div>
 
-    <section id="why" data-nav="為什麼">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>第 9 章你寫得出規則 SQL，但規則引擎真正的價值在「命中之後真的做出某件事」。只把資料卡在 SQL 輸出裡，等於沒用；動作（action）就是把規則處理完的結果轉成實際行為——轉發到另一個 topic、印到 log 供除錯、或送進外部資料系統。</p>
-      <p>這章聚焦 EMQX 5.8.9 的<strong>內建動作</strong>，尤其是 republish 與 console。「送給外部系統」的動作（Webhook、Kafka、資料庫）依賴 Connector／Sink，留到第 11 章詳談。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>Chapter 9 taught you to write rule SQL, but the real value of the Rule Engine is that something actually happens once a rule matches. Data that stops at the SQL output is data you cannot use. An action turns the result the rule produced into real behavior: republishing it to another topic, printing it to the log for debugging, or sending it into an external data system.</p>
+      <p>This chapter focuses on the <strong>built-in actions</strong> of EMQX 5.8.9, above all republish and console. Actions that send data out to an external system (Webhook, Kafka, a database) rely on Connectors and Sinks, which Chapter 11 covers in detail.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>一個規則可以在 <code>actions</code> 裡配置<strong>一個或多個</strong>動作；規則會依序執行。動作要用的資料，來自 SQL 執行結果——你可以用 <code>${欄位名}</code> 這種佔位語法，把規則輸出的欄位塞進動作參數（例如把 SQL 挑出的 <code>payload</code> 或 <code>clientid</code> 放進 republish 的 topic 或 payload）。</p>
-      <p>EMQX 5.8.9 的三種內建動作：</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>In a rule's <code>actions</code> you can configure <strong>one or more</strong> actions, and the rule runs them in order. The data an action uses comes from the SQL result: with placeholder syntax such as <code>${欄位名}</code> you push a field of the rule output into an action parameter (putting the <code>payload</code> or <code>clientid</code> the SQL selected into the republish topic or payload, for example).</p>
+      <p>The three built-in actions in EMQX 5.8.9:</p>
       <ul>
-        <li><strong>Message Republishing（轉發）</strong>：把規則結果重新發布到 MQTT 主題。</li>
-        <li><strong>Console Output（主控台輸出）</strong>：把結果印到主控台或 log，主要用於除錯。</li>
-        <li><strong>Forwarding to Sinks（送進外部系統）</strong>：把結果交給 Sink（第 11 章）。</li>
+        <li><strong>Message Republishing</strong>: publishes the rule result to an MQTT topic.</li>
+        <li><strong>Console Output</strong>: prints the result to the console or the log, mainly for debugging.</li>
+        <li><strong>Forwarding to Sinks</strong>: hands the result to a Sink (Chapter 11).</li>
       </ul>
-      <p>建立規則時，在「Add Action」下拉選單挑動作即可；也可以用 <code>emqx.conf</code> 設定檔宣告同樣的規則與動作。</p>
+      <p>When you create a rule, pick the action from the "Add Action" dropdown; you can also declare the same rule and action in the <code>emqx.conf</code> config file.</p>
     </section>
 
-    <section id="actions" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="actions" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>Action</td><td>動作</td><td>規則命中後執行的輸出行為</td></tr>
-            <tr><td>Republish</td><td>轉發</td><td>把規則結果重新發布到另一 MQTT topic</td></tr>
-            <tr><td>Console Output</td><td>主控台輸出</td><td>把結果印到主控台／log，供除錯</td></tr>
-            <tr><td>Forwarding</td><td>轉送</td><td>把結果送進 Sink（外部系統）</td></tr>
-            <tr><td><code>${key}</code></td><td>佔位符</td><td>在動作參數中引用規則輸出的欄位</td></tr>
+            <tr><td>Action</td><td>what the rule does next</td><td>The output behavior that runs once a rule matches</td></tr>
+            <tr><td>Republish</td><td>publish it again elsewhere</td><td>Publishes the rule result to another MQTT topic</td></tr>
+            <tr><td>Console Output</td><td>print it to the console</td><td>Prints the result to the console or the log, for debugging</td></tr>
+            <tr><td>Forwarding</td><td>send it on</td><td>Sends the result into a Sink (an external system)</td></tr>
+            <tr><td><code>${key}</code></td><td>placeholder</td><td>References a field of the rule output inside an action parameter</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>建立規則</h3><p>在 Dashboard 選 <strong>Integration → Rules → Create</strong>，填規則名，SQL 輸入 <code>SELECT * FROM "t/#"</code>。</p></li>
-        <li><h3>加入 Republish 動作</h3><p>按右側 <strong>Add Action</strong>，Action 下拉選 <strong>Republish</strong>；Target Topic 填 <code>a/1</code>，QoS 設 <code>0</code>，Retain 設 <code>false</code>。</p></li>
-        <li><h3>設定 Payload 佔位符</h3><p>在 Payload 欄位輸入 <code>${payload}</code>，讓轉發訊息沿用原訊息內容；需要時也能用 <code>${clientid}</code> 等欄位拼出自訂 payload。</p></li>
-        <li><h3>處理 MQTT 5.0 屬性（選擇性）</h3><p>展開「MQTT 5.0 Message Properties」開關，可設定 Payload Format Indicator、Message Expiry Interval、Content Type、Response Topic、Correlation Data 等屬性。</p></li>
-        <li><h3>建立並驗證</h3><p>按 <strong>Create</strong> 完成。訂閱 <code>a/1</code>，向 <code>t/1</code> 發布訊息，應收到轉發結果；也可用 <strong>Test the Rule</strong> 直接模擬。</p></li>
+        <li><h3>Create a rule</h3><p>In the Dashboard go to <strong>Integration → Rules → Create</strong>, give the rule a name, and type <code>SELECT * FROM "t/#"</code> into the SQL box.</p></li>
+        <li><h3>Add a Republish action</h3><p>Click <strong>Add Action</strong> on the right and pick <strong>Republish</strong> from the Action dropdown; set Target Topic to <code>a/1</code>, QoS to <code>0</code> and Retain to <code>false</code>.</p></li>
+        <li><h3>Set the Payload placeholder</h3><p>Type <code>${payload}</code> into the Payload field so the republished message keeps the original payload; when you need to, build a custom payload out of fields such as <code>${clientid}</code>.</p></li>
+        <li><h3>Handle MQTT 5.0 properties (optional)</h3><p>Turn on the "MQTT 5.0 Message Properties" switch to set Payload Format Indicator, Message Expiry Interval, Content Type, Response Topic, Correlation Data and other properties.</p></li>
+        <li><h3>Create it and verify</h3><p>Click <strong>Create</strong> to finish. Subscribe to <code>a/1</code>, publish a message to <code>t/1</code>, and the republished result should arrive; you can also simulate it directly with <strong>Test the Rule</strong>.</p></li>
       </ol>
     </section>
 
-    <section id="republish" data-nav="Republish 與 Console">
-      <h2 data-icon="network">Republish 與 Console Output</h2>
-      <p><strong>Republish</strong> 是常用的「資料轉型＋改道」動作。官方範例把 <code>t/#</code 收進、轉發到 <code>a/1</code>：轉發不會攔截原始訊息，原本訂閱 <code>t/1</code> 的 client 仍照常收到，只是多出一份 <code>a/1</code>。加上<strong>Direct Dispatch</strong> 開關可讓訊息直接送給訂閱者，避免再觸發其他規則而陷入遞迴。</p>
-      <p>Republish 的常見參數：</p>
+    <section id="republish" data-nav="Republish and Console">
+      <h2 data-icon="network">Republish and Console Output</h2>
+      <p><strong>Republish</strong> is the everyday "reshape the data and reroute it" action. The official example takes <code>t/#</code 收進、轉發到 <code>a/1</code>: republishing does not intercept the original message, so a client subscribed to <code>t/1</code> still receives it as usual and simply gets one extra copy on <code>a/1</code>. Adding the <strong>Direct Dispatch</strong> switch delivers the message straight to subscribers, which keeps it from triggering other rules and falling into recursion.</p>
+      <p>The common Republish parameters:</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>參數</th><th>說明</th></tr>
+            <tr><th>Parameter</th><th>What it means</th></tr>
           </thead>
           <tbody>
-            <tr><td>Topic</td><td>轉發目標主題，可用 <code>${…}</code> 組出動態主題</td></tr>
-            <tr><td>QoS</td><td>轉發訊息的 QoS 等級</td></tr>
-            <tr><td>Retain</td><td>是否作為 retained 訊息發布</td></tr>
-            <tr><td>Payload</td><td>轉發 payload 模板（常見 <code>${payload}</code>）</td></tr>
-            <tr><td>MQTT 5.0 屬性</td><td>選用：Payload Format、Expiry、Content Type、Response Topic、Correlation Data</td></tr>
-            <tr><td>Direct Dispatch</td><td>直接送達訂閱者，避免規則遞迴</td></tr>
+            <tr><td>Topic</td><td>The republish target topic; use <code>${…}</code> to build a dynamic topic</td></tr>
+            <tr><td>QoS</td><td>The QoS level of the republished message</td></tr>
+            <tr><td>Retain</td><td>Whether to publish it as a retained message</td></tr>
+            <tr><td>Payload</td><td>The republished payload template (commonly <code>${payload}</code>)</td></tr>
+            <tr><td>MQTT 5.0 properties</td><td>Optional: Payload Format, Expiry, Content Type, Response Topic, Correlation Data</td></tr>
+            <tr><td>Direct Dispatch</td><td>Delivers straight to subscribers and avoids rule recursion</td></tr>
           </tbody>
         </table>
       </div>
-      <p><strong>Console Output</strong> 動作只把規則結果印到主控台或 log（格式為 <code>[rule action] 規則ID + Action Data + Envs</code>）。它只該用在除錯：EMQX 以 foreground（Docker 預設）啟動時輸出到主控台；以 systemd 啟動時會進 journal，可用 <code>journalctl</code> 檢視。官方明確警告：正式環境用 console 可能拖慢效能。</p>
+      <p>The <strong>Console Output</strong> action only prints the rule result to the console or the log (in the form <code>[rule action] 規則ID + Action Data + Envs</code>). Use it for debugging only: when EMQX starts in the foreground (the Docker default) the output goes to the console; when it starts under systemd it goes to the journal, which you read with <code>journalctl</code>. The official docs warn plainly that using console in production can slow things down.</p>
     </section>
 
-    <section id="config" data-nav="設定檔動作">
-      <h2 data-icon="assign">用設定檔宣告動作與 <code>${var}</code></h2>
-      <p>規則與動作也能寫進 <code>emqx.conf</code>，在 EMQX 啟動前就生效。在 <code>rule_engine</code> 命名空間下用 <code>rules.&lt;id&gt;</code> 定義，例如：</p>
+    <section id="config" data-nav="Actions in config">
+      <h2 data-icon="assign">Declaring actions and <code>${var}</code> in a config file</h2>
+      <p>Rules and actions can also go into <code>emqx.conf</code>, where they take effect before EMQX starts. Define them under the <code>rule_engine</code> namespace with <code>rules.&lt;id&gt;</code>, like this:</p>
       <pre><code>rule_engine {
   rules.my_republish_rule {
     sql = "SELECT qos, payload.x as y FROM \"t/a\""
@@ -177,46 +177,46 @@
     ]
   }
 }</code></pre>
-      <p>這裡 <code>${qos}</code> 與 <code>${y}</code> 是引用 SQL 輸出欄位的佔位符。例如送進 <code>t/a</code> 一則 <code>{"x":1}</code>，規則先挑出 <code>qos</code> 並把 payload 的 <code>x</code> 改名 <code>y</code>，最後 republish 到 <code>t/b</code>，payload 是 <code>y: 1</code>。</p>
-      <p>若要在規則裡指定一個外部整合 Sink 作為動作，則在 actions 陣列直接填 bridge ID（如 <code>"mqtt:my_egress_mqtt_bridge"</code>）；若是 console 動作，例如 <code>actions = [{function = console}]</code>，會把規則輸出印到主控台。事件型規則（如 client 上線 <code>$events/client_connected</code>）一樣能用設定檔宣告。</p>
+      <p>Here <code>${qos}</code> and <code>${y}</code> are placeholders that reference fields of the SQL output. For example, when <code>t/a</code> receives a <code>{"x":1}</code>, the rule first picks out <code>qos</code> and renames the payload's <code>x</code> to <code>y</code>, then republishes to <code>t/b</code> with the payload <code>y: 1</code>.</p>
+      <p>To name an external integration Sink as a rule's action, put the bridge ID straight into the actions array (such as <code>"mqtt:my_egress_mqtt_bridge"</code>); for a console action, such as <code>actions = [{function = console}]</code>, the rule output is printed to the console. Event rules (a client coming online, <code>$events/client_connected</code>, for instance) can be declared in a config file just the same.</p>
     </section>
 
-    <section id="troubleshoot" data-nav="排錯">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>Republish 沒收到轉發訊息</strong>：確認規則已啟用、SQL 的 FROM pattern 與發布主題相符、動作已儲存、目標 topic／QoS 設定無誤；可先用「Test the Rule」模擬。</li>
-        <li><strong>Console 沒看到輸出</strong>：EMQX 以 background 啟動時輸出進 journal，可用 <code>journalctl</code> 檢視；若以 Docker foreground 執行則看主控台。</li>
-        <li><strong>Payload 不是預期的格式</strong>：轉發 payload 是字串模板，你必須打出想要的樣式（例如 <code>${payload}</code> 或混合文字 + <code>${欄位}</code>）。</li>
-        <li><strong>規則自我觸發、造成遞迴</strong>：Republish 的目標 topic 若又符合同一規則的 <code>FROM</code>，會無限次再觸發。可用 Direct Dispatch 或改目標 topic 避開。</li>
+        <li><strong>No republished message arrives</strong>: check that the rule is enabled, that the SQL's FROM pattern matches the topic you publish to, that the action was saved, and that the target topic and QoS are right; simulate it first with "Test the Rule".</li>
+        <li><strong>Nothing shows up in the console</strong>: when EMQX starts in the background the output goes to the journal, which you read with <code>journalctl</code>; when it runs in the Docker foreground, look at the console.</li>
+        <li><strong>The payload is not in the format you expected</strong>: the republish payload is a string template, so you have to type out the shape you want (for example <code>${payload}</code>, or text mixed with <code>${欄位}</code>).</li>
+        <li><strong>The rule triggers itself and recurses</strong>: if the Republish target topic also matches the same rule's <code>FROM</code>, it fires again without end. Avoid that with Direct Dispatch, or change the target topic.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>Republish 會擋掉原本的訊息嗎</summary>
-        <div class="body"><p>不會。Republish 只是多送一份到目標主題；原本發布到 <code>t/1</code> 的訊息仍會照常送給訂閱 <code>t/1</code> 的 client。</p></div>
+        <summary>Does Republish block the original message?</summary>
+        <div class="body"><p>No. Republish only sends one extra copy to the target topic; a message published to <code>t/1</code> still reaches the clients subscribed to <code>t/1</code> as usual.</p></div>
       </details>
       <details class="faq">
-        <summary>Console Output 適合 production 嗎</summary>
-        <div class="body"><p>不適合。官方把它標為除錯用途，大量輸出會拖慢效能；production 建議用 republish 或送往 Sink。</p></div>
+        <summary>Is Console Output suitable for production?</summary>
+        <div class="body"><p>No. The official docs mark it as a debugging tool, and heavy output slows things down; in production use republish or send the data to a Sink.</p></div>
       </details>
       <details class="faq">
-        <summary>能同時設定多個動作嗎</summary>
-        <div class="body"><p>可以。規則的 <code>actions</code> 是可陣列，可在 UI 連續加入多個動作，設定檔裡也以陣列列出；規則依序執行。</p></div>
+        <summary>Can I configure several actions at once?</summary>
+        <div class="body"><p>Yes. A rule's <code>actions</code> is an array, so you can add one action after another in the UI and list them as an array in the config file; the rule runs them in order.</p></div>
       </details>
       <details class="faq">
-        <summary>什麼時候用 republish、什麼時候用 Sink</summary>
-        <div class="body"><p>只是把資料改主題轉發，用 republish；要送往外部系統（資料庫、HTTP、Kafka、MQTT 遠端 broker），就用 Forwarding to Sinks（Sink）。</p></div>
+        <summary>When do I use republish, and when do I use a Sink?</summary>
+        <div class="body"><p>If you are only moving the data to a different topic, use republish; to send it to an external system (a database, HTTP, Kafka, a remote MQTT broker), use Forwarding to Sinks.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-get-started.md">EMQX 5.8 Rule Get Started — Add Republish Action（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rules.md">EMQX 5.8 Rule Engine — Actions（pinned docs 分支）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-configs.md">EMQX 5.8 Use Rules with Configuration Files（pinned docs 分支）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-get-started.md">EMQX 5.8 Rule Get Started — Add Republish Action (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rules.md">EMQX 5.8 Rule Engine — Actions (pinned docs branch)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/develop/data-integration/rule-configs.md">EMQX 5.8 Use Rules with Configuration Files (pinned docs branch)</a></li>
       </ul>
     </section>
 

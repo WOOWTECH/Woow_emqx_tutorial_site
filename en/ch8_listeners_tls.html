@@ -70,16 +70,16 @@
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
-      <a href="#why">為什麼要學這個</a>
-      <a href="#concept">核心概念</a>
-      <a href="#what">名詞對照</a>
-      <a href="#steps">動手做</a>
-      <a href="#topic1">五個埠與協定</a>
-      <a href="#topic2">TLS、憑證與 mTLS</a>
-      <a href="#topic3">連接埠衝突</a>
-      <a href="#troubleshoot">故障排除</a>
-      <a href="#faq">常見問題</a>
-      <a href="#sources">官方來源</a>
+      <a href="#why">Why this matters</a>
+      <a href="#concept">Core concepts</a>
+      <a href="#what">Terms</a>
+      <a href="#steps">Hands-on</a>
+      <a href="#topic1">Ports and protocols</a>
+      <a href="#topic2">TLS and mTLS</a>
+      <a href="#topic3">Port conflicts</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Official sources</a>
     </div>
   </aside>
 
@@ -87,125 +87,125 @@
     <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch8_listeners_tls.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 8</div>
-      <h1>Listeners 與 TLS</h1>
-      <p class="lead">EMQX Listeners 與 TLS：1883／8083／8084／8883 各埠用途、新增與修改 Listener、TLS 憑證與 mTLS 概念，以及連接埠衝突的處理。</p>
+      <h1>Listeners and TLS</h1>
+      <p class="lead">EMQX listeners and TLS: what each of 1883/8083/8084/8883 is for, how to add and edit a listener, TLS certificates and the mTLS concept, and how to handle port conflicts.</p>
     </div>
 
-    <section id="why" data-nav="為什麼要學這個">
-      <h2 data-icon="why">為什麼要學這個</h2>
-      <p>到目前為止，你連線多半用純 TCP 的 1883，但 EMQX 5.8.9 的一個特色，就是同一個 broker 可以同時監聽多個「出口」：標準 MQTT（TCP）、WebSocket、安全 WebSocket、以及走 SSL/TLS 的加密連線。你想讓某些裝置走加密、Home Assistant 走 WebSocket、測試走 1883，就得看懂這些<strong>監聽器（Listener）</strong>是誰、如何新增與編輯，以及最重要的憑證概念。</p>
-      <p>這章帶你看看五個埠各自用途、在 <strong>Management → Listeners</strong> 新增／編輯監聽器、理解 SSL/TLS 與 mTLS 的單向與雙向驗證；還有家用最常絆腳的<strong>連接埠衝突</strong>（Mosquitto 卡 1883、WebRTC 卡 8083）該怎麼在 Dashboard 安全地遷移。</p>
+    <section id="why" data-nav="Why this matters">
+      <h2 data-icon="why">Why this matters</h2>
+      <p>So far you have connected mostly over plain TCP on 1883, but one thing EMQX 5.8.9 does is let a single broker listen on several "exits" at once: standard MQTT (TCP), WebSocket, secure WebSocket, and encrypted connections over SSL/TLS. If you want some devices on an encrypted port, Home Assistant on WebSocket and your testing on 1883, you need to understand what these <strong>listeners</strong> are, how to add and edit them, and above all how certificates work.</p>
+      <p>This chapter walks through what each of the five ports is for, how to add and edit a listener under <strong>Management → Listeners</strong>, and how one-way and mutual authentication work in SSL/TLS and mTLS. It also covers the <strong>port conflict</strong> that trips up home installs most often (Mosquitto holding 1883, WebRTC holding 8083) and how to migrate safely from the Dashboard.</p>
     </section>
 
-    <section id="concept" data-nav="核心概念">
-      <h2 data-icon="concept">核心概念</h2>
-      <p>監聽器（Listener）是 EMQX 對外接受 MQTT client 連線的「伺服端監聽點」：每一個都有<strong>傳輸協定（TCP／SSL／WebSocket／WSS）＋綁定位址與埠</strong>，並可設定這支監聽器能接受多少並發連線（max_connections）。EMQX 一個實例同時可以啟動多支監聽器，因此你能讓不同用途的 client 走不同協定與埠。</p>
-      <p>官方文件明確列出四種主要傳輸：TCP（1883）、SSL（8883）、WebSocket（8083）、Secure WebSocket（8084）。Dashboard 管理介面本身則由 add-on 開在 18083（HTTP），所以你日常常講的「五個埠」是：1883、8083、8084、8883 與 18083。</p>
-      <p>要連進加密入口，client 會自動做 SSL/TLS 交握，驗證 server 憑證。它區分<strong>單向驗證</strong>（client 驗 server）與<strong>雙向驗證（mTLS）</strong>（server 也驗 client 的憑證）。這章後段把憑證與交握說清楚。</p>
+    <section id="concept" data-nav="Core concepts">
+      <h2 data-icon="concept">Core concepts</h2>
+      <p>A listener is the server-side point at which EMQX accepts MQTT client connections. Each one has a <strong>transport protocol (TCP/SSL/WebSocket/WSS) plus a bind address and port</strong>, and you can set how many concurrent connections it accepts (max_connections). One EMQX instance can run several listeners at the same time, so clients with different jobs can use different protocols and ports.</p>
+      <p>The official docs list four main transports: TCP (1883), SSL (8883), WebSocket (8083) and Secure WebSocket (8084). The Dashboard itself is served by the add-on on 18083 (HTTP), so the "five ports" you hear about day to day are 1883, 8083, 8084, 8883 and 18083.</p>
+      <p>To reach an encrypted entry point, the client performs an SSL/TLS handshake and checks the server certificate. There are two forms: <strong>one-way authentication</strong> (the client checks the server) and <strong>mutual authentication (mTLS)</strong> (the server checks the client's certificate as well). Certificates and the handshake are covered later in this chapter.</p>
     </section>
 
-    <section id="what" data-nav="名詞對照">
-      <h2 data-icon="what">名詞對照</h2>
+    <section id="what" data-nav="Terms">
+      <h2 data-icon="what">Terms at a glance</h2>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>英文</th><th>中文</th><th>一句話</th></tr>
+            <tr><th>Term</th><th>Plain English</th><th>In one line</th></tr>
           </thead>
           <tbody>
-            <tr><td>Listener</td><td>監聽器</td><td>EMQX 對外接收 client 連線的監聽點</td></tr>
-            <tr><td>TLS</td><td>傳輸層安全</td><td>加密傳輸的協定，SSL 是其前身</td></tr>
-            <tr><td>Certificate</td><td>憑證</td><td>數位身分證明（X.509）</td></tr>
-            <tr><td>CA</td><td>憑證機構</td><td>發出並信任憑證的機構</td></tr>
-            <tr><td>mTLS</td><td>雙向 TLS</td><td>server 也驗證 client 的憑證</td></tr>
-            <tr><td>WebSocket</td><td>網頁套件通道</td><td>瀏覽器端的 MQTT 通道</td></tr>
-            <tr><td>Port</td><td>連接埠</td><td>協定進出的編號</td></tr>
+            <tr><td>Listener</td><td>listening endpoint</td><td>The point where EMQX accepts client connections</td></tr>
+            <tr><td>TLS</td><td>transport layer security</td><td>The protocol that encrypts traffic in transit; SSL was its predecessor</td></tr>
+            <tr><td>Certificate</td><td>digital ID</td><td>A digital proof of identity (X.509)</td></tr>
+            <tr><td>CA</td><td>certificate authority</td><td>The body that issues certificates and vouches for them</td></tr>
+            <tr><td>mTLS</td><td>mutual TLS</td><td>The server checks the client's certificate too</td></tr>
+            <tr><td>WebSocket</td><td>browser transport</td><td>The MQTT channel a browser uses</td></tr>
+            <tr><td>Port</td><td>network port number</td><td>The number a protocol comes in and goes out on</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="steps" data-nav="動手做">
-      <h2 data-icon="steps">動手做</h2>
+    <section id="steps" data-nav="Hands-on">
+      <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
-        <li><h3>瀏覽現有監聽器</h3><p>登入 Dashboard，左側 <strong>Management → Listeners</strong>。你可以在這裡看到既有監聽器，例如 TCP（1883）、SSL（8883）、WebSocket（8083）、WSS（8084），各有對應的協定與埠。用 <strong>Add（新增）</strong>也可以建立新的監聽器。</p></li>
-        <li><h3>編輯 SSL 監聽器並換憑證</h3><p>在 Listeners 列表點 SSL 監聽器的 Name（例如 <code>default</code>），進編輯頁。該頁可更換 <strong>TLS Cert</strong>（伺服器憑證）、<strong>TLS Key</strong>（對應私鑰）與 <strong>CA Cert</strong>（信任的 CA）；EMQX 預設使用內建的測試憑證（在 <code>etc/certs</code>）。改完按 <strong>Update</strong>。</p></li>
-        <li><h3>啟用／關閉 mTLS 交握</h3><p>在同頁的 <strong>TLS Verify</strong> 開關決定是否要驗證 client 憑證（雙向）；要強制 mTLS，就把 <strong>TLS Verify</strong> 設為 Enable、並把 <strong>Fail If No Peer Cert</strong> 設為 <code>true</code>，這樣沒有憑證的 client 在交握階段就會失敗。</p></li>
-        <li><h3>處理連接埠衝突</h3><p>若某一埠（如 8083 被 WebRTC 用）卡住，先暫停衝突的一方，再到 Listeners 頁把該監聽器的埠改掉並 <strong>Update</strong>。注意：若監聽器是由 <code>emqx.conf</code> 定義的，Dashboard 的變更只會生效到下次 EMQX 重啟之前。</p></li>
+        <li><h3>Browse the existing listeners</h3><p>Log in to the Dashboard and open <strong>Management → Listeners</strong> in the sidebar. The listeners already there are listed, for example TCP (1883), SSL (8883), WebSocket (8083) and WSS (8084), each with its protocol and port. Use <strong>Add</strong> to create a new listener.</p></li>
+        <li><h3>Edit the SSL listener and swap in your certificates</h3><p>In the Listeners list, click the Name of the SSL listener (for example <code>default</code>) to open its edit page. There you can replace <strong>TLS Cert</strong> (the server certificate), <strong>TLS Key</strong> (its private key) and <strong>CA Cert</strong> (the trusted CA); by default EMQX uses the built-in test certificates (under <code>etc/certs</code>). Click <strong>Update</strong> when you are done.</p></li>
+        <li><h3>Turn the mTLS handshake on or off</h3><p>On the same page, the <strong>TLS Verify</strong> switch decides whether the client certificate is checked (mutual). To require mTLS, set <strong>TLS Verify</strong> to Enable and <strong>Fail If No Peer Cert</strong> to <code>true</code>; a client with no certificate then fails during the handshake.</p></li>
+        <li><h3>Deal with a port conflict</h3><p>If a port is taken (say 8083 is in use by WebRTC), stop the service that conflicts first, then go to the Listeners page, change that listener's port and click <strong>Update</strong>. Note: if the listener is defined in <code>emqx.conf</code>, a change made in the Dashboard only holds until the next EMQX restart.</p></li>
       </ol>
     </section>
 
-    <section id="topic1" data-nav="五個埠與協定">
-      <h2 data-icon="network">五個埠與協定</h2>
-      <p>因為 add-on 以 host_network 模式開在 Home Assistant 主機上，這五個埠直接用到 HA 的連接埠。核心對照如下。</p>
+    <section id="topic1" data-nav="Ports and protocols">
+      <h2 data-icon="network">The five ports and their protocols</h2>
+      <p>Because the add-on runs in host_network mode on the Home Assistant host, these five ports are the host's own ports. Here is the mapping.</p>
       <div class="data-table">
         <table>
           <thead>
-            <tr><th>連接埠</th><th>協定</th><th>用途</th></tr>
+            <tr><th>Port</th><th>Protocol</th><th>What it is for</th></tr>
           </thead>
           <tbody>
-            <tr><td>1883</td><td>MQTT（TCP）</td><td>標準 MQTT，Home Assistant 與 Zigbee 最常用</td></tr>
-            <tr><td>8083</td><td>MQTT/WS</td><td>MQTT over WebSocket（瀏覽器測試工具走這裡）</td></tr>
-            <tr><td>8084</td><td>MQTT/WSS</td><td>安全 WebSocket（TLS 加密的 WebSocket）</td></tr>
-            <tr><td>8883</td><td>MQTTS</td><td>MQTT over SSL/TLS，加密的標準 MQTT</td></tr>
-            <tr><td>18083</td><td>HTTP</td><td>EMQX Dashboard 管理介面</td></tr>
+            <tr><td>1883</td><td>MQTT (TCP)</td><td>Standard MQTT; what Home Assistant and Zigbee use most</td></tr>
+            <tr><td>8083</td><td>MQTT/WS</td><td>MQTT over WebSocket (the browser test client uses this)</td></tr>
+            <tr><td>8084</td><td>MQTT/WSS</td><td>Secure WebSocket (a WebSocket encrypted with TLS)</td></tr>
+            <tr><td>8883</td><td>MQTTS</td><td>MQTT over SSL/TLS: standard MQTT, encrypted</td></tr>
+            <tr><td>18083</td><td>HTTP</td><td>The EMQX Dashboard web interface</td></tr>
           </tbody>
         </table>
       </div>
-      <p>照文件說法，WebSocket 監聽器的 MQTT path 預設是 <code>/mqtt</code>。你可能有些裝置只用 1883，另一些走 8883 加密；web 瀏覽器若要塞網頁，就走 8083（或 8084 的安全版）。你並不需要同時把五個都顧著，加裝需求逐一選一個「用得上」的即可。</p>
+      <p>Per the docs, the MQTT path on a WebSocket listener defaults to <code>/mqtt</code>. You may have some devices on 1883 only and others on the encrypted 8883; anything running in a web browser goes to 8083 (or 8084 for the secure version). You do not have to keep all five in play — pick the one you actually need as each requirement comes up.</p>
     </section>
 
-    <section id="topic2" data-nav="TLS、憑證與 mTLS">
-      <h2 data-icon="security">TLS、憑證與 mTLS</h2>
-      <p><strong>TLS（Transport Layer Security）</strong>在傳輸層加密資料，EMQX 把它用在 MQTT 連線、資料整合往外部資源、以及叢集節點之間，都可以單向或雙向。單向（one-way）時 client 驗證 server 的身分憑證；雙向（mTLS）時 server 還要驗證 client 的憑證，可防中間人攻擊。</p>
-      <p>SSL/TLS 需要三支檔案：<strong>certfile</strong>（伺服器憑證）、<strong>keyfile</strong>（對應的私鑰）與 <strong>cacertfile</strong>（受信任的 CA 清單）。EMQX 出貨自帶一組只用於測試的憑證（在 <code>etc/certs</code>），所以你看的 8883 監聽預設是「單向」可用的測試環境。要上線務必要換成受信 CA 簽發的憑證（例如你家網域＋可被信任的 CA），私鑰只放系統與你自己看。</p>
-      <p>mTLS（雙向）的實作，就是把 SSL 監聽器的 <strong>TLS Verify</strong> 打開、並把 <strong>Fail If No Peer Cert</strong> 設為 true，強迫每個 client 握手都要提供受信任的憑證。另外，EMQX 預設每 120 秒重新載入憑證，所以更換 server 憑證不一定需要重啟 EMQX。</p>
+    <section id="topic2" data-nav="TLS and mTLS">
+      <h2 data-icon="security">TLS, certificates and mTLS</h2>
+      <p><strong>TLS (Transport Layer Security)</strong> encrypts data at the transport layer. EMQX uses it for MQTT connections, for Data Integration reaching out to external resources, and between cluster nodes; each of those can be one-way or mutual. In one-way TLS the client checks the server's identity certificate; in mutual TLS (mTLS) the server checks the client's certificate as well, which blocks a man-in-the-middle attack.</p>
+      <p>SSL/TLS needs three files: <strong>certfile</strong> (the server certificate), <strong>keyfile</strong> (its private key) and <strong>cacertfile</strong> (the list of trusted CAs). EMQX ships with a set of certificates meant only for testing (under <code>etc/certs</code>), so the 8883 listener you see works out of the box as a one-way test setup. Before you go live, replace them with certificates issued by a trusted CA (your own domain plus a CA that clients already trust), and keep the private key readable only by the system and by you.</p>
+      <p>You implement mTLS by turning on <strong>TLS Verify</strong> on the SSL listener and setting <strong>Fail If No Peer Cert</strong> to true, which forces every client to present a trusted certificate during the handshake. EMQX also reloads certificates every 120 seconds by default, so replacing the server certificate does not always require an EMQX restart.</p>
     </section>
 
-    <section id="topic3" data-nav="連接埠衝突">
-      <h2 data-icon="warning">連接埠衝突與遷移</h2>
-      <p>因為 host_network，這五個埠與 Home Assistant 主機上的其他服務共用編號，最常見的衝突，要談兩個例子：官方 README 明說「無法與 Mosquitto 同時運行」（兩個都盯 1883），以及 WebRTC（AlexxIT）與 EMQX 共用 8083。</p>
-      <p>處置的流程照 add-on README：先暫停衝突的一方（如 Mosquitto），再啟動 EMQX；若想兩者共存，就到 <strong>Management → Listeners</strong> 把衝突監聽器的埠改掉或新增一支監聽器定在別的埠，再重新啟動該服務。也可以完全只保留你需要的 listener（例如只開 1883 與 8883），把不用的埠關掉，減少被掃描的攻擊面。</p>
-      <p>要注意官方文件的一條提示：<strong>若監聽器在 <code>emqx.conf</code> 中被定義，Dashboard 上的變更只會生效到下次 EMQX 重啟為止。</strong>想讓啟動後就固定生效，就得用設定檔或環境變數（add-on 的 <code>EMQX_LISTENERS__*</code> 環境變數在第 17 章談）。</p>
+    <section id="topic3" data-nav="Port conflicts">
+      <h2 data-icon="warning">Port conflicts and migration</h2>
+      <p>Because of host_network, these five ports share their numbers with the other services on the Home Assistant host, and two conflicts come up most often: the official README states plainly that it "cannot run at the same time as Mosquitto" (both want 1883), and WebRTC (AlexxIT) shares 8083 with EMQX.</p>
+      <p>The add-on README gives the procedure: stop the conflicting service (Mosquitto, say) first, then start EMQX. If you want both running, go to <strong>Management → Listeners</strong>, change the port on the listener that clashes or add a listener on a different port, then start that service again. You can also keep only the listeners you need (1883 and 8883, for example) and close the rest, which shrinks the attack surface exposed to scanners.</p>
+      <p>One note from the official docs is worth keeping in mind: <strong>if a listener is defined in <code>emqx.conf</code>, a change made in the Dashboard only holds until the next EMQX restart.</strong> To make a setting stick from startup onwards, use a config file or an environment variable (the add-on's <code>EMQX_LISTENERS__*</code> variables are covered in Chapter 17).</p>
     </section>
 
-    <section id="troubleshoot" data-nav="故障排除">
-      <h2 data-icon="troubleshoot">故障排除</h2>
+    <section id="troubleshoot" data-nav="Troubleshooting">
+      <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>EMQX 啟動失敗、Log 顯示「連接埠被佔用」</strong>：找出是哪一埠，暫停衝突的 Mosquitto（1883）或 WebRTC（8083），再啟動 EMQX；之後想長期共存，再到 Listeners 把其中一方的埠改掉。</li>
-        <li><strong>換憑證後 8883 一直連不上</strong>：確認 certfile／keyfile 成對、CA 與 server 憑證是 PEM 格式，且 server 憑證的 CN（或 SAN）與 client 連線的位址相符（否則會見 Hostname/IP does not match certificate 的錯誤）。可在 Listeners 用 Reset 換回測試憑證，用來隔離問題。</li>
-        <li><strong>啟用 mTLS 後無憑證 client 全部斷掉</strong>：這是 mTLS 的預期——雙向就是堅持 client 提供「受信任憑證」。若你只是想暫時不嚴，把 TLS Verify 關回單向，或先幫該 client 簽發一張受信任的用戶端憑證。</li>
-        <li><strong>在 Dashboard 改了埠，重啟後又變回原本</strong>：多半是該監聽器由 <code>emqx.conf</code> 定義，Dashboard 變更只到重啟前。想持久，用 add-on 環境變數（<code>EMQX_LISTENERS__*</code>）在啟動時覆寫，細節在第 17 章。</li>
+        <li><strong>EMQX fails to start and the log says the port is already in use</strong>: work out which port it is, stop the Mosquitto (1883) or WebRTC (8083) that clashes, then start EMQX. If you want them to coexist long term, go to Listeners afterwards and change the port on one side.</li>
+        <li><strong>8883 stops accepting connections after a certificate change</strong>: check that certfile and keyfile are a matching pair, that the CA and the server certificate are in PEM format, and that the CN (or SAN) on the server certificate matches the address the client connects to (otherwise you get a Hostname/IP does not match certificate error). Use Reset in Listeners to go back to the test certificates and isolate the problem.</li>
+        <li><strong>Every client without a certificate drops after you enable mTLS</strong>: that is what mTLS is meant to do — mutual authentication insists that the client present a trusted certificate. To relax it for now, set TLS Verify back to one-way, or issue that client a trusted client certificate first.</li>
+        <li><strong>You changed a port in the Dashboard and the restart reverted it</strong>: the listener is almost certainly defined in <code>emqx.conf</code>, and a Dashboard change only holds until the restart. To make it permanent, override it at startup with the add-on's environment variables (<code>EMQX_LISTENERS__*</code>); Chapter 17 has the details.</li>
       </ul>
     </section>
 
-    <section id="faq" data-nav="常見問題">
-      <h2 data-icon="faq">常見問題</h2>
+    <section id="faq" data-nav="FAQ">
+      <h2 data-icon="faq">FAQ</h2>
       <details class="faq">
-        <summary>五個埠都要開嗎，能不能關</summary>
-        <div class="body"><p>不必全部都開。你可以只留你實際用的埠（例如 1883＋18083），把 WebSocket／SSL 那幾支停掉或換埠。規則是用得越少越安全，多開一個就是多一分攻擊面。</p></div>
+        <summary>Do I have to open all five ports, or can I close some</summary>
+        <div class="body"><p>You do not need all of them. Keep only the ports you actually use (1883 plus 18083, for example) and stop or renumber the WebSocket and SSL listeners. The fewer you run, the safer you are: every extra open port is extra attack surface.</p></div>
       </details>
       <details class="faq">
-        <summary>8883 與 8084 聽起來很像，差在哪</summary>
-        <div class="body"><p>8883 是「加密的標準 MQTT（MQTT over SSL/TLS）」；8084 是「加密的 WebSocket 通道（MQTT over WSS）」。通訊內容都加密，差在傳輸層：前者給原生 MQTT client（TCP），後者給瀏覽器用的 WebSocket。非加密版本就是 1883 與 8083。</p></div>
+        <summary>8883 and 8084 sound alike, what is the difference</summary>
+        <div class="body"><p>8883 is "standard MQTT, encrypted (MQTT over SSL/TLS)"; 8084 is "an encrypted WebSocket channel (MQTT over WSS)". Both encrypt the traffic; they differ in the transport underneath. The first is for native MQTT clients over TCP, the second for the WebSocket a browser uses. Their unencrypted counterparts are 1883 and 8083.</p></div>
       </details>
       <details class="faq">
-        <summary>單向與 mTLS（雙向）我該選哪個</summary>
-        <div class="body"><p>先從單向開始：client 加密收送，也會驗證 server 的憑證，已能保證資料不被偷看。若你希望「只有持有你核發證書的設備才能進」，再升級到 mTLS，但要先為每個裝置準備好憑證，否則沒憑證的裝置就會全部無法登入。</p></div>
+        <summary>One-way or mTLS, which should I choose</summary>
+        <div class="body"><p>Start with one-way: the client sends and receives encrypted and checks the server certificate, which is already enough to keep the traffic from being read. Move up to mTLS when you want "only devices holding a certificate you issued to get in", but prepare a certificate for every device first, or every device without one will be locked out.</p></div>
       </details>
       <details class="faq">
-        <summary>憑證用自己簽的可以嗎</summary>
-        <div class="body"><p>可以「測試」，但不建議「上線」。EMQX 出貨用的就是測試證，官方明說生產環境要用受信 CA 核發的憑證。自簽憑證再讓每個 client 安裝你的 CA 才能信任，對家用多裝置來說更容易出錯。</p></div>
+        <summary>Can I use a certificate I signed myself</summary>
+        <div class="body"><p>For "testing", yes; for "production", no. What EMQX ships with is a test certificate, and the official docs say plainly that production needs a certificate issued by a trusted CA. A self-signed certificate also means installing your CA on every client before it will be trusted, which goes wrong easily in a home with many devices.</p></div>
       </details>
     </section>
 
-    <section id="sources" data-nav="官方來源">
-      <h2 data-icon="url">官方來源</h2>
+    <section id="sources" data-nav="Official sources">
+      <h2 data-icon="url">Official sources</h2>
       <ul>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md">EMQX 5.8 Listener Configuration（四協定與埠）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/emqx-mqtt-tls.md">EMQX 5.8 Enable SSL/TLS（單向／雙向 mTLS）</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/mqtt-client-tls.md">EMQX 5.8 Client TLS 連線範例</a></li>
-        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/overview.md">EMQX 5.8 Network and TLS 總覽</a></li>
-        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README（連接埠與衝突）</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/configuration/listener.md">EMQX 5.8 Listener Configuration (four protocols and their ports)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/emqx-mqtt-tls.md">EMQX 5.8 Enable SSL/TLS (one-way and mTLS)</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/mqtt-client-tls.md">EMQX 5.8 client TLS connection examples</a></li>
+        <li><a href="https://github.com/emqx/emqx-docs/blob/37af6a1d6d5480e4293b4bbcb25b081e1e6aa41e/en_US/guides/network/overview.md">EMQX 5.8 Network and TLS overview</a></li>
+        <li><a href="https://github.com/WOOWTECH/Woow_ha_emqx/blob/0ac58f38653589b854496944d82af2548b12f944/emqx/README.md">Woow EMQX add-on README (ports and conflicts)</a></li>
       </ul>
     </section>
 
