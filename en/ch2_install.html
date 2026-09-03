@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html" class="active">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html" class="active">Install</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -83,7 +83,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch2_install.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 2</div>
       <h1>Install the Woow EMQX add-on</h1>
@@ -100,7 +99,7 @@
       <h2 data-icon="concept">Core concepts</h2>
       <p><strong>Woow EMQX</strong> is a Home Assistant add-on that WOOWTECH maintains as a fork of hassio-addons/addon-emqx. It ships <strong>EMQX 5.8.9</strong> (Open Source) on the Erlang/OTP runtime, with a built-in SQLite store for its settings. The add-on runs with <code>host_network: true</code>, which means it does not seal its networking into a small virtual network inside the container; it sends and receives MQTT on the ports of the Home Assistant host itself.</p>
       <p>The upside is that other browsers, phone apps and external devices can reach ports such as <code>1883</code> and <code>8883</code> on your host directly, with nothing in between. The cost is that you now have to care about who is holding a port: if you keep Home Assistant's Mosquitto add-on, both use 1883, so the two cannot start at the same time.</p>
-      <p>The add-on also serves its admin interface through <code>ingress</code> mode: you can open the EMQX Dashboard straight from the Home Assistant sidebar, with no need to remember <code>http://&lt;主機&gt;:18083</code>. The add-on's <code>config.yaml</code> already sets both <code>ingress_port: 18083</code> and <code>host_network: true</code>.</p>
+      <p>The add-on also serves its admin interface through <code>ingress</code> mode: you can open the EMQX Dashboard straight from the Home Assistant sidebar, with no need to remember <code>http://&lt;host&gt;:18083</code>. The add-on's <code>config.yaml</code> already sets both <code>ingress_port: 18083</code> and <code>host_network: true</code>.</p>
     </section>
 
     <section id="what" data-nav="Terms">
@@ -128,7 +127,7 @@
         <li><h3>Add the WoowTech repository</h3><p>In Home Assistant, go to <strong>Settings → Add-ons → Add-on store</strong>, open the ⋯ menu at the top right → <strong>Add repository</strong>, paste in <code>https://github.com/WOOWTECH/Woow_ha_emqx</code> and click Add.</p></li>
         <li><h3>Install Woow EMQX</h3><p>Refresh the store, find <strong>Woow EMQX</strong>, open it and click <strong>Install</strong> (the download can take a while).</p></li>
         <li><h3>Start the add-on</h3><p>Check that <code>host_network</code> is enabled on the add-on page, then click <strong>Start</strong>. Afterwards read the log and confirm there is no "port already in use" error.</p></li>
-        <li><h3>Open the Web UI and log in for the first time</h3><p>Click <strong>Open Web UI</strong> and log in with the user name <code>admin</code> and the password <code>public</code>. If you are asked to change the password, change it there and then to <code>&lt;你的新密碼&gt;</code>, and do not use <code>public</code> again before you create real MQTT accounts in a later chapter.</p></li>
+        <li><h3>Open the Web UI and log in for the first time</h3><p>Click <strong>Open Web UI</strong> and log in with the user name <code>admin</code> and the password <code>public</code>. If you are asked to change the password, change it there and then to <code>&lt;your-new-password&gt;</code>, and do not use <code>public</code> again before you create real MQTT accounts in a later chapter.</p></li>
       </ol>
     </section>
 
@@ -156,7 +155,7 @@
       <h2 data-icon="login">First login and changing the password</h2>
       <p>The default account for the EMQX Dashboard is <code>admin</code>/<code>public</code>. The official documentation is explicit about this: the first time you log in with the default credentials, EMQX detects that you are still on the default password and <strong>forces you to change it</strong>; the new password cannot be the same as the old one, and <strong>keeping <code>public</code> for real use is not recommended</strong>.</p>
       <p>This is an important first step in protecting the admin surface: the Dashboard is the way in to controlling the whole broker, so anyone who guesses <code>admin/public</code> can rewrite all of your authentication and authorization. In Chapter 6 you will create real MQTT accounts for your devices and Home Assistant; in this chapter you only have to change the Dashboard login password.</p>
-      <p>If you forget the new password, EMQX gives you the CLI command <code>emqx ctl admins passwd &lt;帳號&gt; &lt;新密碼&gt;</code> to reset it; Chapter 18 covers the details under diagnostics and the API.</p>
+      <p>If you forget the new password, EMQX gives you the CLI command <code>emqx ctl admins passwd &lt;username&gt; &lt;new-password&gt;</code> to reset it; Chapter 18 covers the details under diagnostics and the API.</p>
     </section>
 
     <section id="troubleshoot" data-nav="Troubleshooting">
@@ -164,7 +163,7 @@
       <ul>
         <li><strong>You added the repository but Woow EMQX does not show up in the store</strong>: refresh the page, or leave the store and come back in; check that you pasted the whole URL, including the trailing <code>Woow_ha_emqx</code>.</li>
         <li><strong>It will not start, and the log says a port is in use</strong>: the most likely cause is that the Mosquitto add-on or WebRTC is running at the same time, and both hold 1883 or 8083. Stop the conflicting service first, then start EMQX.</li>
-        <li><strong>The Dashboard will not open</strong>: get in through Ingress (the <strong>EMQX</strong> icon in the sidebar), or use <code>http://&lt;Home Assistant 位址&gt;:18083</code> instead. Check that nothing else is holding 18083.</li>
+        <li><strong>The Dashboard will not open</strong>: get in through Ingress (the <strong>EMQX</strong> icon in the sidebar), or use <code>http://&lt;home-assistant-host&gt;:18083</code> instead. Check that nothing else is holding 18083.</li>
         <li><strong>Once you have changed it, really stop using <code>public</code></strong>: if you were not asked to change the password on first login, this is not a fresh install; if you are still on the default credentials, change them by hand in the Dashboard's user settings.</li>
       </ul>
     </section>

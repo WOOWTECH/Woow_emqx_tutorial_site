@@ -1,4 +1,227 @@
 {
   "_readme": "code 區塊的例外清單：只有列在這裡的 <pre>/<code>/<kbd> 才允許與 zh 不同（通常是程式碼裡的中文註解或中文佔位值）。zh 那邊改了就會對不上而紅燈。由 scripts/apply_code_translations.js 維護。",
-  "allow": []
+  "allow": [
+    {
+      "file": "ch10_rule_actions.html",
+      "unit": "#concept",
+      "zh": "<code>${欄位名}</code>",
+      "en": "<code>${field}</code>"
+    },
+    {
+      "file": "ch10_rule_actions.html",
+      "unit": "#republish",
+      "zh": "<code>t/#</code 收進、轉發到 <code>a/1</code>",
+      "en": "<code>t/#</code in and republishes it to <code>a/1</code>"
+    },
+    {
+      "file": "ch10_rule_actions.html",
+      "unit": "#republish",
+      "zh": "<code>[rule action] 規則ID + Action Data + Envs</code>",
+      "en": "<code>[rule action] ruleID + Action Data + Envs</code>"
+    },
+    {
+      "file": "ch10_rule_actions.html",
+      "unit": "#troubleshoot",
+      "zh": "<code>${欄位}</code>",
+      "en": "<code>${field}</code>"
+    },
+    {
+      "file": "ch12_sources_bridge.html",
+      "unit": "#source_mqtt",
+      "zh": "<code>$share/群組名/topic</code>",
+      "en": "<code>$share/&lt;group&gt;/topic</code>"
+    },
+    {
+      "file": "ch12_sources_bridge.html",
+      "unit": "#troubleshoot",
+      "zh": "<code>$share/群組/topic</code>",
+      "en": "<code>$share/&lt;group&gt;/topic</code>"
+    },
+    {
+      "file": "ch12_sources_bridge.html",
+      "unit": "#troubleshoot",
+      "zh": "<code>$bridges/mqtt:&lt;名稱&gt;</code>",
+      "en": "<code>$bridges/mqtt:&lt;name&gt;</code>"
+    },
+    {
+      "file": "ch17_configuration.html",
+      "unit": "#files",
+      "zh": "<pre><code>node {\n  name = \"emqx@127.0.0.1\"\n  cookie = \"&lt;你的cookie&gt;\"\n}</code></pre>",
+      "en": "<pre><code>node {\n  name = \"emqx@127.0.0.1\"\n  cookie = \"&lt;your-cookie&gt;\"\n}</code></pre>"
+    },
+    {
+      "file": "ch17_configuration.html",
+      "unit": "#secret",
+      "zh": "<code>&lt;你的密碼&gt;</code>",
+      "en": "<code>&lt;your-password&gt;</code>"
+    },
+    {
+      "file": "ch18_logs_api_diagnose.html",
+      "unit": "#api",
+      "zh": "<pre><code>curl -X GET http://localhost:18083/api/v5/nodes \\\n  -u &lt;你的API金鑰&gt;:&lt;你的API密鑰&gt; \\\n  -H \"Content-Type: application/json\"</code></pre>",
+      "en": "<pre><code>curl -X GET http://localhost:18083/api/v5/nodes \\\n  -u &lt;your-api-key&gt;:&lt;your-api-secret&gt; \\\n  -H \"Content-Type: application/json\"</code></pre>"
+    },
+    {
+      "file": "ch19_ngrok.html",
+      "unit": "#options",
+      "zh": "<code>ngrok tcp 1883 --remote-addr=&lt;位址&gt;</code>",
+      "en": "<code>ngrok tcp 1883 --remote-addr=&lt;address&gt;</code>"
+    },
+    {
+      "file": "ch1_overview.html",
+      "unit": "#what",
+      "zh": "<code>客廳/溫度</code>",
+      "en": "<code>living-room/temperature</code>"
+    },
+    {
+      "file": "ch21_security.html",
+      "unit": "#what",
+      "zh": "<code>&lt;你的密碼&gt;</code>",
+      "en": "<code>&lt;your-password&gt;</code>"
+    },
+    {
+      "file": "ch2_install.html",
+      "unit": "#concept",
+      "zh": "<code>http://&lt;主機&gt;:18083</code>",
+      "en": "<code>http://&lt;host&gt;:18083</code>"
+    },
+    {
+      "file": "ch2_install.html",
+      "unit": "#steps",
+      "zh": "<code>&lt;你的新密碼&gt;</code>",
+      "en": "<code>&lt;your-new-password&gt;</code>"
+    },
+    {
+      "file": "ch2_install.html",
+      "unit": "#topic2",
+      "zh": "<code>emqx ctl admins passwd &lt;帳號&gt; &lt;新密碼&gt;</code>",
+      "en": "<code>emqx ctl admins passwd &lt;username&gt; &lt;new-password&gt;</code>"
+    },
+    {
+      "file": "ch2_install.html",
+      "unit": "#troubleshoot",
+      "zh": "<code>http://&lt;Home Assistant 位址&gt;:18083</code>",
+      "en": "<code>http://&lt;home-assistant-host&gt;:18083</code>"
+    },
+    {
+      "file": "ch3_dashboard.html",
+      "unit": "#concept",
+      "zh": "<code>http://&lt;主機&gt;:18083</code>",
+      "en": "<code>http://&lt;host&gt;:18083</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳/+/溫度</code>",
+      "en": "<code>living-room/+/temperature</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳/東/溫度</code>",
+      "en": "<code>living-room/east/temperature</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳/西/溫度</code>",
+      "en": "<code>living-room/west/temperature</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳/#</code>",
+      "en": "<code>living-room/#</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳</code>",
+      "en": "<code>living-room</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic2",
+      "zh": "<code>$share/群組名/主題</code>",
+      "en": "<code>$share/&lt;group&gt;/&lt;topic&gt;</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#faq",
+      "zh": "<code>$share/群組/</code>",
+      "en": "<code>$share/&lt;group&gt;/</code>"
+    },
+    {
+      "file": "ch6_authentication.html",
+      "unit": "#steps",
+      "zh": "<code>&lt;你的密碼&gt;</code>",
+      "en": "<code>&lt;your-password&gt;</code>"
+    },
+    {
+      "file": "ch7_authorization.html",
+      "unit": "#topic2",
+      "zh": "<code>客廳/開關/+/state</code>",
+      "en": "<code>living-room/switch/+/state</code>"
+    },
+    {
+      "file": "ch9_rule_engine.html",
+      "unit": "#sql",
+      "zh": "<pre><code>SELECT &lt;欄位與運算式&gt; FROM &lt;資料來源&gt; [WHERE &lt;條件&gt;]</code></pre>",
+      "en": "<pre><code>SELECT &lt;fields and expressions&gt; FROM &lt;data source&gt; [WHERE &lt;condition&gt;]</code></pre>"
+    },
+    {
+      "file": "ch9_rule_engine.html",
+      "unit": "#sql",
+      "zh": "<code>${欄位名}</code>",
+      "en": "<code>${field}</code>"
+    },
+    {
+      "file": "skills.html",
+      "unit": "#main",
+      "zh": "<pre class=\"code-block\"><code>feature_id: [穩定識別]\nversion: 5.8.9\nchannel: [正式 | 實驗性 | 僅概念]\ndashboard_module: [是 | 否]\nsecurity: [需在 UI 設定 | 屬概念]\nevidence:\n  - [官方文件 URL]\nlimitations: [限制]\nredact: [需要遮蔽的欄位]</code></pre>",
+      "en": "<pre class=\"code-block\"><code>feature_id: [stable-id]\nversion: 5.8.9\nchannel: [ga | experimental | concept-only]\ndashboard_module: [yes | no]\nsecurity: [configure in the UI | conceptual]\nevidence:\n  - [official docs URL]\nlimitations: [limitations]\nredact: [fields to redact]</code></pre>"
+    },
+    {
+      "file": "ch19_ngrok.html",
+      "unit": "#what",
+      "zh": "<code>&lt;你的 ngrok authtoken&gt;</code>",
+      "en": "<code>&lt;your-ngrok-authtoken&gt;</code>"
+    },
+    {
+      "file": "ch19_ngrok.html",
+      "unit": "#steps",
+      "zh": "<code>&lt;你的 ngrok authtoken&gt;</code>",
+      "en": "<code>&lt;your-ngrok-authtoken&gt;</code>"
+    },
+    {
+      "file": "ch3_dashboard.html",
+      "unit": "#steps",
+      "zh": "<code>http://&lt;主機位址&gt;:18083</code>",
+      "en": "<code>http://&lt;host-address&gt;:18083</code>"
+    },
+    {
+      "file": "ch3_dashboard.html",
+      "unit": "#troubleshoot",
+      "zh": "<code>http://&lt;主機位址&gt;:18083</code>",
+      "en": "<code>http://&lt;host-address&gt;:18083</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#steps",
+      "zh": "<code>客廳/濕度</code>",
+      "en": "<code>living-room/humidity</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳/溫度</code>",
+      "en": "<code>living-room/temperature</code>"
+    },
+    {
+      "file": "ch4_mqtt_basics.html",
+      "unit": "#topic1",
+      "zh": "<code>客廳/東/上/溫度</code>",
+      "en": "<code>living-room/east/upper/temperature</code>"
+    }
+  ]
 }

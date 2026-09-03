@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html">Install</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html" class="active">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html" class="active">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -84,7 +84,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch6_authentication.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 6</div>
       <h1>Authentication</h1>
@@ -129,7 +128,7 @@
       <ol class="steps">
         <li><h3>Open the Authentication page</h3><p>Log in to the Dashboard, go to <strong>Access Control → Authentication</strong> in the left menu, and click <strong>Create</strong> at the top right.</p></li>
         <li><h3>Create Password-Based plus the built-in database</h3><p>On the Create page, pick <strong>Password-Based</strong> as the mechanism and <strong>Built-in Database</strong> as the backend (external databases and HTTP Server are left to the concept sections below). Set whether it matches on Username or ClientID and which password hash to use, to suit your case, then click <strong>Create</strong>.</p></li>
-        <li><h3>Add a user</h3><p>Find the authenticator you just created in the Authenticator List, click <strong>User Management</strong>, and add a username and password (for example <code>ha_broker</code>/<code>&lt;你的密碼&gt;</code>). It is stored in the EMQX built-in database.</p></li>
+        <li><h3>Add a user</h3><p>Find the authenticator you just created in the Authenticator List, click <strong>User Management</strong>, and add a username and password (for example <code>ha_broker</code>/<code>&lt;your-password&gt;</code>). It is stored in the EMQX built-in database.</p></li>
         <li><h3>Verify a working connection, then disable it</h3><p>Go back to the WebSocket client from Chapter 5 and connect with the credentials you just created, to confirm that authentication really took effect (a wrong password is rejected). Then go to the Authenticator List, turn this authenticator's <strong>Enable</strong> switch off, and watch what "every client can connect" does — turn it straight back on when the experiment is over. Delete any user you no longer need from User Management.</p></li>
       </ol>
     </section>

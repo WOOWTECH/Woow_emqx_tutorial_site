@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html">Install</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html" class="active">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html" class="active">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -83,7 +83,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch12_sources_bridge.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 12</div>
       <h1>Sources and data import</h1>
@@ -141,7 +140,7 @@
       <p>Two things to watch when you create an MQTT Source:</p>
       <ul>
         <li><strong>The subscribe topic accepts the <code>+</code> and <code>#</code> wildcards</strong>, so one Source can pick up a whole family of remote topics.</li>
-        <li><strong>Use a shared subscription with a cluster or a connection pool</strong>: when EMQX runs as a cluster, or the Connector has a connection pool open, several clients subscribe to the same topic at once and each of them receives the message. The official advice is to spread that load with <code>$share/群組名/topic</code> (for example <code>$share/1/f/#</code>).</li>
+        <li><strong>Use a shared subscription with a cluster or a connection pool</strong>: when EMQX runs as a cluster, or the Connector has a connection pool open, several clients subscribe to the same topic at once and each of them receives the message. The official advice is to spread that load with <code>$share/&lt;group&gt;/topic</code> (for example <code>$share/1/f/#</code>).</li>
       </ul>
       <p>The fields a Source brings in, for use in the rule SQL, are:</p>
       <div class="data-table">
@@ -174,9 +173,9 @@
       <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
         <li><strong>The Source receives nothing from the remote broker</strong>: check that the Connector state is Connected, that the subscribe Topic and QoS are right, that the wildcards are correct, and that something really is publishing on the remote broker.</li>
-        <li><strong>Duplicate data with a cluster or a connection pool</strong>: switch to a shared subscription, <code>$share/群組/topic</code>, so several bridge clients do not each receive the same message.</li>
+        <li><strong>Duplicate data with a cluster or a connection pool</strong>: switch to a shared subscription, <code>$share/&lt;group&gt;/topic</code>, so several bridge clients do not each receive the same message.</li>
         <li><strong>The written-back messages never arrive locally</strong>: a Source only brings the message in; it takes a separate Republish action to actually write it back onto a local topic. Check that the action was added and the rule created.</li>
-        <li><strong>A SQL field comes back empty</strong>: check that the rule's <code>FROM</code> is the right <code>$bridges/mqtt:&lt;名稱&gt;</code>, and that the name you put in matches the Source's name.</li>
+        <li><strong>A SQL field comes back empty</strong>: check that the rule's <code>FROM</code> is the right <code>$bridges/mqtt:&lt;name&gt;</code>, and that the name you put in matches the Source's name.</li>
       </ul>
     </section>
 

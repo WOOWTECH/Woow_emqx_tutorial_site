@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html">Install</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html" class="active">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html" class="active">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -83,7 +83,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch9_rule_engine.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 9</div>
       <h1>Rule Engine</h1>
@@ -141,7 +140,7 @@
     <section id="sql" data-nav="SQL syntax">
       <h2 data-icon="protocol">Rule SQL: SELECT/FROM/WHERE</h2>
       <p>The basic shape of the rule SQL is:</p>
-      <pre><code>SELECT &lt;欄位與運算式&gt; FROM &lt;資料來源&gt; [WHERE &lt;條件&gt;]</code></pre>
+      <pre><code>SELECT &lt;fields and expressions&gt; FROM &lt;data source&gt; [WHERE &lt;condition&gt;]</code></pre>
       <p><strong>FROM</strong> names the data source, in one of two main shapes:</p>
       <ul>
         <li><strong>topic</strong>: for example <code>SELECT * FROM "t/#"</code> handles every message whose topic matches <code>t/#</code>. Separate several topics with commas, as in <code>FROM "t/1", "t/2"</code>. A topic must be wrapped in double or single quotes.</li>
@@ -150,7 +149,7 @@
       <p><strong>WHERE</strong> adds a further filter. A field can be metadata (such as <code>clientid</code> or <code>username</code>) or a field inside the payload (dot syntax such as <code>payload.x.y</code>, as long as the payload is JSON/Map); you can also combine conditions with <code>and</code>/<code>or</code>.</p>
       <p><strong>SELECT</strong> picks the fields to output, and can rename them:</p>
       <pre><code>SELECT clientid, payload.clientid as myclientid FROM "t/#"</code></pre>
-      <p>The output is a JSON object. Once the SQL has run, a later action can reference its fields with <code>${欄位名}</code>.</p>
+      <p>The output is a JSON object. Once the SQL has run, a later action can reference its fields with <code>${field}</code>.</p>
       <p>Expressions support arithmetic (<code>+</code>/<code>-</code>/<code>*</code>/<code>div</code>/<code>mod</code>), comparison (<code>=</code>, <code>&lt;&gt;</code>, <code>&lt;</code>, <code>&gt;</code>…) and logic (<code>and</code>/<code>or</code>), plus a long list of built-in functions. A separate <code>FOREACH</code> statement can emit several results at once (splitting an array of sensor readings in the payload into one message each, for example); learn it when you get to that point.</p>
     </section>
 

@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html" class="active">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html">Install</a></li>
+      <li><a href="ch3_dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -83,7 +83,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch3_dashboard.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 3</div>
       <h1>A tour of the EMQX Dashboard</h1>
@@ -98,7 +97,7 @@
 
     <section id="concept" data-nav="Core concepts">
       <h2 data-icon="concept">Core concepts</h2>
-      <p>The EMQX Dashboard is the admin console built into EMQX, and by default it listens on HTTP port <strong>18083</strong>. In Home Assistant you can open it straight through Ingress (the EMQX icon in the left sidebar), or you can go to <code>http://&lt;主機&gt;:18083</code>.</p>
+      <p>The EMQX Dashboard is the admin console built into EMQX, and by default it listens on HTTP port <strong>18083</strong>. In Home Assistant you can open it straight through Ingress (the EMQX icon in the left sidebar), or you can go to <code>http://&lt;host&gt;:18083</code>.</p>
       <p>One idea is worth fixing early: the Dashboard is only a visual layer over EMQX, and <strong>EMQX sends and receives messages as usual whether or not you open it</strong>. Its job is to let you monitor the cluster, connections, subscriptions, rules and security settings in one place; it is not a required part of the broker.</p>
       <p>Signing in lands you on the home page, Cluster Overview, which is the foundation the rest of the Dashboard rests on. It tells you how many connections and subscriptions there are right now, the rate messages are flowing in and out, and how many nodes the cluster has — the first thing to glance at before any troubleshooting.</p>
     </section>
@@ -126,7 +125,7 @@
       <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
         <li><h3>Open it from Home Assistant</h3><p>In Home Assistant's left sidebar, find the <strong>EMQX</strong> icon (the Ingress entry point) and click it to open the Dashboard.</p></li>
-        <li><h3>Or go straight to 18083</h3><p>Open <code>http://&lt;主機位址&gt;:18083</code> in your browser. Both routes reach the same Dashboard.</p></li>
+        <li><h3>Or go straight to 18083</h3><p>Open <code>http://&lt;host-address&gt;:18083</code> in your browser. Both routes reach the same Dashboard.</p></li>
         <li><h3>Sign in, and change the password first</h3><p>For the first login use <code>admin</code>/<code>public</code>, then follow the prompt to change it to a password of your own (see Chapter 2).</p></li>
         <li><h3>Walk the sidebar end to end</h3><p>Go down the left column from Monitoring, Access Control and Integration all the way through System, and write down one line on what each module is for. Then go back to <strong>Monitoring → Cluster Overview</strong> and take in the whole picture again.</p></li>
       </ol>
@@ -169,7 +168,7 @@
     <section id="troubleshoot" data-nav="Troubleshooting">
       <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>You sign in but the Dashboard will not open</strong>: check whether you are going through Ingress or through 18083; if the host is on another subnet, use <code>http://&lt;主機位址&gt;:18083</code> instead.</li>
+        <li><strong>You sign in but the Dashboard will not open</strong>: check whether you are going through Ingress or through 18083; if the host is on another subnet, use <code>http://&lt;host-address&gt;:18083</code> instead.</li>
         <li><strong>You cannot find the version</strong>: go to <strong>Monitoring → Nodes</strong>; the version column beside the node name is the version now running (expect 5.8.9).</li>
         <li><strong>A sidebar entry is missing</strong>: advanced features such as Delayed Publish and Alarms are not shown by default in the Open Source edition. That is normal, not a fault.</li>
         <li><strong>The numbers on the home page look stuck</strong>: the Overview chart has a time range you can pick; to start accumulating again, use Reset Monitoring Data.</li>

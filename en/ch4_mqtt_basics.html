@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html" class="active">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html">Install</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html" class="active">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -83,7 +83,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch4_mqtt_basics.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 4</div>
       <h1>The MQTT mental model</h1>
@@ -127,19 +126,19 @@
       <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
         <li><h3>Open the Dashboard's WebSocket test client</h3><p>In the EMQX Dashboard, find the built-in visual WebSocket client (the Diagnose section / Diagnose tools). It connects to your broker as MQTT over WebSocket.</p></li>
-        <li><h3>Subscribe to a topic</h3><p>Add a subscriber and subscribe to a topic such as <code>客廳/濕度</code>. Do not attach anything practical to it yet; the point is to get a direct impression of subscribe → receive.</p></li>
-        <li><h3>Publish a message</h3><p>Switch to the publisher role, type <code>客廳/濕度</code> as the topic and a number as the payload, then send it and watch whether the subscriber receives it straight away.</p></li>
+        <li><h3>Subscribe to a topic</h3><p>Add a subscriber and subscribe to a topic such as <code>living-room/humidity</code>. Do not attach anything practical to it yet; the point is to get a direct impression of subscribe → receive.</p></li>
+        <li><h3>Publish a message</h3><p>Switch to the publisher role, type <code>living-room/humidity</code> as the topic and a number as the payload, then send it and watch whether the subscriber receives it straight away.</p></li>
         <li><h3>Try QoS and retained</h3><p>Change the publish QoS to 1, tick "Retain", and get a feel for how retained behaves: a subscriber that arrives later still receives the message immediately. Chapter 5 has the full demonstration; here you are only building the intuition.</p></li>
       </ol>
     </section>
 
     <section id="topic1" data-nav="Topics and wildcards">
       <h2 data-icon="protocol">Topic structure and wildcards</h2>
-      <p>A topic is a UTF-8 string, split into levels by a forward slash <code>/</code>. In <code>客廳/溫度</code>, for example, temperature is the level under the living room. A publisher sends its messages to a specific topic; a subscriber can use a <strong>wildcard</strong> to subscribe to many topics at once.</p>
+      <p>A topic is a UTF-8 string, split into levels by a forward slash <code>/</code>. In <code>living-room/temperature</code>, for example, temperature is the level under the living room. A publisher sends its messages to a specific topic; a subscriber can use a <strong>wildcard</strong> to subscribe to many topics at once.</p>
       <p>MQTT gives you two wildcards:</p>
       <ul>
-        <li><strong><code>+</code> (single level)</strong>: matches exactly one level. <code>客廳/+/溫度</code>, for example, receives <code>客廳/東/溫度</code> and <code>客廳/西/溫度</code>, but does <strong>not</strong> receive <code>客廳/東/上/溫度</code>.</li>
-        <li><strong><code>#</code> (multi level)</strong>: matches any number of levels, and must come last. <code>客廳/#</code>, for example, receives <code>客廳</code>, <code>客廳/溫度</code> and <code>客廳/東/上/溫度</code>.</li>
+        <li><strong><code>+</code> (single level)</strong>: matches exactly one level. <code>living-room/+/temperature</code>, for example, receives <code>living-room/east/temperature</code> and <code>living-room/west/temperature</code>, but does <strong>not</strong> receive <code>living-room/east/upper/temperature</code>.</li>
+        <li><strong><code>#</code> (multi level)</strong>: matches any number of levels, and must come last. <code>living-room/#</code>, for example, receives <code>living-room</code>, <code>living-room/temperature</code> and <code>living-room/east/upper/temperature</code>.</li>
       </ul>
       <p>The rules matter: <code>+</code> and <code>#</code> can be used only to <strong>subscribe</strong>, never to publish; and each one either fills a whole level or, in the case of <code>#</code>, comes last.</p>
       <p><strong>QoS (quality of service)</strong> is a reliability setting carried by each message on its own, and it has three levels:</p>
@@ -164,7 +163,7 @@
       <p><strong>Keepalive</strong> is how long the client promises to go between control packets sent to the broker; if the broker hears nothing for longer than that, it treats the connection as dropped. When you adjust how long counts as dropped, keepalive is what you are adjusting.</p>
       <p><strong>Retained message</strong>: mark a message as Retain and the broker stores the latest one for that topic. Any new subscriber to that topic receives it immediately, without waiting for the publisher to publish again. The cost is that only the latest message per topic is kept; to clear it, publish an empty message to that topic.</p>
       <p><strong>Will message</strong>: the client sets a will (a topic plus a payload) when it connects, and when the client drops unexpectedly the broker publishes that will to the subscribers on its behalf, so everyone else knows straight away that its state has changed.</p>
-      <p>A <strong>shared subscription</strong> takes the form <code>$share/群組名/主題</code> and spreads the message load evenly across the subscribers in one group (round_robin by default), instead of giving every one of them a duplicate copy. To raise throughput or add redundancy, split the work across several subscribers so each handles its own share.</p>
+      <p>A <strong>shared subscription</strong> takes the form <code>$share/&lt;group&gt;/&lt;topic&gt;</code> and spreads the message load evenly across the subscribers in one group (round_robin by default), instead of giving every one of them a duplicate copy. To raise throughput or add redundancy, split the work across several subscribers so each handles its own share.</p>
     </section>
 
     <section id="troubleshoot" data-nav="Troubleshooting">
@@ -193,7 +192,7 @@
       </details>
       <details class="faq">
         <summary>With a shared subscription, who receives each message?</summary>
-        <div class="body"><p>Within one <code>$share/群組/</code> group, each message is received by exactly one client in the group (chosen by the strategy in force); separate groups each receive their own copy. That makes it a good fit for spreading load.</p></div>
+        <div class="body"><p>Within one <code>$share/&lt;group&gt;/</code> group, each message is received by exactly one client in the group (chosen by the strategy in force); separate groups each receive their own copy. That makes it a good fit for spreading load.</p></div>
       </details>
     </section>
 

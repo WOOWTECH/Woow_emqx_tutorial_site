@@ -49,8 +49,8 @@
       <!-- /i18n:switch -->
 <span class="script-accent" aria-hidden="true">research safely</span>
 <p class="eyebrow">Standalone Agent Handbook · EMQX 5.8.9</p>
-<h1>The working spec for researching, writing and shipping the 22-chapter EMQX guide</h1>
-<p class="lead">Hand this handbook straight to a research or writing agent. The factual boundary is fixed: EMQX 5.8.9, the official docs at <code>docs.emqx.com/en/emqx/v5.8</code>, and for the add-on, <code>WOOWTECH/Woow_ha_emqx</code> and its <code>emqx/</code> directory.</p>
+<h1>The working spec for researching, writing and delivering the 22-chapter EMQX guide</h1>
+<p class="lead">Hand this handbook straight to a research or writing agent. The factual boundary is fixed: EMQX 5.8.9, the official docs at <code>docs.emqx.com/en/emqx/v5.8</code>, and for the add-on, <code>WOOWTECH/Woow_ha_emqx</code> — specifically its <code>emqx/</code> directory — is the authority.</p>
 </div>
 
 <section class="resource-section">
@@ -59,16 +59,16 @@
 <article class="info-card"><h3>Your job</h3>
 <ul>
 <li>Write only the claims you can back with the official v5.8 docs, the Woow_ha_emqx source, or read-only observation on a live instance.</li>
-<li>Write in US English and address the reader as you. Explain the term first, then give a home scenario, and write the steps last.</li>
+<li>Write in US English and address the reader as you. Explain the term first, then give a home setup, and write the steps last.</li>
 <li>Describe the system as an "MQTT broker", not as a "platform that does everything"; keep clustering to concepts and monitoring.</li>
-<li>State the menu path, the default and the maturity of every feature.</li>
+<li>Explicitly state the menu path, the default and the maturity of every feature.</li>
 </ul></article>
 <article class="info-card"><h3>What you must not do</h3>
 <ul>
 <li>Do not present the "Modules" and "Data Bridge" of EMQX 4.x as the recommended 5.x wording.</li>
 <li>Do not treat add-on 5.9.0 as an EMQX version (5.9.0 only adds an ngrok TCP tunnel).</li>
 <li>Do not run Create, Delete, Save, Kick, Disconnect or any other state-changing action to get a screenshot.</li>
-<li>Do not publish MQTT passwords, client IDs, API keys, ngrok authtokens, TLS private keys or connection strings.</li>
+<li>Do not expose MQTT passwords, client IDs, API keys, ngrok authtokens, TLS private keys or connection strings.</li>
 </ul></article>
 </div>
 </section>
@@ -77,9 +77,9 @@
 <h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-source-branch" aria-hidden="true"></i></span>Source precedence and handling conflicts</h2>
 <ol class="phase-list">
 <li><strong>Woow_ha_emqx source / README:</strong> highest precedence, for add-on install, env_vars, host_network and port facts.</li>
-<li><strong>EMQX v5.8 official docs:</strong> Dashboard modules, defaults, and the user-facing facts about Authentication, ACL, Listener, Rule and Connector.</li>
-<li><strong>Read-only observation on a live instance:</strong> it proves only what this one environment shows. On its own it cannot prove that something is generally supported, and you must never create or delete a setting on a live system.</li>
-<li><strong>Release notes for the same version:</strong> use them for version behavior and limits. Where they disagree with the docs, follow the official source you can actually reach, and note it.</li>
+<li><strong>EMQX v5.8 official docs:</strong> the user-facing facts — Dashboard modules, defaults, Authentication, ACL, Listener, Rule, Connector and the like.</li>
+<li><strong>Read-only observation on a live instance:</strong> it proves only "what this one environment shows". On its own it cannot prove that something is generally supported, and you must never create or delete a setting on a live system.</li>
+<li><strong>Release notes for the same version:</strong> use them for version behavior and limits. Where they disagree with the docs, follow the official source you can reach, and note it.</li>
 </ol>
 <div class="notice"><strong>Conflict rule:</strong> do not reconcile the sources yourself. Record the claim, source A, source B, the conclusion you adopted, and what is still unverified; when you cannot resolve it, downgrade the text to a limitation or to something still to be verified.</div>
 </section>
@@ -87,15 +87,15 @@
 <section class="resource-section">
 <h2 class="icon-heading"><span class="icon-tile"><i class="mdi mdi-tag-multiple-outline" aria-hidden="true"></i></span>Working from a feature manifest</h2>
 <p>Build the feature list before you research, and write the chapters after that. Every row carries at least: <code>feature_id</code>, name, chapter, maturity, source, verification status, limitations and a security note.</p>
-<pre class="code-block"><code>feature_id: [穩定識別]
+<pre class="code-block"><code>feature_id: [stable-id]
 version: 5.8.9
-channel: [正式 | 實驗性 | 僅概念]
-dashboard_module: [是 | 否]
-security: [需在 UI 設定 | 屬概念]
+channel: [ga | experimental | concept-only]
+dashboard_module: [yes | no]
+security: [configure in the UI | conceptual]
 evidence:
-  - [官方文件 URL]
-limitations: [限制]
-redact: [需要遮蔽的欄位]</code></pre>
+  - [official docs URL]
+limitations: [limitations]
+redact: [fields to redact]</code></pre>
 <ul class="check-list">
 <li>Scan the module list in the official docs first, then compare it with the Woow_ha_emqx README and config.</li>
 <li>When a chapter is done, check it back against the manifest, so no feature is missing, duplicated or taken from another version.</li>
@@ -120,8 +120,8 @@ redact: [需要遮蔽的欄位]</code></pre>
 <div class="table-scroll"><table class="data-table"><thead><tr><th>Part</th><th>Chapters</th><th>Core deliverable</th></tr></thead><tbody>
 <tr><td>Basics</td><td>01–04</td><td>What it is, installing, the Dashboard, the MQTT mental model.</td></tr>
 <tr><td>Access control</td><td>05–08</td><td>Connecting, Authentication, Authorization, Listeners and TLS.</td></tr>
-<tr><td>Rules and integrations</td><td>09–13</td><td>Rule Engine, actions, Connector, Sink and Source, Home Assistant integration.</td></tr>
-<tr><td>Operations</td><td>14–22</td><td>Clients, monitoring, messages, configuration, logs and the API, ngrok, backup, security, troubleshooting.</td></tr>
+<tr><td>Rules and integrations</td><td>09–13</td><td>Rule Engine, actions, connectors, sinks and sources, Home Assistant integration.</td></tr>
+<tr><td>Operations</td><td>14–22</td><td>Clients, monitoring, messages, configuration, Logs/API, ngrok, backup, security, troubleshooting.</td></tr>
 </tbody></table></div>
 <h3>The required skeleton for every chapter</h3>
 <ul class="check-list">
@@ -145,8 +145,8 @@ redact: [需要遮蔽的欄位]</code></pre>
 <article class="info-card"><h3>Security review</h3>
 <ul>
 <li>Run the sensitive-data scan, then check by hand for passwords, tokens, IP addresses and hostnames.</li>
-<li>Every high-risk action needs a backup, its impact, an approval and a rollback.</li>
-<li>Never write authentication up as protection against everything; state the risk before exposing 1883.</li>
+<li>Before any high-risk action there must be a backup, a stated impact, an approval and a rollback.</li>
+<li>Do not describe authentication as protection against everything; state the risk before exposing 1883.</li>
 </ul></article>
 <article class="info-card"><h3>Editorial review</h3>
 <ul>

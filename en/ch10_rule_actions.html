@@ -42,31 +42,31 @@
     <h2>Chapters</h2>
     <ol>
       <li class="part-label">Basics: what it is and how to install it</li>
-      <li data-i18n="pending"><a href="ch1_overview.html">What EMQX is</a></li>
-      <li data-i18n="pending"><a href="ch2_install.html">Install</a></li>
-      <li data-i18n="pending"><a href="ch3_dashboard.html">Dashboard</a></li>
-      <li data-i18n="pending"><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
+      <li><a href="ch1_overview.html">What EMQX is</a></li>
+      <li><a href="ch2_install.html">Install</a></li>
+      <li><a href="ch3_dashboard.html">Dashboard</a></li>
+      <li><a href="ch4_mqtt_basics.html">MQTT basics</a></li>
       <li class="part-label">Core: connecting and access control</li>
-      <li data-i18n="pending"><a href="ch5_first_connection.html">First connection</a></li>
-      <li data-i18n="pending"><a href="ch6_authentication.html">Authentication</a></li>
-      <li data-i18n="pending"><a href="ch7_authorization.html">Authorization</a></li>
-      <li data-i18n="pending"><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
+      <li><a href="ch5_first_connection.html">First connection</a></li>
+      <li><a href="ch6_authentication.html">Authentication</a></li>
+      <li><a href="ch7_authorization.html">Authorization</a></li>
+      <li><a href="ch8_listeners_tls.html">Listeners/TLS</a></li>
       <li class="part-label">Advanced: rules, integrations and data bridging</li>
-      <li data-i18n="pending"><a href="ch9_rule_engine.html">Rule Engine</a></li>
-      <li data-i18n="pending"><a href="ch10_rule_actions.html" class="active">Built-in actions</a></li>
-      <li data-i18n="pending"><a href="ch11_connectors_sinks.html">Connectors</a></li>
-      <li data-i18n="pending"><a href="ch12_sources_bridge.html">Sources</a></li>
-      <li data-i18n="pending"><a href="ch13_home_assistant.html">HA integration</a></li>
+      <li><a href="ch9_rule_engine.html">Rule Engine</a></li>
+      <li><a href="ch10_rule_actions.html" class="active">Built-in actions</a></li>
+      <li><a href="ch11_connectors_sinks.html">Connectors</a></li>
+      <li><a href="ch12_sources_bridge.html">Sources</a></li>
+      <li><a href="ch13_home_assistant.html">HA integration</a></li>
       <li class="part-label">Operations: monitoring, management and recovery</li>
-      <li data-i18n="pending"><a href="ch14_client_management.html">Client management</a></li>
-      <li data-i18n="pending"><a href="ch15_monitoring.html">Monitoring</a></li>
-      <li data-i18n="pending"><a href="ch16_message_management.html">Message management</a></li>
-      <li data-i18n="pending"><a href="ch17_configuration.html">Configuration</a></li>
-      <li data-i18n="pending"><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
-      <li data-i18n="pending"><a href="ch19_ngrok.html">ngrok</a></li>
-      <li data-i18n="pending"><a href="ch20_backup_recovery.html">Backup</a></li>
-      <li data-i18n="pending"><a href="ch21_security.html">Secure deployment</a></li>
-      <li data-i18n="pending"><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
+      <li><a href="ch14_client_management.html">Client management</a></li>
+      <li><a href="ch15_monitoring.html">Monitoring</a></li>
+      <li><a href="ch16_message_management.html">Message management</a></li>
+      <li><a href="ch17_configuration.html">Configuration</a></li>
+      <li><a href="ch18_logs_api_diagnose.html">Logs/API</a></li>
+      <li><a href="ch19_ngrok.html">ngrok</a></li>
+      <li><a href="ch20_backup_recovery.html">Backup</a></li>
+      <li><a href="ch21_security.html">Secure deployment</a></li>
+      <li><a href="ch22_troubleshooting.html">Troubleshooting</a></li>
     </ol>
     <div class="toc-in-chapter">
       <h2>This chapter</h2>
@@ -83,7 +83,6 @@
   </aside>
 
   <main class="content">
-    <div class="callout i18n-pending"><strong>This chapter has not been translated yet.</strong> You are reading the original Chinese text. <a href="../ch10_rule_actions.html" hreflang="zh-Hant">Open the Chinese version</a></div>
     <div class="chapter-header">
       <div class="kicker">Chapter 10</div>
       <h1>Built-in actions and message republishing</h1>
@@ -98,7 +97,7 @@
 
     <section id="concept" data-nav="Core concepts">
       <h2 data-icon="concept">Core concepts</h2>
-      <p>In a rule's <code>actions</code> you can configure <strong>one or more</strong> actions, and the rule runs them in order. The data an action uses comes from the SQL result: with placeholder syntax such as <code>${欄位名}</code> you push a field of the rule output into an action parameter (putting the <code>payload</code> or <code>clientid</code> the SQL selected into the republish topic or payload, for example).</p>
+      <p>In a rule's <code>actions</code> you can configure <strong>one or more</strong> actions, and the rule runs them in order. The data an action uses comes from the SQL result: with placeholder syntax such as <code>${field}</code> you push a field of the rule output into an action parameter (putting the <code>payload</code> or <code>clientid</code> the SQL selected into the republish topic or payload, for example).</p>
       <p>The three built-in actions in EMQX 5.8.9:</p>
       <ul>
         <li><strong>Message Republishing</strong>: publishes the rule result to an MQTT topic.</li>
@@ -139,7 +138,7 @@
 
     <section id="republish" data-nav="Republish and Console">
       <h2 data-icon="network">Republish and Console Output</h2>
-      <p><strong>Republish</strong> is the everyday "reshape the data and reroute it" action. The official example takes <code>t/#</code 收進、轉發到 <code>a/1</code>: republishing does not intercept the original message, so a client subscribed to <code>t/1</code> still receives it as usual and simply gets one extra copy on <code>a/1</code>. Adding the <strong>Direct Dispatch</strong> switch delivers the message straight to subscribers, which keeps it from triggering other rules and falling into recursion.</p>
+      <p><strong>Republish</strong> is the everyday "reshape the data and reroute it" action. The official example takes <code>t/#</code in and republishes it to <code>a/1</code>: republishing does not intercept the original message, so a client subscribed to <code>t/1</code> still receives it as usual and simply gets one extra copy on <code>a/1</code>. Adding the <strong>Direct Dispatch</strong> switch delivers the message straight to subscribers, which keeps it from triggering other rules and falling into recursion.</p>
       <p>The common Republish parameters:</p>
       <div class="data-table">
         <table>
@@ -156,7 +155,7 @@
           </tbody>
         </table>
       </div>
-      <p>The <strong>Console Output</strong> action only prints the rule result to the console or the log (in the form <code>[rule action] 規則ID + Action Data + Envs</code>). Use it for debugging only: when EMQX starts in the foreground (the Docker default) the output goes to the console; when it starts under systemd it goes to the journal, which you read with <code>journalctl</code>. The official docs warn plainly that using console in production can slow things down.</p>
+      <p>The <strong>Console Output</strong> action only prints the rule result to the console or the log (in the form <code>[rule action] ruleID + Action Data + Envs</code>). Use it for debugging only: when EMQX starts in the foreground (the Docker default) the output goes to the console; when it starts under systemd it goes to the journal, which you read with <code>journalctl</code>. The official docs warn plainly that using console in production can slow things down.</p>
     </section>
 
     <section id="config" data-nav="Actions in config">
@@ -186,7 +185,7 @@
       <ul>
         <li><strong>No republished message arrives</strong>: check that the rule is enabled, that the SQL's FROM pattern matches the topic you publish to, that the action was saved, and that the target topic and QoS are right; simulate it first with "Test the Rule".</li>
         <li><strong>Nothing shows up in the console</strong>: when EMQX starts in the background the output goes to the journal, which you read with <code>journalctl</code>; when it runs in the Docker foreground, look at the console.</li>
-        <li><strong>The payload is not in the format you expected</strong>: the republish payload is a string template, so you have to type out the shape you want (for example <code>${payload}</code>, or text mixed with <code>${欄位}</code>).</li>
+        <li><strong>The payload is not in the format you expected</strong>: the republish payload is a string template, so you have to type out the shape you want (for example <code>${payload}</code>, or text mixed with <code>${field}</code>).</li>
         <li><strong>The rule triggers itself and recurses</strong>: if the Republish target topic also matches the same rule's <code>FROM</code>, it fires again without end. Avoid that with Direct Dispatch, or change the target topic.</li>
       </ul>
     </section>
