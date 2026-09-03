@@ -133,7 +133,8 @@ run('nested list items cannot inflate direct counts', ['scripts/check_content.js
 run('placeholders and documented defaults pass secret scan', ['scripts/check_sensitive.js', '--fixture=tests/fixtures/sensitive-negative.txt'], 0);
 run('EMQX/MQTT secrets fail scan', ['scripts/check_sensitive.js', '--fixture=tests/fixtures/sensitive-positive.txt'], 1,
   ['EMQX_NODE__COOKIE 含實值', 'ngrok authtoken 含實值', 'password 欄位含實值', 'API key 欄位含實值',
-   'MQTT 連線字串含帳密', 'TLS 私鑰區塊', '未核准的私有 IP', 'IPv6 ULA', 'IPv6 link-local', '測試環境 hostname']);
+   'sensitive-positive.txt:10: Authorization header 含實值', 'MQTT 連線字串含帳密', 'TLS 私鑰區塊',
+   '未核准的私有 IP', 'IPv6 ULA', 'IPv6 link-local', '測試環境 hostname']);
 
 // shared link resolver
 const linkDir = fs.mkdtempSync(path.join(os.tmpdir(), 'emqx-links-'));

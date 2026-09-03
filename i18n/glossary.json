@@ -688,7 +688,6 @@
       "繁體中文 22 章教學 ／ 22 章繁體中文 EMQX 教學": "22-chapter EMQX tutorial  — index/tutorial meta — drop the language claim, do not write 'Traditional Chinese'",
       "第 N 章": "Chapter N  — never 'Ch. 4', never a bare number",
       "第 2、3、4 章 ／ 第 2、8 章": "Chapters 2, 3 and 4 / Chapters 2 and 8",
-      "回目錄": "Back to contents  — pager",
       "（pinned commit）": "(pinned commit)  — sources list, x8",
       "（pinned docs 分支）": "(pinned docs branch)  — sources list, x25",
       "（pinned docs）": "(pinned docs)  — sources list, x6",

@@ -95,11 +95,12 @@ for (const file of files) {
     if (/-----BEGIN\s+(?:[A-Z][A-Z0-9 ]*\s+)?PRIVATE KEY-----/.test(line)) report(file, lineNo, 'TLS 私鑰區塊');
 
     const authRe = /["']?Authorization["']?\s*(?:=|:)\s*(?:["']([^"']+)["']|((?:(?:Bearer|Basic)\s+)?[^\s,;`]+))/gi;
+    const quotedAuthorizationIdentity = /^\s*"Authorization"\s*:\s*"Authorization"\s*,?\s*$/.test(line);
     for (const match of line.matchAll(authRe)) {
       const value = match[1] || match[2] || '';
       const credential = value.replace(/^(?:Bearer|Basic)\s+/i, '');
-      // A glossary or translation map may legitimately contain "Authorization": "Authorization".
-      if (credential.toLowerCase() !== 'authorization' && isSecretValue(credential, 8)) report(file, lineNo, 'Authorization header 含實值');
+      // Only an exact quoted glossary/translation identity mapping is exempt.
+      if (!quotedAuthorizationIdentity && isSecretValue(credential, 8)) report(file, lineNo, 'Authorization header 含實值');
     }
 
     const cookieRe = /["']?(?:Cookie|Set-Cookie)["']?\s*(?:=|:)\s*(?:["']([^"']+)["']|([^\s,;]+=[^\s,;]+))/gi;
