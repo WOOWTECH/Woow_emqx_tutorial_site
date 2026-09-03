@@ -97,6 +97,24 @@ for (const file of ['sales.html', 'skills.html']) {
 const promptCount = (fs.readFileSync(path.join(ROOT, 'prompts.html'), 'utf8').match(/<article class="prompt-card">/g) || []).length;
 record('prompts hub ships at least 45 searchable copyable prompts', promptCount >= 45, String(promptCount));
 record('prompts hub clipboard failure feedback is visible', /id="copyStatus"/.test(fs.readFileSync(path.join(ROOT, 'prompts.html'), 'utf8')));
+
+// English transcreation and inherited malformed-markup regressions.
+const enSales = fs.readFileSync(path.join(ROOT, 'en', 'sales.html'), 'utf8');
+for (const required of [
+  'Option A (self-hosted)',
+  'Option B (managed by WoowTech)',
+  '[currency and price pending]',
+  '[contact channel pending]',
+  '[CTA URL pending]',
+]) {
+  record(`English sales page keeps required text: ${required}`, enSales.includes(required));
+}
+const enRuleActions = fs.readFileSync(path.join(ROOT, 'en', 'ch10_rule_actions.html'), 'utf8');
+const visibleRelationship = 'In the official example, messages matching t/# are republished to a/1.';
+const malformedFrozenFragment = '<code>t/#</code in and republishes it to <code>a/1</code>';
+record('Chapter 10 restates the relationship before the inherited malformed frozen fragment',
+  enRuleActions.indexOf(visibleRelationship) >= 0 &&
+  enRuleActions.indexOf(visibleRelationship) < enRuleActions.indexOf(malformedFrozenFragment));
 // check_content
 run('valid chapter fixture passes', ['scripts/check_content.js', '--fixture=tests/fixtures/valid-chapter.html'], 0);
 run('listed positional chapter passes', ['scripts/check_content.js', 'ch1_overview.html'], 0);

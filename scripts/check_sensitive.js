@@ -97,7 +97,9 @@ for (const file of files) {
     const authRe = /["']?Authorization["']?\s*(?:=|:)\s*(?:["']([^"']+)["']|((?:(?:Bearer|Basic)\s+)?[^\s,;`]+))/gi;
     for (const match of line.matchAll(authRe)) {
       const value = match[1] || match[2] || '';
-      if (isSecretValue(value.replace(/^(?:Bearer|Basic)\s+/i, ''), 8)) report(file, lineNo, 'Authorization header 含實值');
+      const credential = value.replace(/^(?:Bearer|Basic)\s+/i, '');
+      // A glossary or translation map may legitimately contain "Authorization": "Authorization".
+      if (credential.toLowerCase() !== 'authorization' && isSecretValue(credential, 8)) report(file, lineNo, 'Authorization header 含實值');
     }
 
     const cookieRe = /["']?(?:Cookie|Set-Cookie)["']?\s*(?:=|:)\s*(?:["']([^"']+)["']|([^\s,;]+=[^\s,;]+))/gi;

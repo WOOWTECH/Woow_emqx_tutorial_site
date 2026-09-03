@@ -10,6 +10,7 @@ password = "public"
 API key: <your-api-key>
 api_key = YOUR_KEY
 Authorization: Bearer <redacted>
+"Authorization": "Authorization"
 MQTT connection uses broker host and port only, without inline credentials.
 TLS private key is stored separately and never committed.
 Example documentation address 192.168.1.10.
