@@ -161,7 +161,7 @@
       <ul>
         <li><strong>Connect does nothing, or keeps failing</strong>: first check whether another service (WebRTC, for example) has taken 8083 — the same kind of port conflict as in Chapter 2. If you are coming in from another device, Host has to be the Home Assistant host address, not <code>localhost</code>.</li>
         <li><strong>You subscribed but nothing arrives</strong>: check that your subscription topic covers the publish topic with a wildcard (only a subscription to <code>testtopic/#</code> matches <code>testtopic/1</code>). After a successful publish the Received area should hold a row; if there is not a single one, the broker did not actually route the message.</li>
-        <li><strong>The same message arrives more than once</strong>: if you published at QoS 1, a duplicate is the normal result of at least once. Choose QoS 2 when you need exactly one copy, and do not read the repeat as a broker fault.</li>
+        <li><strong>The same message arrives more than once</strong>: QoS 1 guarantees at-least-once delivery, so a duplicate is possible. Choose QoS 2 when you need exactly one copy, and do not read a possible repeat as a broker fault.</li>
         <li><strong>Everything disappears after you refresh the page</strong>: that is the built-in WebSocket client clearing itself by default, not a bug. If you need to keep connection history or several saved setups, switch to the desktop MQTTX tool; that is what suits ongoing testing.</li>
       </ul>
     </section>

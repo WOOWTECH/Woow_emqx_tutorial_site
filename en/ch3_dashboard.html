@@ -125,7 +125,7 @@
       <h2 data-icon="steps">Hands-on</h2>
       <ol class="steps">
         <li><h3>Open it from Home Assistant</h3><p>In Home Assistant's left sidebar, find the <strong>EMQX</strong> icon (the Ingress entry point) and click it to open the Dashboard.</p></li>
-        <li><h3>Or go straight to 18083</h3><p>Open <code>http://&lt;host-address&gt;:18083</code> in your browser. Both routes reach the same Dashboard.</p></li>
+        <li><h3>Or go straight to 18083</h3><p>Open <code>http://&lt;host&gt;:18083</code> in your browser. Both routes reach the same Dashboard.</p></li>
         <li><h3>Sign in, and change the password first</h3><p>For the first login use <code>admin</code>/<code>public</code>, then follow the prompt to change it to a password of your own (see Chapter 2).</p></li>
         <li><h3>Walk the sidebar end to end</h3><p>Go down the left column from Monitoring, Access Control and Integration all the way through System, and write down one line on what each module is for. Then go back to <strong>Monitoring → Cluster Overview</strong> and take in the whole picture again.</p></li>
       </ol>
@@ -168,7 +168,7 @@
     <section id="troubleshoot" data-nav="Troubleshooting">
       <h2 data-icon="troubleshoot">Troubleshooting</h2>
       <ul>
-        <li><strong>You sign in but the Dashboard will not open</strong>: check whether you are going through Ingress or through 18083; if the host is on another subnet, use <code>http://&lt;host-address&gt;:18083</code> instead.</li>
+        <li><strong>You sign in but the Dashboard will not open</strong>: check whether you are going through Ingress or through 18083; if the host is on another subnet, use <code>http://&lt;host&gt;:18083</code> instead.</li>
         <li><strong>You cannot find the version</strong>: go to <strong>Monitoring → Nodes</strong>; the version column beside the node name is the version now running (expect 5.8.9).</li>
         <li><strong>A sidebar entry is missing</strong>: advanced features such as Delayed Publish and Alarms are not shown by default in the Open Source edition. That is normal, not a fault.</li>
         <li><strong>The numbers on the home page look stuck</strong>: the Overview chart has a time range you can pick; to start accumulating again, use Reset Monitoring Data.</li>

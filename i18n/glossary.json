@@ -544,10 +544,10 @@
       "主要導覽": "Main navigation"
     },
     "pager": {
-      "← 上一章": "← Previous chapter",
-      "下一章 →": "Next chapter →",
-      "回目錄": "Back to contents",
-      "回目錄 →": "Back to contents →",
+      "← 上一章": "← Previous  — canonical generated pager label",
+      "下一章 →": "Next →  — canonical generated pager label",
+      "回目錄": "Contents  — canonical generated pager label",
+      "回目錄 →": "Contents →  — canonical generated pager label",
       "09 · 規則引擎": "09 · Rule Engine"
     },
     "callout_labels": {

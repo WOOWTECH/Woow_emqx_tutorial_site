@@ -138,7 +138,7 @@
 
     <section id="republish" data-nav="Republish and Console">
       <h2 data-icon="network">Republish and Console Output</h2>
-      <p><strong>Republish</strong> is the everyday "reshape the data and reroute it" action. The official example takes <code>t/#</code in and republishes it to <code>a/1</code>: republishing does not intercept the original message, so a client subscribed to <code>t/1</code> still receives it as usual and simply gets one extra copy on <code>a/1</code>. Adding the <strong>Direct Dispatch</strong> switch delivers the message straight to subscribers, which keeps it from triggering other rules and falling into recursion.</p>
+      <p><strong>Republish</strong> is the everyday "reshape the data and reroute it" action. In the official example, messages matching t/# are republished to a/1. The source example takes <code>t/#</code in and republishes it to <code>a/1</code>: republishing does not intercept the original message, so a client subscribed to <code>t/1</code> still receives it as usual and simply gets one extra copy on <code>a/1</code>. Adding the <strong>Direct Dispatch</strong> switch delivers the message straight to subscribers, which keeps it from triggering other rules and falling into recursion.</p>
       <p>The common Republish parameters:</p>
       <div class="data-table">
         <table>

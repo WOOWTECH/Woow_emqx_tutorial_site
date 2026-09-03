@@ -186,7 +186,7 @@
   "en:ch3_dashboard.html#steps": {
    "status": "complete",
    "sourceHash": "b8028f834d7988f0",
-   "targetHash": "20a1743e4cd5611d",
+   "targetHash": "7d0935e91e4fd44e",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
@@ -207,7 +207,7 @@
   "en:ch3_dashboard.html#troubleshoot": {
    "status": "complete",
    "sourceHash": "bcd583687b3dc4df",
-   "targetHash": "6cdea2cae11da516",
+   "targetHash": "ba97d28300f75876",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
@@ -263,7 +263,7 @@
   "en:ch4_mqtt_basics.html#topic1": {
    "status": "complete",
    "sourceHash": "ddb57c25ff092d80",
-   "targetHash": "018300eda7489826",
+   "targetHash": "639409941d4280f4",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
@@ -347,7 +347,7 @@
   "en:ch5_first_connection.html#troubleshoot": {
    "status": "complete",
    "sourceHash": "f32d06eb0eac9676",
-   "targetHash": "54fb20a4c64aa973",
+   "targetHash": "97f9db15d44c17c4",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
@@ -697,7 +697,7 @@
   "en:ch10_rule_actions.html#republish": {
    "status": "complete",
    "sourceHash": "2c59f2efffaf3ede",
-   "targetHash": "01c8d8c822a09b77",
+   "targetHash": "7fed819ca7f373df",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
@@ -1075,7 +1075,7 @@
   "en:ch15_monitoring.html#troubleshoot": {
    "status": "complete",
    "sourceHash": "6cdf2d9983835564",
-   "targetHash": "04c5fed2f883a5e2",
+   "targetHash": "836c2683c4d42f12",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
@@ -1642,14 +1642,14 @@
   "en:sales.html#main": {
    "status": "complete",
    "sourceHash": "2393c8c84924add4",
-   "targetHash": "5a67b595e717d20d",
+   "targetHash": "4a36d30cd87532ba",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },
   "en:prompts.html#main": {
    "status": "complete",
    "sourceHash": "a9b3c76e9a01f706",
-   "targetHash": "c859bc2ef81414c5",
+   "targetHash": "e86bdbe40a0b6135",
    "registeredAt": "2026-09-02",
    "translatedAt": "2026-09-03"
   },

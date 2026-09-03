@@ -9,7 +9,8 @@
     {
       "unit": "#republish",
       "zh": "<code>t/#</code 收進、轉發到 <code>a/1</code>",
-      "en": "<code>t/#</code in and republishes it to <code>a/1</code>"
+      "en": "<code>t/#</code in and republishes it to <code>a/1</code>",
+      "note": "The source omits the closing angle bracket after the first code element. Root HTML is frozen, so the target preserves this fragment for structural parity and restates the complete relationship in visible prose immediately before it."
     },
     {
       "unit": "#republish",

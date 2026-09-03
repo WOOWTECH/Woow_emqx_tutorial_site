@@ -197,13 +197,13 @@
       "file": "ch3_dashboard.html",
       "unit": "#steps",
       "zh": "<code>http://&lt;主機位址&gt;:18083</code>",
-      "en": "<code>http://&lt;host-address&gt;:18083</code>"
+      "en": "<code>http://&lt;host&gt;:18083</code>"
     },
     {
       "file": "ch3_dashboard.html",
       "unit": "#troubleshoot",
       "zh": "<code>http://&lt;主機位址&gt;:18083</code>",
-      "en": "<code>http://&lt;host-address&gt;:18083</code>"
+      "en": "<code>http://&lt;host&gt;:18083</code>"
     },
     {
       "file": "ch4_mqtt_basics.html",
