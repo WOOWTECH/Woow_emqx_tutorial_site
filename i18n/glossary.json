@@ -2,7 +2,6 @@
   "_readme": "Site glossary for en/ (v2). shared = WoowTech series names and chrome terms reused across the 13 sites (kept verbatim from the kit seed; the Headscale/Tailscale rows below are seed leftovers and are simply unused here). terms = EMQX / MQTT / Home Assistant add-on domain terms for THIS site — upstream EMQX wording wins. keepEnglish = never translate or rephrase. forbid = words the reviewer rejects. decisions = the binding cross-chapter wording agreed before the 22 chapters are translated in parallel: section headings, data-nav labels, chapter nav labels, pager chrome, callout openers, table headers, Chinese strings inside frozen code blocks, and the Taiwan-specific examples that policy=localize replaces. The plain-text version of the same table is /home/user/out/terms_emqx.txt — that is what translators and reviewers read.",
   "version": 2,
   "principles": [
-    "Upstream English UI/docs wording wins (headscale.net, tailscale.com/kb).",
     "Product names, CLI commands, config keys, file names, hostnames and placeholders stay verbatim; Chinese placeholders become <your-…> style.",
     "US spelling; sentence case for headings, nav and buttons; Title Case for product and WoowTech series names.",
     "Second person 'you'; direct, like a senior engineer onboarding a beginner; no 'In this chapter we will', no marketing adjectives, no emoji.",
